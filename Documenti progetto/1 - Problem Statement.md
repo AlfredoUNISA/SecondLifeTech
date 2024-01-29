@@ -299,11 +299,24 @@ Attori Partecipanti:
 
 Flusso di Eventi:
 ## 6.17. Scenario 17 (S17) – *Gestore Utenti* aggiunge un Gestore
-Nome:
+Nome: GestoreAggiungeGestore
 
-Attori Partecipanti:
+Attori Partecipanti: Sigismondo:Gestore Utenti
 
 Flusso di Eventi:
+
+1. Sigismondo è stato incaricato, in seguito all'assunzione di Ascanio Ferri come *Gestore Prodotti* di creargli un account
+2. Sigismondo preme sul tasto per accedere al pannello gestore e viene spostato sulla pagina
+3. Sigismondo clicca sul tasto per aggiungere un gestore e viene spostato su una pagina con un form
+4. Sigismondo riempie il form:
+	- Gestore: Prodotti
+	- Nome: Ascanio
+	- Cognome: Ferri
+	- Indirizzo: Via G. Marconi, Positano
+	- Email: A.Ferri1982@alice.it
+	- Numero: 3243753477	
+5. Sigismondo preme sul tasto per confermare l'inserimento
+6. Il sistema avvisa Sigismondo che la password verrà autogenerata ed inviata ad Ascanio per email
 ## 6.18. Scenario 18 (S18) – *Gestore Prodotti* modifica il banner
 Nome:
 
