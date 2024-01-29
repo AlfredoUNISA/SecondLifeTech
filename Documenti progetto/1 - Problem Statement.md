@@ -287,24 +287,49 @@ Flusso di Eventi:
    - Messaggio: "Salve, il vostro sito ha valutato il mio iPhone 12 per 500 euro, sarei interessato alla vendita, è possibile organizzare un incontro in negozio per parlare un po' del prezzo? Grazie e buona giornata" 
 
 ## 6.15. Scenario 15 (S15) – *Gestore Prodotti* modifica un prodotto
-Nome:
+Nome: ModificaProdotto
 
-Attori Partecipanti:
+Attori Partecipanti: Arsenio:GestoreProdotti
 
 Flusso di Eventi:
+1. Arsenio deve modificare il prezzo di un "iPhone 12"
+2. Preme sul tasto per accedere, inserisce correttamente i dati ed effettua il login
+3. Dato che è un *Gestore Prodotti*, verrà spostato sulla pagina Dashboard Gestore Prodotti
+4. Il sistema lo sposta sulla pagina Pannello Gestori
+5. Arsenio preme il tasto sulla sidebar per visualizzare tutti i prodotti in vendita ed inserisce nella barra di ricerca "iPhone 12"
+6. La tabella si aggiorna con i risultati
+7. Arsenio clicca sul dispositivo cercato
+8. Il sistema lo sposta sulla pagina di Modifica Prodotto, che mostra un form pre-compilato con i dati del dispositivo
+9. Arsenio modifica il prezzo a 500
+10. Arsenio preme il tasto per confermare la modifica
+11. Viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
+
+
+
 ## 6.16. Scenario 16 (S16) – *Gestore Prodotti* elimina un prodotto
-Nome:
+Nome: EliminaProdotto
 
-Attori Partecipanti:
+Attori Partecipanti: Arsenio:GestoreProdotti
 
 Flusso di Eventi:
+1. Arsenio deve eliminare un dispositivo "iPhone 12"
+2. Preme sul tasto per accedere, inserisce correttamente i dati ed effettua il login
+3. Dato che è un *Gestore Prodotti*, verrà spostato sulla pagina Dashboard Gestore Prodotti
+4. Il sistema lo sposta sulla pagina Pannello Gestori
+5. Arsenio preme il tasto sulla sidebar per visualizzare tutti i prodotti in vendita ed inserisce nella barra di ricerca "iPhone 12"
+6. La tabella si aggiorna con i risultati
+7. Arsenio clicca sul dispositivo cercato
+8. Il sistema lo sposta sulla pagina di Modifica Prodotto, che mostra un form pre-compilato con i dati del dispositivo
+9. Arsenio modifica il prezzo a 500
+10. Arsenio preme il tasto per confermare la modifica
+11. Viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
+
 ## 6.17. Scenario 17 (S17) – *Gestore Utenti* aggiunge un Gestore
 Nome: GestoreAggiungeGestore
 
 Attori Partecipanti: Sigismondo:Gestore Utenti
 
 Flusso di Eventi:
-
 1. Sigismondo è stato incaricato, in seguito all'assunzione di Ascanio Ferri come *Gestore Prodotti* di creargli un account
 2. Sigismondo preme sul tasto per accedere al pannello gestore e viene spostato sulla pagina
 3. Sigismondo clicca sul tasto per aggiungere un gestore e viene spostato su una pagina con un form
@@ -317,6 +342,7 @@ Flusso di Eventi:
 	- Numero: 3243753477	
 5. Sigismondo preme sul tasto per confermare l'inserimento
 6. Il sistema avvisa Sigismondo che la password verrà autogenerata ed inviata ad Ascanio per email
+
 ## 6.18. Scenario 18 (S18) – *Gestore Prodotti* modifica il banner
 Nome:
 
