@@ -15,7 +15,7 @@ SecondLifeTech supporta quattro tipi utenti:
 2.	I *Clienti* sono dei clienti registrati che possiedono gli stessi requisiti degli utenti *Guest* (tranne quello di fare il login), ma in aggiunta devono essere in grado di:
 	- Finalizzare gli ordini
 	- Effettuare il logout
-	- Consultare e modificare il proprio profilo 
+	- Consultare e modificare il proprio profilo
 	- Visualizzare gli ordini eseguiti
 	- Eliminare il proprio account
 
@@ -36,15 +36,19 @@ I clienti registrati e non ed i gestori utilizzeranno due versioni differenti de
 # 3. Requisiti Non Funzionali
 Il sistema deve:
 1. Avere una interfacca semplice ed intuitiva, rendendo la navigazione del sito piacevole
-2. Essere accessibile da qualsiasi dispositivo e browser (che supportano cookies e Javascript)
-3. Poter mantenere il suo corretto funzionamento anche nel caso di dati errati
-4. Deve poter fornire il catalogo dei dispositivi all’utente in meno di cinque secondi
-5. Deve garantire la sicurezza degli account degli utenti
-6. Deve avere una taglia massima di 10 GB
-7. Essere conforme alle normative europee sulla privacy online
+2. Poter mantenere il suo corretto funzionamento anche nel caso di dati errati
+3. Garantire la persistenza dei dati anche in casi di malfunzionamento
+4. Garantire la sicurezza degli account degli utenti
+5. Poter fornire il catalogo dei dispositivi all’utente in meno di cinque secondi
+6. Supportare più utenti allo stesso tempo
+7. Avere una taglia massima di 10 GB
+8. Supportare l'inserimento di nuovi tipi di prodotti
+9.  Essere conforme alle normative europee sulla privacy online
 
 # 4. Ambiente
-L’ambiente di destinazione del sistema prodotto è un qualsiasi sistema operativo Windows o Linux, oppure un cloud provider (come Amazon Web Services).
+L’ambiente di destinazione del sistema prodotto è un qualsiasi sistema operativo Linux, oppure un cloud provider (come Amazon Web Services).
+
+Essere accessibile da qualsiasi dispositivo e browser (che supportano cookies e Javascript)
 
 # 5. Deliverables e Deadlines
 
@@ -52,6 +56,7 @@ L’ambiente di destinazione del sistema prodotto è un qualsiasi sistema operat
 - System Design Document (SDD) - 
 - Object Design Document (ODD) - 
 - Schema Database - 
+- Codice - 
 - Test Planning Documents - 
 - Test Execution Documents - 
 
@@ -93,10 +98,10 @@ Flusso di Eventi:
 6. Stavolta il sistema gli garantisce l’accesso, avvisandolo del successo del Login
 7. Viene mandato sulla Home Page, dove il pulsante di Login/Registrazione è sostituito da un pulsante per accedere al suo profilo
 
-## 6.3.	Scenario 3 (S3) - *Cliente Generico* cerca un dispositivo
+## 6.3.	Scenario 3 (S3) - *Guest* cerca un dispositivo
 Nome: CercaDispositivo
 
-Attori Partecipanti: Antonio:ClienteGenerico
+Attori Partecipanti: Antonio:Guest
 
 Flusso di Eventi:
 1. Antonio vuole vedere se è in vendita sul sito un certo dispositivo
@@ -105,20 +110,20 @@ Flusso di Eventi:
 4. Antonio non trova il dispositivo che vuole in questa schermata, pertanto clicca sulla barra di ricerca, scrive "Google Pixel 4" e preme Invio
 5. Il sito ritorna una lista di dispositivi con il nome simile a "Google Pixel 4" che Antonio può visualizzare
 
-## 6.4.	Scenario 4 (S4) – *Cliente Generico* visualizza i dettagli di un prodotto
+## 6.4.	Scenario 4 (S4) – *Guest* visualizza i dettagli di un prodotto
 Nome: VisualizzaDettagliProdotto
 
-Attori Partecipanti: Martina:ClienteGenerico
+Attori Partecipanti: Martina:Guest
 
 Flusso di Eventi:
 1. Martina è interessata ad un "Iphone 8" che ha individuato nella pagina Prodotti del sito e vuole osservarne le caratteristiche
 2. Dalla pagina della visualizzazione dei prodotti, Martina clicca sul dispositivo
 3. Viene spostata su una pagina che contiene l'immagine, tutte le informazioni e tutte le opzioni disponibili/non disponibili per il dispositivo "Iphone 8"
 
-## 6.5.	Scenario 5 (S5) – *Cliente Generico* aggiunge un prodotto al carrello
+## 6.5.	Scenario 5 (S5) – *Guest* aggiunge un prodotto al carrello
 Nome: AggiungiAlCarrello
 
-Attori Partecipanti: Martina:ClienteGenerico
+Attori Partecipanti: Martina:Guest
 
 Flusso di Eventi:
 1. Martina sta osservando le caratteristiche di un "Iphone 12" e decide di volerlo aggiungere al carrello per poterlo osservare in seguito
@@ -159,12 +164,149 @@ Flusso di Eventi:
 13. Luigi clicca il pulsante per procedere con il pagamento
 14. Dopo una verifica andata a buon fine, l’ordine viene effettuato e Luigi viene riportato sulla schermata dei suoi ordini, dove si trova l'ordine appena creato
 
-## 6.6.	Scenario 4 (S4) – *Gestore Prodotti* aggiunge un prodotto	  
-Al gestore dei prodotti, Arsenio Fanucci, è stato assegnato il compito di aggiungere al catalogo il nuovissimo smartphone iPhone 15 Pro di colore Blu, 6GB di RAM, 128GB di memoria e 6,12’’ di display in condizioni Ottime. Arsenio effettua il Login con successo, clicca su "Pannello Admin" che gli presenta una schermata con le possibili funzioni. Arsenio clicca su "Aggiungi Prodotto", questo pulsante porta il gestore ad una pagina contenente una form nel quale carica la foto del dispositivo e compila tutti i campi in maniera appropriata con Nome: iPhone 15 Pro, Display: 6,12, Storage: 128, RAM: 6, Quantità: 1, Colore: Blu, Marca: Apple, Categoria: Smartphone, Condizione: Ottimo e Anno: 2023. E preme conseguentemente il tasto "Aggiungi". Alla pressione del tasto, viene reindirizzato ad una pagina che riepiloga l’aggiunta del prodotto.
+## 6.7.	Scenario 7 (S7) – *Gestore Prodotti* aggiunge un prodotto
+Nome: GestoreAggiungeProdotto
 
-## 6.6.	Scenario 5 (S5) – *Gestore Utenti* rimuove un *Gestore Prodotti*
-Il gestore degli utenti, Lucilla Nucci, ha il compito di rimuovere la sua ex-collega Liliana Bianchi dal ruolo di *Gestore Prodotti*, causa pensionamento. Lucilla, effettua correttamente il Login al sistema con la sua mail aziendale, e premendo sul tasto "Pannello Admin" le vengono presentate le funzioni per Aggiungere o Rimuovere un gestore. Clicca su "Rimuovi Gestore", e le viene mostrato un form nel quale può inserire l’e-mail aziendale di Liliana. E preme il tasto "Conferma". Il sito allora si aggiorna con l’esito dell’operazione.
+Attori Partecipanti: Arsenio:GestoreProdotti
 
-## 6.6.	Scenario 6 (S6) – Utente ottiene una stima dell’usato
-L’Utente Antonio Roghi vuole ottenere una stima monetaria di un suo vecchio dispositivo, con la speranza di poterlo venderlo all’azienda SecondLifeTech. Dalla Home Page clicca il tasto "Valuta il tuo usato". In seguito, gli viene presentata la schermata con un selettore nel quale può inserire la marca del dispositivo, la pagina si aggiorna mostrando un selettore con tutti i possibili dispositivi valutabili, compilato anche questo campo, la pagina si aggiorna mostrando i selettori per condizione e per spazio interno. Riempiti tutti i campi presenti, Antonio può cliccare su "Valuta" e la pagina si aggiorna mostrando il dispositivo e la sua valutazione in euro.
+Flusso di Eventi:
+1. Arsenio, è stato assegnato il compito di aggiungere al catalogo un nuovissimo smartphone iPhone 15 Pro
+2. Arsenio preme sul tasto per accedere, inserisce correttamente i dati ed effettua il login
+3. Arsenio preme sul tasto per accedere al pannello gestori e viene spostato sulla pagina 
+4. Arsenio preme sul tasto per accedere al pannello per l'aggiunta di un prodotto e viene spostato sulla pagina richiesta che mostra un form
+5. Arsenio la foto del dispositivo tramite il tasto per caricarla e compila il form:
+	- Nome: iPhone 15 Pro
+	- Display: 6,12
+	- Storage: 128
+	- RAM: 6
+	- Quantità: 1
+	- Colore: Blu
+	- Marca: Apple 
+	- Categoria: Smartphone 
+	- Condizione: Ottimo 
+	- Anno: 2023
+6. Arsenio preme il tasto per confermare l'aggiunta e viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
 
+## 6.8.	Scenario 8 (S8) – *Gestore Utenti* rimuove un *Gestore Prodotti*
+Nome: GestoreRimuoveGestore
+
+Attori Partecipanti: Lucilla:GestoreProdotti
+
+Flusso di Eventi:
+1. Lucilla ha il compito di rimuovere la sua ex-collega Liliana dal ruolo di *Gestore Prodotti*, causa pensionamento. 
+2. Lucilla, effettua correttamente il Login al sistema con la sua e-mail aziendale
+3. Preme sul tasto per accedere al Pannello Admin
+4. Il sistema gli presenta le funzioni per Aggiungere o Rimuovere un gestore 
+5. Lucilla clicca sul pulsante per rimuovere un gestore
+6. Il sistema la sposta sulla pagina di Rimozione Account, dove può inserire un'e-mail
+7. Lucilla inseisce l'e-mail aziendale di Liliana e preme il tasto di conferma 
+8. Il sito mostra un avviso di conferma di rimozione, specificando le informazioni basilari (Nome: "Liliana", Cognome: "Verdi", Ruolo: "*Gestore Prodotti*")
+9. Lucilla conferma l'operazione 
+10. Il sito si aggiorna con l’esito dell’operazione
+
+## 6.9.	Scenario 9 (S9) – Utente ottiene una stima dell’usato
+Nome: UtenteOttieneStimaUsato
+
+Attori Partecipanti: Claudio:Guest
+
+Flusso di Eventi:
+1. Dalla Home Page, Claudio clicca il tasto "Valuta il tuo usato"
+2. Il sistema lo porta su una pagina di Valutazione Usato, dove gli viene presentato un form che si aggiorna con ogni informazione che inserisce 
+3. Claudio inserisce nei selettori del form: 
+   - Marca: "Samsung"
+   - Nome: "S22"
+   - Spazio Interno: "128GB"
+   - RAM: "8GB"
+   - Condizione: "Accettabile"
+4. Dopo aver compilato tutti i campi, Claudio preme sul pulsante di valutazione
+5. La pagina si aggiorna mostrando una valutazione in euro, con l'opzione di contattare il negozio
+6. Claudio sceglie di contattare il negozio e viene reindirizzato nella pagina Contatti
+
+## 6.10. Scenario 10 (S10) – *Cliente* effettua Logout
+Nome: Logout
+
+Attori Partecipanti: Franco:Cliente
+
+Flusso di Eventi:
+1. Franco ha deciso di effettuare il logout
+2. Franco clicca sul tasto per accedere al pannello di controllo del proprio account
+3. Il sistema lo porta sulla pagina di Visualizzazione Account contenente i suoi dati (come il suo nome, cognome, email, numero di telefono)
+4. Franco clicca sul tasto per effettuare il Logout
+5. Il sistema lo sposta sulla Home Page, dove il pulsante per accedere al suo account diventa un pulsante di login/registrazione
+
+
+## 6.11. Scenario 11 (S11) – *Cliente* modifica il proprio profilo
+Nome: ModificaProfiloCliente
+
+Attori Partecipanti: Giovanni:Cliente
+
+Flusso di Eventi:
+1. Giovanni vuole modificare il numero di telefono collegato al suo account del sito
+2. Clicca sul tasto per accedere al pannello di controllo del proprio account e viene spostato sulla pagina Visualizzazione Account
+3. Giovanni clicca sul tasto per modificare le su informazioni sulla scheda delle informazioni generali
+4. Le informazioni sullo schermo sono diventate modificabili
+5. Giovanni sostituisce il vecchio numero telefonico con quello nuovo e preme il tasto per salvare le informazioni
+6. La pagina si aggiorna con i nuovi dati inseriti
+
+
+## 6.12. Scenario 12 (S12) – *Cliente* elimina il proprio account
+Nome: EliminaProfiloCliente
+
+Attori Partecipanti: Erminio:Cliente
+
+Flusso di Eventi:
+1. Erminio vuole eliminare il proprio account
+2. Clicca sul tasto per accedere la pannello di controllo del proprio account e viene spostato sulla pagina account
+3. Erminio scorre la pagina e clicca sul tasto per eliminare il proprio account
+4. Il sistema chiede conferma ad Erminio per l'eliminazione, avvisandolo che l'account non sarà più recuperabile
+5. Erminio preme il tasto per confermare e viene spostato sulla homepage come visitatore
+
+
+## 6.13. Scenario 13 (S13) – *Cliente* visualizza i propri ordini
+Nome: VisualizzaOrdini
+
+Attori Partecipanti: Carlo:Cliente
+
+Flusso di Eventi:
+1. Carlo dalla Home Page clicca sull tasto per accedere al pannello di controllo del suo profilo
+2. Carlo scorre la pagina e clicca sul tasto per visualizzare l'ordine
+3. Viene mostrata una lista degli ordini effettuati e clicca sell'ordine più recente
+4. A Carlo vengono mostrati i dettagli sugli articoli ordinati, le quantità, la data dell'ordine e il prezzo pagato
+
+## 6.14. Scenario 14 (S14) – *Guest* contatta l'azienda
+Nome: UtenteContatta
+
+Attori Partecipanti: Marco:Guest
+
+Flusso di Eventi:
+1. Mario ha necessità di contattare l'azienda per contrattare sull'usato valutato sul sito
+2. Mario clicca sul tasto per contattare l'azienda e viene spostato su una pagina
+3. La pagina presenta le informazioni dell'azienda e un form da compilare
+4. Mario inserisce nel form
+   - Email: "mario.rossi72@hotmail.it"
+   - Messaggio: "Salve, il vostro sito ha valutato il mio iPhone 12 per 500 euro, sarei interessato alla vendita, è possibile organizzare un incontro in negozio per parlare un po' del prezzo? Grazie e buona giornata" 
+
+## 6.15. Scenario 15 (S15) – *Gestore Prodotti* modifica un prodotto
+Nome:
+
+Attori Partecipanti:
+
+Flusso di Eventi:
+## 6.16. Scenario 16 (S16) – *Gestore Prodotti* elimina un prodotto
+Nome:
+
+Attori Partecipanti:
+
+Flusso di Eventi:
+## 6.17. Scenario 17 (S17) – *Gestore Utenti* aggiunge un Gestore
+Nome:
+
+Attori Partecipanti:
+
+Flusso di Eventi:
+## 6.18. Scenario 18 (S18) – *Gestore Prodotti* modifica il banner
+Nome:
+
+Attori Partecipanti:
+
+Flusso di Eventi:
