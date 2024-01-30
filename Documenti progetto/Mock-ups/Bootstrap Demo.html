@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+
+	<style>
+		.caro {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 10px;
+		}
+
+		.carousel {
+			width: 30%;
+			height: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Navbar</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Link</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							Dropdown
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+					</li>
+				</ul>
+				<form class="d-flex" role="search">
+					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success" type="submit">Search</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="caro">
+		<div id="carouselExampleIndicators" class="carousel slide">
+			<div class="carousel-indicators">
+				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+					aria-current="true" aria-label="Slide 1"></button>
+				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+					aria-label="Slide 2"></button>
+			</div>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src="https://cdn.pixabay.com/photo/2024/01/19/13/27/fog-8519076_960_720.jpg"
+						class="d-block w-100" alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="https://cdn.pixabay.com/photo/2023/11/29/10/32/mountains-8419249_960_720.jpg"
+						class="d-block w-100" alt="...">
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+
+	<table class="table table-striped" id="myTable">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">First</th>
+				<th scope="col">Last</th>
+				<th scope="col">Handle</th>
+				<th scope="col">Operations</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row">1</th>
+				<td>Mark</td>
+				<td>Otto</td>
+				<td>@mdo</td>
+				<td>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal1">
+						Details
+					</button>
+					<div class="modal fade" id="detailModal1" tabindex="-1" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="exampleModalLabel">
+										Details
+									</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<p>Test1</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="button" class="btn btn-danger">
+						Delete
+					</button>
+				</td>
+			</tr>
+
+			<tr>
+				<th scope="row">2</th>
+				<td>Jacob</td>
+				<td>Thornton</td>
+				<td>@fratm</td>
+				<td>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal2">
+						Details
+					</button>
+					<div class="modal fade" id="detailModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="exampleModalLabel">
+										Details
+									</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<p>Test2</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="button" class="btn btn-danger">
+						Delete
+					</button>
+				</td>
+			</tr>
+
+			<tr>
+				<th scope="row">3</th>
+				<td>Larry the Bird</td>
+				<td></td>
+				<td>@twitter</td>
+				<td>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal3">
+						Details
+					</button>
+					<div class="modal fade" id="detailModal3" tabindex="-1" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="exampleModalLabel">
+										Details
+									</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<p>Test3</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<button type="button" class="btn btn-danger">
+						Delete
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+		Add a row
+	</button>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">
+						Modal title
+					</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" placeholder="First" aria-label="First"
+							aria-describedby="basic-addon1" id="modalFirstField">
+					</div>
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" placeholder="Last" aria-label="Last"
+							aria-describedby="basic-addon1" id="modalLastField">
+					</div>
+					<div class="input-group mb-3">
+						<span class="input-group-text" id="basic-addon1">@</span>
+						<input type="text" class="form-control" placeholder="Handle" aria-label="Handle"
+							aria-describedby="basic-addon1" id="modalHandleField">
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						Close
+					</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+						Add
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.querySelector('.modal-footer .btn-primary').addEventListener('click', function () {
+			var first = document.getElementById('modalFirstField').value;
+			var last = document.getElementById('modalLastField').value;
+			var handle = document.getElementById('modalHandleField').value;
+
+			var table = document.getElementById('myTable');
+			var row = table.insertRow(-1);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+
+			cell1.innerHTML = table.rows.length - 1; // Adjust as needed for your "#"
+			cell2.innerHTML = first;
+			cell3.innerHTML = last;
+			cell4.innerHTML = '@' + handle;
+
+			// Clear the input fields after adding the row
+			document.getElementById('modalFirstField').value = '';
+			document.getElementById('modalLastField').value = '';
+			document.getElementById('modalHandleField').value = '';
+		});
+	</script>
+
+</body>
+
+</html>
