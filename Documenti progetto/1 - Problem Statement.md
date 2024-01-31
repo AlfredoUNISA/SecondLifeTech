@@ -1,22 +1,22 @@
 # 1. Problem Domain
-Il progetto "SecondLifeTech" ha lo scopo di sviluppare un sito di e-commerce specializzato nella vendita di smartphone e tablet ricondizionati. Il sito offrirà una piattaforma completa per l'acquisto e la stima monetaria di dispositivi elettronici ricondizionati, promuovendo allo stesso tempo la sostenibilità ambientale attraverso il riutilizzo di dispositivi usati. Il sito dovrà essere altamente user-friendly, sicuro ed efficiente. Il sistema prodotto faciliterà l’interfacciamento dell’azienda con i propri clienti e possibili tali, questo tramite un’interfaccia intuitiva e facilitata.
+Il progetto "SecondLifeTech" ha lo scopo di sviluppare un sito di e-commerce specializzato nella vendita di smartphone e tablet ricondizionati. Il sito offrirà una piattaforma completa per l'acquisto e la stima monetaria di dispositivi elettronici ricondizionati, promuovendo allo stesso tempo la sostenibilità ambientale attraverso il riutilizzo di dispositivi usati. Il sistema prodotto faciliterà l’interfacciamento dell’azienda con i propri clienti e possibili tali, questo tramite un’interfaccia intuitiva e facilitata.
 
 # 2. Requisiti Funzionali
 SecondLifeTech supporta quattro tipi utenti:
-1.	I *Guest* sono dei clienti non registrati che devono essere in grado di: 
+1.	I *Guest* sono degli utenti non registrati che devono essere in grado di: 
 	- Visualizzare i dispositivi in vendita 
 	- Visualizzare i dettagli di uno specifico dispositivo
 	- Aggiungere dispositivi al carrello
-	- Modificare le quantità dei dispositivi nel carrello
+	- Modificare o elminare le quantità dei dispositivi nel carrello
 	- Valutare un proprio dispositivo usato
 	- Registrarsi al sito
 	- Fare il login per diventare *Clienti*
 
-2.	I *Clienti* sono dei clienti registrati che possiedono gli stessi requisiti degli utenti *Guest* (tranne quello di fare il login), ma in aggiunta devono essere in grado di:
+2.	I *Clienti* sono degli utenti registrati che possiedono gli stessi requisiti degli utenti *Guest* (tranne quello di fare il login), ma in aggiunta devono essere in grado di:
 	- Finalizzare gli ordini
 	- Effettuare il logout
 	- Consultare e modificare il proprio profilo
-	- Visualizzare gli ordini eseguiti
+	- Visualizzare gli ordini effettuare
 	- Eliminare il proprio account
 
 3.	I *Gestori Prodotti* devono essere in grado di: 
@@ -28,7 +28,7 @@ SecondLifeTech supporta quattro tipi utenti:
 
 4.	I *Gestori Utenti* devono essere in grado di:
 	- Aggiungere nuovi utenti *Guest*, *Clienti* e *Gestori Prodotti*
-	- Eliminare utenti *Guest*, *Clienti* e *Gestori Prodotti* esistenti nel sistema
+	- Eliminare tutti i tipi di utenti esistenti nel sistema
 	- Gestire tutti i tipi di utenti, in modo da risolvere eventuali problemi
 
 I clienti registrati e non ed i gestori utilizzeranno due versioni differenti della stessa interfaccia utente.
@@ -144,7 +144,7 @@ Attori Partecipanti: Luigi:Guest
 Flusso di Eventi:
 1. Luigi vuole finalizzare l’acquisto di due dispositivi che ha inserito nel suo carrello temporaneo
 2. Dalla pagina del carrello clicca il tasto per Finalizzare l'ordine 
-3. Dato che Luigi è un utente *Guest*, il sistema lo notifica che solamente i clienti registrati (*Cliente*) possno finalizzare gli ordini, mostrandogli anche un pulsante per accedere o per creare un nuovo account
+3. Dato che Luigi è un utente *Guest*, il sistema lo notifica che solamente i clienti registrati (*Cliente*) possono finalizzare gli ordini, mostrandogli anche un pulsante per accedere o per creare un nuovo account
 4. Luigi, preme il pulsante per fare il Login e si identifica
 5. Dopo aver eseguito l'accesso, Luigi diventa un *Cliente* ed i prodotti che si trovavano nel carrello temporaneo vengono trasferiti al carrello permanente del cliente
 6. Ritornando alla pagina del carrello, clicca nuovamente il tasto per finalizzare l’ordine 
@@ -170,21 +170,21 @@ Nome: GestoreAggiungeProdotto
 Attori Partecipanti: Arsenio:GestoreProdotti
 
 Flusso di Eventi:
-1. Arsenio, è stato assegnato il compito di aggiungere al catalogo un nuovissimo smartphone iPhone 15 Pro
+1. Ad Arsenio è stato assegnato il compito di aggiungere al catalogo un nuovissimo smartphone iPhone 15 Pro
 2. Arsenio preme sul tasto per accedere, inserisce correttamente i dati ed effettua il login
 3. Arsenio preme sul tasto per accedere al pannello gestori e viene spostato sulla pagina 
 4. Arsenio preme sul tasto per accedere al pannello per l'aggiunta di un prodotto e viene spostato sulla pagina richiesta che mostra un form
-5. Arsenio la foto del dispositivo tramite il tasto per caricarla e compila il form:
-	- Nome: iPhone 15 Pro
-	- Display: 6,12
-	- Storage: 128
-	- RAM: 6
-	- Quantità: 1
-	- Colore: Blu
-	- Marca: Apple 
-	- Categoria: Smartphone 
-	- Condizione: Ottimo 
-	- Anno: 2023
+5. Arsenio aggiunge la foto del dispositivo tramite il tasto per caricarla e compila il form:
+	- Nome: "iPhone 15 Pro"
+	- Display: "6,12"
+	- Storage: "128"
+	- RAM: "6"
+	- Quantità: "1"
+	- Colore: "Blu"
+	- Marca: "Apple" 
+	- Categoria: "Smartphone" 
+	- Condizione: "Ottimo" 
+	- Anno: "2023"
 6. Arsenio preme il tasto per confermare l'aggiunta e viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
 
 ## 6.8.	Scenario 8 (S8) – *Gestore Utenti* rimuove un *Gestore Prodotti*
@@ -196,8 +196,8 @@ Flusso di Eventi:
 1. Lucilla ha il compito di rimuovere la sua ex-collega Liliana dal ruolo di *Gestore Prodotti*, causa pensionamento. 
 2. Lucilla, effettua correttamente il Login al sistema con la sua e-mail aziendale
 3. Preme sul tasto per accedere al Pannello Admin
-4. Il sistema gli presenta le funzioni per Aggiungere o Rimuovere un gestore 
-5. Lucilla clicca sul pulsante per rimuovere un gestore
+4. Il sistema gli presenta le funzioni per Aggiungere o Rimuovere un utente 
+5. Lucilla clicca sul pulsante per rimuovere un utente
 6. Il sistema la sposta sulla pagina di Rimozione Account, dove può inserire un'e-mail
 7. Lucilla inseisce l'e-mail aziendale di Liliana e preme il tasto di conferma 
 8. Il sito mostra un avviso di conferma di rimozione, specificando le informazioni basilari (Nome: "Liliana", Cognome: "Verdi", Ruolo: "*Gestore Prodotti*")
@@ -215,8 +215,8 @@ Flusso di Eventi:
 3. Claudio inserisce nei selettori del form: 
    - Marca: "Samsung"
    - Nome: "S22"
-   - Spazio Interno: "128GB"
-   - RAM: "8GB"
+   - Spazio Interno: "128"
+   - RAM: "8"
    - Condizione: "Accettabile"
 4. Dopo aver compilato tutti i campi, Claudio preme sul pulsante di valutazione
 5. La pagina si aggiorna mostrando una valutazione in euro, con l'opzione di contattare il negozio
@@ -270,13 +270,13 @@ Attori Partecipanti: Carlo:Cliente
 Flusso di Eventi:
 1. Carlo dalla Home Page clicca sull tasto per accedere al pannello di controllo del suo profilo
 2. Carlo scorre la pagina e clicca sul tasto per visualizzare l'ordine
-3. Viene mostrata una lista degli ordini effettuati e clicca sell'ordine più recente
+3. Viene mostrata una lista degli ordini effettuati e clicca sull'ordine più recente
 4. A Carlo vengono mostrati i dettagli sugli articoli ordinati, le quantità, la data dell'ordine e il prezzo pagato
 
-## 6.14. Scenario 14 (S14) – *Guest* contatta l'azienda
-Nome: UtenteContatta
+## 6.14. Scenario 14 (S14) – *Cliente* contatta l'azienda
+Nome: ClienteContatta
 
-Attori Partecipanti: Marco:Guest
+Attori Partecipanti: Marco:Cliente
 
 Flusso di Eventi:
 1. Mario ha necessità di contattare l'azienda per contrattare sull'usato valutato sul sito
@@ -285,6 +285,7 @@ Flusso di Eventi:
 4. Mario inserisce nel form
    - Email: "mario.rossi72@hotmail.it"
    - Messaggio: "Salve, il vostro sito ha valutato il mio iPhone 12 per 500 euro, sarei interessato alla vendita, è possibile organizzare un incontro in negozio per parlare un po' del prezzo? Grazie e buona giornata" 
+5. Mario preme invia e viene spostato alla pagina Home con un avviso di corretto invio
 
 ## 6.15. Scenario 15 (S15) – *Gestore Prodotti* modifica un prodotto
 Nome: ModificaProdotto
@@ -300,11 +301,9 @@ Flusso di Eventi:
 6. La tabella si aggiorna con i risultati
 7. Arsenio clicca sul dispositivo cercato
 8. Il sistema lo sposta sulla pagina di Modifica Prodotto, che mostra un form pre-compilato con i dati del dispositivo
-9. Arsenio modifica il prezzo a 500
+9. Arsenio modifica il prezzo a "500"
 10. Arsenio preme il tasto per confermare la modifica
-11. Viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
-
-
+11. Viene avvisato del successo dell'operazione e viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
 
 ## 6.16. Scenario 16 (S16) – *Gestore Prodotti* elimina un prodotto
 Nome: EliminaProdotto
@@ -320,9 +319,8 @@ Flusso di Eventi:
 6. La tabella si aggiorna con i risultati
 7. Arsenio clicca sul dispositivo cercato
 8. Il sistema lo sposta sulla pagina di Modifica Prodotto, che mostra un form pre-compilato con i dati del dispositivo
-9. Arsenio modifica il prezzo a 500
-10. Arsenio preme il tasto per confermare la modifica
-11. Viene spostato sulla pagina dei dettagli del nuovo prodotto aggiunto
+9. Arsenio preme il tasto per eliminare il prodotto selezionato
+10. Viene avvisato del successo dell'operazione e viene spostato nella pagina di visualizzazione dei prodotti
 
 ## 6.17. Scenario 17 (S17) – *Gestore Utenti* aggiunge un Gestore
 Nome: GestoreAggiungeGestore
@@ -332,14 +330,14 @@ Attori Partecipanti: Sigismondo:Gestore Utenti
 Flusso di Eventi:
 1. Sigismondo è stato incaricato, in seguito all'assunzione di Ascanio Ferri come *Gestore Prodotti* di creargli un account
 2. Sigismondo preme sul tasto per accedere al pannello gestore e viene spostato sulla pagina
-3. Sigismondo clicca sul tasto per aggiungere un gestore e viene spostato su una pagina con un form
+3. Sigismondo clicca sul tasto per aggiungere un utente e viene spostato su una pagina con un form
 4. Sigismondo riempie il form:
-	- Gestore: Prodotti
-	- Nome: Ascanio
-	- Cognome: Ferri
-	- Indirizzo: Via G. Marconi, Positano
-	- Email: A.Ferri1982@alice.it
-	- Numero: 3243753477	
+	- Utente: "Gestore Prodotti"
+	- Nome: "Ascanio"
+	- Cognome: "Ferri"
+	- Indirizzo: "Via G. Marconi, Positano"
+	- Email: "A.Ferri1982@alice.it"
+	- Numero: "3243753477"	
 5. Sigismondo preme sul tasto per confermare l'inserimento
 6. Il sistema avvisa Sigismondo che la password verrà autogenerata ed inviata ad Ascanio per email
 
@@ -351,6 +349,6 @@ Attori Partecipanti: Marcella:Gestore Prodotti
 Flusso di Eventi:
 1. Il *Gestore Prodotti* Marcella è stata incaricata di modificare il banner per motivi di marketing
 2. Marcella accede al pannello di controllo del Gestore e preme sul tasto per modificare il banner
-3. Viene spostata su una nuova pagina contenente un form per caricare l'imamgine
+3. Viene spostata su una nuova pagina contenente un form per caricare l'immagine
 4. Marcella inserisce l'immagine "MagicoBisestile.jpeg" e preme il tasto conferma
 5. Viene spostata sulla home con il banner modificato
