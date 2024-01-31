@@ -344,8 +344,13 @@ Flusso di Eventi:
 6. Il sistema avvisa Sigismondo che la password verrà autogenerata ed inviata ad Ascanio per email
 
 ## 6.18. Scenario 18 (S18) – *Gestore Prodotti* modifica il banner
-Nome:
+Nome:GestoreModificaBanner
 
-Attori Partecipanti:
+Attori Partecipanti: Marcella:Gestore Prodotti
 
 Flusso di Eventi:
+1. Il *Gestore Prodotti* Marcella è stata incaricata di modificare il banner per motivi di marketing
+2. Marcella accede al pannello di controllo del Gestore e preme sul tasto per modificare il banner
+3. Viene spostata su una nuova pagina contenente un form per caricare l'imamgine
+4. Marcella inserisce l'immagine "MagicoBisestile.jpeg" e preme il tasto conferma
+5. Viene spostata sulla home con il banner modificato
