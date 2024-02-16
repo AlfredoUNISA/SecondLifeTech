@@ -43,9 +43,12 @@ public class User {
 
 	private String phoneNumber;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ShippingAddress> shippingAddresses;
-	// TODO: PaymentMethod
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<PaymentMethod> paymentMethods;
+
 	// TODO: Cart
 
 
