@@ -29,14 +29,9 @@ class UserServiceTests {
 	@Test
 	void UserService_FindUserByEmail_ReturnCorrectEmail() throws ParseException {
 		// Arrange
-		User user = User.builder()
-			.firstName("Mario")
-			.lastName("Rossi")
-			.email("email@email.com")
-			.password("password")
-			.birthDate(new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2000"))
-			.role(Role.CLIENTE)
-			.build();
+		String dateOfBirthString = "01/01/2000";
+		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
+		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
 
 		// Mock del comportamento della repository per restituire il valore quando viene chiamato findByEmail
 		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -56,30 +51,9 @@ class UserServiceTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user1 = User.builder()
-			.firstName("Mario")
-			.lastName("Rossi")
-			.email("email@email.com")
-			.password("password")
-			.birthDate(dateOfBirth)
-			.role(Role.CLIENTE)
-			.build();
-		User user2 = User.builder()
-			.firstName("Luigi")
-			.lastName("Verdi")
-			.email("email2@email.com")
-			.password("password")
-			.birthDate(dateOfBirth)
-			.role(Role.CLIENTE)
-			.build();
-		User gestore = User.builder()
-			.firstName("Antonio")
-			.lastName("Arancioni")
-			.email("emailAziendale@email.com")
-			.password("password")
-			.birthDate(dateOfBirth)
-			.role(Role.GESTORE_PRODOTTI)
-			.build();
+		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, Role.GESTORE_PRODOTTI, "");
 
 		when(userRepository.findByRole(Role.CLIENTE)).thenReturn(List.of(user1, user2));
 

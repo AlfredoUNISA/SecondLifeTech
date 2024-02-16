@@ -26,31 +26,15 @@ class PaymentMethodRepositoryTests {
 	@Autowired
 	private UserRepository userRepository;
 
-
-
 	@Test
 	void PaymentMethodRepository_FindByUserId_ReturnCorrectList() throws ParseException {
 		// Arrange
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user1 = User.builder()
-			.firstName("Mario")
-			.lastName("Rossi")
-			.email("email@email.com")
-			.password("password")
-			.birthDate(dateOfBirth)
-			.role(Role.CLIENTE)
-			.build();
+		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
 
-		User user2 = User.builder()
-			.firstName("Giovanni")
-			.lastName("Verdi")
-			.email("email2@emali.com")
-			.password("password")
-			.birthDate(dateOfBirth)
-			.role(Role.CLIENTE)
-			.build();
+		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, Role.CLIENTE, null);
 
 		userRepository.save(user1);
 		userRepository.save(user2);
