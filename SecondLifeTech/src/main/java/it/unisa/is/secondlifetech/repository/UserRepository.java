@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Interfaccia che rappresenta la repository per la gestione degli utenti.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 	Optional<User> findByEmail(String email);
+
 	List<User> findByRole(String role);
 }

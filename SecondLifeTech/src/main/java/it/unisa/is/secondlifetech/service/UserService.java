@@ -5,6 +5,9 @@ import it.unisa.is.secondlifetech.entity.User;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Interfaccia per il servizio di gestione degli utenti.
+ */
 public interface UserService {
 	/**
 	 * Salva un utente nel database.

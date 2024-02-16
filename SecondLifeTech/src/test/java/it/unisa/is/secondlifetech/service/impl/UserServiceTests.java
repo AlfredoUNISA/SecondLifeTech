@@ -1,14 +1,12 @@
-package it.unisa.is.secondlifetech.service;
+package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.config.Role;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.repository.UserRepository;
-import it.unisa.is.secondlifetech.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;

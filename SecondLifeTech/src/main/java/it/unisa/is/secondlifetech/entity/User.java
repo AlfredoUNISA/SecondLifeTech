@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Classe che rappresenta un utente.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,20 +22,29 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
+
 	@Column(nullable = false)
 	private String firstName;
+
 	@Column(nullable = false)
 	private String lastName;
+
 	@Column(unique = true, nullable = false)
 	private String email;
+
 	@Column(nullable = false)
 	private String password;
+
 	@Column(nullable = false)
 	private Date birthDate;
+
 	@Column(nullable = false)
 	private String role;
+
 	private String phoneNumber;
-	// TODO: ShippingAddress
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<ShippingAddress> shippingAddresses;
 	// TODO: PaymentMethod
 	// TODO: Cart
 

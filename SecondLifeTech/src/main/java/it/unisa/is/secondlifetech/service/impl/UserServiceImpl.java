@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Implementazione del servizio per la gestione degli utenti.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
@@ -54,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * Ottiene tutti gli utenti con un determinato ruolo.
+	 *
 	 * @param role il ruolo da cercare
 	 * @return una lista di tutti gli utenti con il ruolo specificato
 	 */

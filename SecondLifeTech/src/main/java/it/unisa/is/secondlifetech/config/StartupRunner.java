@@ -5,6 +5,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * Classe che viene eseguita all'avvio dell'applicazione.
+ */
 @Slf4j
 @Component
 public class StartupRunner implements ApplicationRunner {
