@@ -42,6 +42,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
+	 * Ottiene un utente dal database tramite l'email.
+	 *
+	 * @param email l'email dell'utente da cercare
+	 * @return l'oggetto User corrispondente all'email specificato, o null se non trovato
+	 */
+	@Override
+	public User findUserByEmail(String email) {
+		return userRepository.findByEmail(email).orElse(null);
+	}
+
+	/**
 	 * Ottiene tutti gli utenti presenti nel database.
 	 *
 	 * @return una lista di tutti gli utenti presenti nel database

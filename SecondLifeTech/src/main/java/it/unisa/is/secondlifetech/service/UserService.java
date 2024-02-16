@@ -23,6 +23,14 @@ public interface UserService {
 	User findUserById(UUID id);
 
 	/**
+	 * Ottiene un utente dal database tramite l'email.
+	 *
+	 * @param email l'email dell'utente da cercare
+	 * @return l'oggetto User corrispondente all'email specificato, o null se non trovato
+	 */
+	User findUserByEmail(String email);
+
+	/**
 	 * Ottiene tutti gli utenti presenti nel database.
 	 *
 	 * @return una lista di tutti gli utenti presenti nel database
