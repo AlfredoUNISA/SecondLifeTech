@@ -50,7 +50,7 @@ public class User {
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private Cart cart = Cart.builder().total(0).user(this).build();
+	private Cart cart = new Cart(null, 0, this);
 
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;
