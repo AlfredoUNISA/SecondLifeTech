@@ -31,6 +31,13 @@ public interface UserService {
 	User findUserByEmail(String email);
 
 	/**
+	 * Ottiene tutti gli utenti con un determinato ruolo.
+	 * @param role il ruolo da cercare
+	 * @return una lista di tutti gli utenti con il ruolo specificato
+	 */
+	List<User> findUsersByRole(String role);
+
+	/**
 	 * Ottiene tutti gli utenti presenti nel database.
 	 *
 	 * @return una lista di tutti gli utenti presenti nel database
