@@ -29,7 +29,7 @@ public class ImageFileServiceImpl implements ImageFileService {
 		return imageFileRepository.save(fileObj);
 	}
 	@Override
-	public ImageFile findById(UUID id) throws Exception {
+	public ImageFile findById(UUID id) {
 		return imageFileRepository.findById(id).orElse(null);
 	}
 
