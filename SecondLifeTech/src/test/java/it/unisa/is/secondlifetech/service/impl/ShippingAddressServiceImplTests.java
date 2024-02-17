@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
-import it.unisa.is.secondlifetech.entity.constants.UserRole;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;

@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.repository;
 
-import it.unisa.is.secondlifetech.entity.constants.UserRole;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.User;
 import org.junit.jupiter.api.Test;
@@ -40,9 +40,9 @@ class CartRepositoryTests {
 		Cart editedByList = user1.getCart();
 		editedByList.setTotal(10);
 
-		Cart foundCart = cartRepository.findByUserId(user1.getId());
+		Cart foundCart = cartRepository.findByUserId(user1.getId()).get();
 		foundCart.setTotal(42);
-		Cart newFoundCart = cartRepository.findByUserId(user1.getId());
+		Cart newFoundCart = cartRepository.findByUserId(user1.getId()).get();
 
 		// Assert
 		assertThat(foundCart).isNotNull();

@@ -35,7 +35,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
+	//@Column(nullable = false)
 	private Date birthDate;
 
 	@Column(nullable = false)
@@ -50,7 +50,7 @@ public class User {
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 	@OneToOne
-	private Cart cart = new Cart(null, 0, this);
+	private Cart cart = new Cart(0, this);
 
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;

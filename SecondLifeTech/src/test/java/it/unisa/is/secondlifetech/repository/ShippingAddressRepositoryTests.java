@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.repository;
 
-import it.unisa.is.secondlifetech.entity.constants.UserRole;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import org.junit.jupiter.api.Test;

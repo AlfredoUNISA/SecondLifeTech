@@ -2,8 +2,8 @@ package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.constants.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constants.ProductState;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation1 = new ProductVariation(
-			null,
 			2020,
 			4,
 			6.0,
@@ -48,7 +47,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation2 = new ProductVariation(
-			null,
 			2018,
 			4,
 			5.5,
@@ -61,7 +59,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation3 = new ProductVariation(
-			null,
 			2019,
 			4,
 			5.9,
@@ -102,7 +99,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation1 = new ProductVariation(
-			null,
 			2020,
 			4,
 			6.0,
@@ -115,7 +111,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation2 = new ProductVariation(
-			null,
 			2018,
 			4,
 			5.5,
@@ -128,7 +123,6 @@ class ProductVariationServiceImplTests {
 		);
 
 		ProductVariation productVariation3 = new ProductVariation(
-			null,
 			2019,
 			4,
 			5.9,

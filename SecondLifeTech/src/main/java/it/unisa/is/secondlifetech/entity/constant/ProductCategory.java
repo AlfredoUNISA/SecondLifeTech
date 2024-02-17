@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.entity.constants;
+package it.unisa.is.secondlifetech.entity.constant;
 
 public class ProductCategory {
 	public static final String SMARTPHONE = "SMARTPHONE";

@@ -2,8 +2,8 @@ package it.unisa.is.secondlifetech.repository;
 
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.constants.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constants.ProductState;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -33,7 +33,6 @@ class ProductVariationRepositoryTests {
 		productModelRepository.save(productModel);
 
 		ProductVariation productVariation1 = new ProductVariation(
-			null,
 			2020,
 			4,
 			6.0,
@@ -46,7 +45,6 @@ class ProductVariationRepositoryTests {
 		);
 
 		ProductVariation productVariation2 = new ProductVariation(
-			null,
 			2018,
 			4,
 			5.5,
@@ -59,7 +57,6 @@ class ProductVariationRepositoryTests {
 		);
 
 		ProductVariation productVariation3 = new ProductVariation(
-			null,
 			2019,
 			4,
 			5.9,
@@ -105,7 +102,6 @@ class ProductVariationRepositoryTests {
 		productModelRepository.save(productModel2);
 
 		ProductVariation productVariation1 = new ProductVariation(
-			null,
 			2020,
 			4,
 			6.0,
@@ -118,7 +114,6 @@ class ProductVariationRepositoryTests {
 		);
 
 		ProductVariation productVariation2 = new ProductVariation(
-			null,
 			2018,
 			4,
 			5.5,
@@ -131,7 +126,6 @@ class ProductVariationRepositoryTests {
 		);
 
 		ProductVariation productVariation3 = new ProductVariation(
-			null,
 			2019,
 			4,
 			5.9,

@@ -5,9 +5,38 @@ import it.unisa.is.secondlifetech.entity.Cart;
 import java.util.UUID;
 
 public interface CartService {
-	// TODO: addToCart
-	// TODO: removeFromCart
-	// TODO: clearCart
+	/**
+	 * Aggiunge un prodotto al carrello.
+	 *
+	 * @param cartId             l'ID del carrello in cui aggiungere il prodotto
+	 * @param productVariationId l'ID della variante di prodotto da aggiungere
+	 * @param quantity           la quantità del prodotto da aggiungere
+	 */
+	void addToCart(UUID cartId, UUID productVariationId, int quantity);
+
+	/**
+	 * Modifica la quantità di un prodotto nel carrello.
+	 *
+	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
+	 * @param productVariationId l'ID della variante di prodotto da modificare
+	 * @param quantity           la nuova quantità del prodotto
+	 */
+	void modifyProductQuantityInCart(UUID cartId, UUID productVariationId, int quantity);
+
+	/**
+	 * Rimuove un prodotto dal carrello.
+	 *
+	 * @param cartId             l'ID del carrello da cui rimuovere il prodotto
+	 * @param productVariationId l'ID della variante di prodotto da rimuovere
+	 */
+	void removeProductFromCart(UUID cartId, UUID productVariationId);
+
+	/**
+	 * Svuota il carrello.
+	 *
+	 * @param cartId l'ID del carrello da svuotare
+	 */
+	void clearCart(UUID cartId);
 
 	/**
 	 * Salva un carrello nel database.

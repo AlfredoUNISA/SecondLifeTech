@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.repository;
 
-import it.unisa.is.secondlifetech.entity.constants.UserRole;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;

@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.entity.constants;
+package it.unisa.is.secondlifetech.entity.constant;
 
 /**
  * Classe contenente i ruoli degli utenti.
