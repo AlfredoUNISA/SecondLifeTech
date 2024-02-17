@@ -1,8 +1,7 @@
 package it.unisa.is.secondlifetech.repository;
 
-import it.unisa.is.secondlifetech.config.Role;
+import it.unisa.is.secondlifetech.entity.constants.UserRole;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
-import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -32,9 +30,9 @@ class PaymentMethodRepositoryTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
-		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		userRepository.save(user1);
 		userRepository.save(user2);

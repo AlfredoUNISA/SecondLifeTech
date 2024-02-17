@@ -19,7 +19,7 @@ public class Cart {
 	@Column(nullable = false)
 	private double total;
 
-	@OneToOne(optional = false)
+	@OneToOne(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = false)
 	private User user;
 
 	// TODO: products

@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
-import it.unisa.is.secondlifetech.config.Role;
+import it.unisa.is.secondlifetech.entity.constants.UserRole;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class UserServiceImplTests {
 		// Arrange
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
-		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		// Mock del comportamento della repository per restituire il valore quando viene chiamato findByEmail
 		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -51,14 +51,14 @@ class UserServiceImplTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
-		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, Role.CLIENTE, null);
-		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, Role.GESTORE_PRODOTTI, "");
+		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, UserRole.GESTORE_PRODOTTI, "");
 
-		when(userRepository.findByRole(Role.CLIENTE)).thenReturn(List.of(user1, user2));
+		when(userRepository.findByRole(UserRole.CLIENTE)).thenReturn(List.of(user1, user2));
 
 		// Act
-		List<User> foundUsers = userService.findUsersByRole(Role.CLIENTE);
+		List<User> foundUsers = userService.findUsersByRole(UserRole.CLIENTE);
 
 		// Assert
 		assertThat(foundUsers).isNotNull();

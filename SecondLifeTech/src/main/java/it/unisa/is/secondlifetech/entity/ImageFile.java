@@ -26,10 +26,14 @@ public class ImageFile {
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] data;
 
-	public ImageFile(String name, String contentType, byte[] data) {
+	@OneToOne(mappedBy = "imageFile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private ProductModel model;
+
+	public ImageFile(String name, String contentType, byte[] data, ProductModel model) {
 		this.name = name;
 		this.contentType = contentType;
 		this.data = data;
+		this.model = model;
 	}
 
 	public String generateBase64Image() {

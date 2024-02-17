@@ -1,6 +1,6 @@
 package it.unisa.is.secondlifetech.repository;
 
-import it.unisa.is.secondlifetech.config.Role;
+import it.unisa.is.secondlifetech.entity.constants.UserRole;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
@@ -45,7 +45,7 @@ public class UserRepositoryTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		User savedUser = userRepository.save(user);
 		User foundUser = userRepository.findById(savedUser.getId()).get();
@@ -64,16 +64,16 @@ public class UserRepositoryTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
-		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, Role.CLIENTE, null);
-		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, Role.GESTORE_PRODOTTI, "");
+		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, UserRole.GESTORE_PRODOTTI, "");
 
 		userRepository.save(user1);
 		userRepository.save(user2);
 		userRepository.save(gestore);
 
 		// Act
-		List<User> foundUsers = userRepository.findByRole(Role.CLIENTE);
+		List<User> foundUsers = userRepository.findByRole(UserRole.CLIENTE);
 
 		// Assert
 		assertThat(foundUsers).isNotNull();
@@ -96,7 +96,7 @@ public class UserRepositoryTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
-		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, Role.CLIENTE, null);
+		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 		userRepository.save(user);
 
 		ShippingAddress shippingAddress1 = ShippingAddress.builder()

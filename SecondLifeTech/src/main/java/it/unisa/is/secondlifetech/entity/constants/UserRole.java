@@ -1,9 +1,9 @@
-package it.unisa.is.secondlifetech.config;
+package it.unisa.is.secondlifetech.entity.constants;
 
 /**
  * Classe contenente i ruoli degli utenti.
  */
-public class Role {
+public class UserRole {
 	public static final String CLIENTE = "ROLE_CLIENTE";
 	public static final String GESTORE_UTENTI = "ROLE_GESTORE_UTENTI";
 	public static final String GESTORE_PRODOTTI = "ROLE_GESTORE_PRODOTTI";

@@ -49,7 +49,7 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne
 	private Cart cart = new Cart(null, 0, this);
 
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
