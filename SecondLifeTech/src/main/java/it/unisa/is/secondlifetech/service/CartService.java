@@ -21,7 +21,7 @@ public interface CartService {
 	 * @param productVariationId l'ID della variante di prodotto da modificare
 	 * @param quantity           la nuova quantità del prodotto
 	 */
-	void modifyProductQuantityInCart(UUID cartId, UUID productVariationId, int quantity);
+	void editProductQuantityInCart(UUID cartId, UUID productVariationId, int quantity);
 
 	/**
 	 * Rimuove un prodotto dal carrello.

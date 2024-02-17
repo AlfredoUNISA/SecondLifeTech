@@ -84,7 +84,5 @@ class CartProductServiceImplTests {
 		variations.add(foundCartProducts.get(1).getProductVariation());
 
 		assertThat(variations).containsOnly(productVariation1, productVariation2);
-
-
 	}
 }

@@ -89,6 +89,8 @@ public class UserRepositoryTests {
 	private PaymentMethodRepository paymentMethodRepository;
 	@Autowired
 	private CartRepository cartRepository;
+	@Autowired
+	private CartProductRepository cartProductRepository;
 
 	@Test
 	public void UserRepository_Save_SetCorrectDependencies() throws ParseException {
