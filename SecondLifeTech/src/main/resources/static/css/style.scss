@@ -1,0 +1,33 @@
+// Custom.scss
+// Option B: Include parts of Bootstrap
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../bootstrap-5.3.2/scss/functions";
+
+// 2. Include any default variable overrides here
+
+
+$--body-bg-dark: #B85A22;
+$--bs-primary: #B85A22; 
+$--bs-body-color: #B85A22;
+$bs-secondary: #2282B9;
+$--link-hover-color: #2282B9;
+$--bs-nav-link-hover-color: #2282B9;
+$--bs-navbar-hover-color: #2282B9;
+$--bs-highlight-color: #2282B9;
+$--bs-emphasis-color: #2282B9;
+$--bs-navbar-hover-color: #2282B9;
+
+
+$primary:       #B85A22;
+$secondary:     #2282B9 ;
+//$success:       $green ;
+//$info:          $cyan ;
+//$warning:       $yellow ;
+//$danger:        $red ;
+//$light:         $gray-100 ;
+//$dark:          $gray-900 ;
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../bootstrap-5.3.2/scss/bootstrap";
+// 5. Add additional custom code here
