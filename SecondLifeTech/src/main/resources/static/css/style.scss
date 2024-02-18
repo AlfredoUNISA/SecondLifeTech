@@ -1,33 +1,26 @@
-// Custom.scss
-// Option B: Include parts of Bootstrap
-
-// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "../bootstrap-5.3.2/scss/functions";
 
-// 2. Include any default variable overrides here
-
-
-$--body-bg-dark: #B85A22;
-$--bs-primary: #B85A22; 
-$--bs-body-color: #B85A22;
-$bs-secondary: #2282B9;
-$--link-hover-color: #2282B9;
-$--bs-nav-link-hover-color: #2282B9;
-$--bs-navbar-hover-color: #2282B9;
-$--bs-highlight-color: #2282B9;
-$--bs-emphasis-color: #2282B9;
-$--bs-navbar-hover-color: #2282B9;
-
-
+// Colori tema
 $primary:       #B85A22;
 $secondary:     #2282B9 ;
-//$success:       $green ;
-//$info:          $cyan ;
-//$warning:       $yellow ;
-//$danger:        $red ;
-//$light:         $gray-100 ;
-//$dark:          $gray-900 ;
+$success:       #198754FF ;
+$info:          #65D7EFFF ;
+$warning:       #C98900FF;
+$danger:        #9F101DFF ;
+$light:         #FFCFB3FF ;
+$dark:          #1A1512FF ;
+//Shading link
+$link-shade-percentage: 1%;
+//Colori Navbar
+$nav-link-color: $primary;
+$navbar-dark-color:                 tint-color($secondary, 90%);
+$navbar-dark-hover-color:           $secondary;
+$navbar-dark-active-color:          $light;
+$navbar-dark-disabled-color:        tint-color($secondary, 25%);
+$navbar-dark-icon-color:            $navbar-dark-color;
+$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-dark-icon-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-dark-toggler-border-color:  tint-color($light, 10%);
+$navbar-dark-brand-color:           $navbar-dark-active-color;
+$navbar-dark-brand-hover-color:     $navbar-dark-active-color;
 
-// 3. Include remainder of required Bootstrap stylesheets
 @import "../bootstrap-5.3.2/scss/bootstrap";
-// 5. Add additional custom code here
