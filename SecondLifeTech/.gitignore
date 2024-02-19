@@ -1,3 +1,9 @@
+# Escludi tutti i backup dei diagrammi di Visual Paradigm
+*.bak_*
+
+# Includi i file dei progetti di Visual Paradigm
+!*.vpp
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
