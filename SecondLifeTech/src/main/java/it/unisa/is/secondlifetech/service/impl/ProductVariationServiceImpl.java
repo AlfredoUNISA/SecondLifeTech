@@ -26,6 +26,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public ProductVariation createNewProductVariation(ProductVariation productVariation) {
+		productVariation.getProductModel().getProductVariations().add(productVariation);
 		return productVariationService.save(productVariation);
 	}
 
@@ -60,6 +61,16 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	@Override
 	public List<ProductVariation> findProductVariationsByState(String state) {
 		return productVariationService.findByState(state);
+	}
+
+	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @return una lista di tutte le varianti di prodotto
+	 */
+	@Override
+	public List<ProductVariation> findAllProductVariations() {
+		return productVariationService.findAll();
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
     <title>Create User</title>
 </head>
 <body>
@@ -24,10 +24,6 @@
         <input type="password" id="password" th:field="*{password}">
     </div>
     <div>
-        <label for="birthDate">Birthday</label>
-        <input type="date" id="birthDate" th:field="*{birthDate}">
-    </div>
-    <div>
         <label for="role">Role</label>
         <select id="role" th:field="*{role}">
             <th:block th:each="role : ${roles}">
@@ -35,12 +31,8 @@
             </th:block>
         </select>
     </div>
-    <div>
-        <label for="phoneNumber">Phone Number</label>
-        <input type="text" id="phoneNumber" th:field="*{phoneNumber}">
-    </div>
 
-    <button type="submit">Create User</button>
+    <button type="submit">Create Product Model</button>
 </form>
 </body>
 </html>

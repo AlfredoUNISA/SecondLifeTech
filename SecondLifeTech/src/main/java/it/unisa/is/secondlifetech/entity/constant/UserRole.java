@@ -22,7 +22,7 @@ public class UserRole {
 	 * @return il nome del ruolo
 	 */
 	public static String getRoleName(String role) {
-		return role.replace("ROLE_", "");
+		return role.replace("ROLE_", "").replace("_", "");
 	}
 
 	/**

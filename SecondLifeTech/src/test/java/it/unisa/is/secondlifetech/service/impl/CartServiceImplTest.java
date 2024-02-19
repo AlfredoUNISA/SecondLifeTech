@@ -7,7 +7,6 @@ import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,10 +28,7 @@ class CartServiceImplTest {
 	private CartRepository cartRepository;
 
 	@Mock
-	private ProductVariationRepository productVariationService;
-
-	@Mock
-	private ProductModelRepository productModelRepository;
+	private ProductVariationRepository productVariationRepository;
 
 	@InjectMocks
 	private CartServiceImpl cartService;
@@ -79,8 +75,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 
 		// Act
@@ -114,12 +110,12 @@ class CartServiceImplTest {
 		Cart cart2 = new Cart();
 
 		ProductModel productModel = new ProductModel(
-			UUID.randomUUID(),
 			"iPhone 11",
 			"Apple",
-			ProductCategory.SMARTPHONE,
-			null
+			ProductCategory.SMARTPHONE
 		);
+		productModel.setId(UUID.randomUUID());
+		productModel.setImageFile(null);
 
 		ProductVariation productVariation1 = new ProductVariation(
 			UUID.randomUUID(),
@@ -152,8 +148,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
@@ -180,12 +176,12 @@ class CartServiceImplTest {
 		Cart cart2 = new Cart();
 
 		ProductModel productModel = new ProductModel(
-			UUID.randomUUID(),
 			"iPhone 11",
 			"Apple",
-			ProductCategory.SMARTPHONE,
-			null
+			ProductCategory.SMARTPHONE
 		);
+		productModel.setId(UUID.randomUUID());
+		productModel.setImageFile(null);
 
 		ProductVariation productVariation1 = new ProductVariation(
 			UUID.randomUUID(),
@@ -218,8 +214,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
@@ -243,12 +239,12 @@ class CartServiceImplTest {
 		Cart cart2 = new Cart();
 
 		ProductModel productModel = new ProductModel(
-			UUID.randomUUID(),
 			"iPhone 11",
 			"Apple",
-			ProductCategory.SMARTPHONE,
-			null
+			ProductCategory.SMARTPHONE
 		);
+		productModel.setId(UUID.randomUUID());
+		productModel.setImageFile(null);
 
 		ProductVariation productVariation1 = new ProductVariation(
 			UUID.randomUUID(),
@@ -281,8 +277,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);

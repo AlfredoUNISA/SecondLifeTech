@@ -10,6 +10,7 @@ import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -35,6 +36,7 @@ public class CartServiceImpl implements CartService {
 	 * @param quantity           la quantità del prodotto da aggiungere
 	 */
 	@Override
+	@Transactional
 	public void addToCart(UUID cartId, UUID productVariationId, int quantity) {
 		// Trova il carrello e la variante di prodotto
 		Cart cart = cartRepository.findById(cartId)
@@ -52,9 +54,8 @@ public class CartServiceImpl implements CartService {
 
 		// Crea un nuovo oggetto CartItem e lo aggiunge al carrello
 		CartItem cartItem = new CartItem(cart, productVariation, quantity, subTotal);
-		cart.getProducts().add(cartItem);
-
 		cartItemService.createNewCartItem(cartItem);
+		cart.getProducts().add(cartItem);
 
 		// Aggiorna il totale del carrello
 		cart.setTotal(cart.getTotal() + subTotal);
@@ -88,14 +89,13 @@ public class CartServiceImpl implements CartService {
 
 				cartItem.setQuantity(newQuantity);
 				cartItem.setSubTotal(newSubTotal);
+				cartItemService.updateCartItem(cartItem.getId(), cartItem);
 
 				cart.setTotal(cart.getTotal() - oldSubTotal + newSubTotal);
+				cartRepository.save(cart);
 				break;
 			}
 		}
-
-		cartRepository.save(cart);
-		//productVariationService.(productVariation);
 	}
 
 	/**

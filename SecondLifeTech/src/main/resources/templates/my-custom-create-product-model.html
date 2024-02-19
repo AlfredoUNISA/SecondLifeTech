@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Create Product Model</title>
+</head>
+<body>
+<form method="post" role="form" enctype="multipart/form-data" th:action="@{/create-product-model-test}" th:object="${productModel}">
+    <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" th:field="*{name}">
+    </div>
+    <div>
+        <label for="brand">Brand</label>
+        <input type="text" id="brand" th:field="*{brand}">
+    </div>
+    <div>
+        <label for="category">Category</label>
+        <select id="category" th:field="*{category}">
+            <th:block th:each="category : ${categories}">
+                <option th:value="${category}" th:text="${category}"></option>
+            </th:block>
+        </select>
+    </div>
+    <div>
+        <label for="image">Image</label>
+        <input type="file" id="image" name="image">
+    </div>
+
+    <button type="submit">Create User</button>
+</form>
+
+</body>
+</html>
