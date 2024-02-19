@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public interface ProductVariationService {
 	/**
-	 * Salva una variante di prodotto nel database.
+	 * Crea una nuova variante di prodotto nel database.
 	 *
-	 * @param productVariation l'oggetto ProductVariation da salvare
-	 * @return l'oggetto ProductVariation salvato
+	 * @param productVariation l'oggetto ProductVariation da creare
+	 * @return l'oggetto ProductVariation creato
 	 */
 	ProductVariation createNewProductVariation(ProductVariation productVariation);
 

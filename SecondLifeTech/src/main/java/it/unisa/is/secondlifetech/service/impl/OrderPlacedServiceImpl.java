@@ -20,10 +20,10 @@ public class OrderPlacedServiceImpl implements OrderPlacedService {
 	}
 
 	/**
-	 * Salva un ordine nel database.
+	 * Crea un nuovo ordine nel database.
 	 *
-	 * @param order l'oggetto OrderPlaced da salvare
-	 * @return l'oggetto OrderPlaced salvato
+	 * @param order l'oggetto OrderPlaced da creare
+	 * @return l'oggetto OrderPlaced creato
 	 */
 	@Override
 	public OrderPlaced createNewOrder(OrderPlaced order) {

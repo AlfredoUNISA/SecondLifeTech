@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ProductVariationRepositoryTests {
+class ProductVariationServiceTests {
 	@Autowired
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationService productVariationService;
 	@Autowired
 	private ProductModelRepository productModelRepository;
 
@@ -68,12 +68,12 @@ class ProductVariationRepositoryTests {
 			productModel
 		);
 
-		productVariationRepository.save(productVariation1);
-		productVariationRepository.save(productVariation2);
-		productVariationRepository.save(productVariation3);
+		productVariationService.save(productVariation1);
+		productVariationService.save(productVariation2);
+		productVariationService.save(productVariation3);
 
 		// Act
-		List<ProductVariation> foundVariations = productVariationRepository.findByState(ProductState.ACCETTABILE);
+		List<ProductVariation> foundVariations = productVariationService.findByState(ProductState.ACCETTABILE);
 
 		// Assert
 		assertThat(foundVariations).isNotNull();
@@ -137,12 +137,12 @@ class ProductVariationRepositoryTests {
 			productModel2
 		);
 
-		productVariationRepository.save(productVariation1);
-		productVariationRepository.save(productVariation2);
-		productVariationRepository.save(productVariation3);
+		productVariationService.save(productVariation1);
+		productVariationService.save(productVariation2);
+		productVariationService.save(productVariation3);
 
 		// Act
-		List<ProductVariation> foundVariations = productVariationRepository.findByProductModelId(productModel1.getId());
+		List<ProductVariation> foundVariations = productVariationService.findByProductModelId(productModel1.getId());
 
 		// Assert
 		assertThat(foundVariations).isNotNull();

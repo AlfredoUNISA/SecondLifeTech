@@ -8,7 +8,7 @@ import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.repository.ProductVariationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ class CartServiceImplTest {
 	private CartRepository cartRepository;
 
 	@Mock
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationService productVariationService;
 
 	@Mock
 	private ProductModelRepository productModelRepository;
@@ -79,8 +79,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 
 		// Act
@@ -152,8 +152,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
@@ -218,8 +218,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
@@ -281,8 +281,8 @@ class CartServiceImplTest {
 
 		when(cartRepository.save(cart2)).thenReturn(cart2);
 
-		when(productVariationRepository.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
-		when(productVariationRepository.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
+		when(productVariationService.findById(productVariation1.getId())).thenReturn(Optional.of(productVariation1));
+		when(productVariationService.findById(productVariation2.getId())).thenReturn(Optional.of(productVariation2));
 
 		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
 		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);

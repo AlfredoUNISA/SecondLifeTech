@@ -22,7 +22,7 @@ class OrderPlacedRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationService productVariationService;
 	@Autowired
 	private OrderPlacedRepository orderRepository;
 	@Autowired
@@ -50,7 +50,7 @@ class OrderPlacedRepositoryTests {
 			"Accettabile",
 			productModel
 		);
-		productVariationRepository.save(productVariation);
+		productVariationService.save(productVariation);
 
 		User user = new User(
 			"Mario",
@@ -129,7 +129,7 @@ class OrderPlacedRepositoryTests {
 			"Accettabile",
 			productModel
 		);
-		productVariationRepository.save(productVariation);
+		productVariationService.save(productVariation);
 
 		User user = new User(
 			"Mario",
@@ -208,7 +208,7 @@ class OrderPlacedRepositoryTests {
 			"Accettabile",
 			productModel
 		);
-		productVariationRepository.save(productVariation);
+		productVariationService.save(productVariation);
 
 		User user = new User(
 			"Mario",

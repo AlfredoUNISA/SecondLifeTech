@@ -8,11 +8,33 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ImageFileService {
+	/**
+	 * Crea un nuovo file immagine
+	 * @param file file da creare
+	 * @return file immagine creato
+	 * @throws IOException se si verifica un errore durante la creazione del file
+	 */
 	ImageFile createNewImage(MultipartFile file) throws IOException;
 
-	ImageFile findById(UUID id) throws Exception;
+	/**
+	 * Trova un file immagine per id
+	 * @param id id del file immagine
+	 * @return file immagine
+	 */
+	ImageFile findById(UUID id);
 
-	List<ImageFile> findAll();
+	/**
+	 * Aggiorna un file immagine
+	 * @param id id del file immagine
+	 * @param imageFile file immagine
+	 * @return file immagine aggiornato
+	 */
+	ImageFile updateImage(UUID id, ImageFile imageFile);
+
+	/**
+	 * Elimina un file immagine per id
+	 * @param id id del file immagine
+	 */
 	void deleteById(UUID id);
 }
 

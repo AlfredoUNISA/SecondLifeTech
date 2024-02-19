@@ -4,7 +4,7 @@ import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.repository.ProductVariationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 class ProductVariationServiceImplTests {
 
 	@Mock
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationService productVariationService;
 
 	@InjectMocks
 	private ProductVariationServiceImpl productVariationService;
@@ -70,7 +70,7 @@ class ProductVariationServiceImplTests {
 			productModel
 		);
 
-		when(productVariationRepository.findByState(ProductState.ACCETTABILE)).thenReturn(List.of(productVariation1, productVariation2));
+		when(productVariationService.findByState(ProductState.ACCETTABILE)).thenReturn(List.of(productVariation1, productVariation2));
 
 		// Act
 		List<ProductVariation> foundVariations = productVariationService.findProductVariationsByState(ProductState.ACCETTABILE);
@@ -134,10 +134,10 @@ class ProductVariationServiceImplTests {
 			productModel2
 		);
 
-		when(productVariationRepository.findByProductModelId(productModel1.getId())).thenReturn(List.of(productVariation1, productVariation2));
+		when(productVariationService.findByProductModelId(productModel1.getId())).thenReturn(List.of(productVariation1, productVariation2));
 
 		// Act
-		List<ProductVariation> foundVariations = productVariationRepository.findByProductModelId(productModel1.getId());
+		List<ProductVariation> foundVariations = productVariationService.findByProductModelId(productModel1.getId());
 
 		// Assert
 		assertThat(foundVariations).isNotNull();

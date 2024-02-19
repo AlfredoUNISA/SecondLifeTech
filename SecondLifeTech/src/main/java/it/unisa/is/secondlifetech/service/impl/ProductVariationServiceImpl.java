@@ -1,8 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
-import it.unisa.is.secondlifetech.service.ProductVariationService;
+import it.unisa.is.secondlifetech.repository.ProductVariationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,23 +9,23 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProductVariationServiceImpl implements ProductVariationService {
-	private final ProductVariationRepository productVariationRepository;
+public class ProductVariationServiceImpl implements it.unisa.is.secondlifetech.service.ProductVariationService {
+	private final ProductVariationService productVariationService;
 
 	@Autowired
-	public ProductVariationServiceImpl(ProductVariationRepository productVariationRepository) {
-		this.productVariationRepository = productVariationRepository;
+	public ProductVariationServiceImpl(ProductVariationService productVariationService) {
+		this.productVariationService = productVariationService;
 	}
 
 	/**
-	 * Salva una variante di prodotto nel database.
+	 * Crea una nuova variante di prodotto nel database.
 	 *
-	 * @param productVariation l'oggetto ProductVariation da salvare
-	 * @return l'oggetto ProductVariation salvato
+	 * @param productVariation l'oggetto ProductVariation da creare
+	 * @return l'oggetto ProductVariation creato
 	 */
 	@Override
 	public ProductVariation createNewProductVariation(ProductVariation productVariation) {
-		return productVariationRepository.save(productVariation);
+		return productVariationService.save(productVariation);
 	}
 
 	/**
@@ -37,7 +36,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public ProductVariation findProductVariationById(UUID id) {
-		return productVariationRepository.findById(id).orElse(null);
+		return productVariationService.findById(id).orElse(null);
 	}
 
 	/**
@@ -48,7 +47,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public List<ProductVariation> findProductVariationsByProductModelId(UUID productId) {
-		return productVariationRepository.findByProductModelId(productId);
+		return productVariationService.findByProductModelId(productId);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public List<ProductVariation> findProductVariationsByState(String state) {
-		return productVariationRepository.findByState(state);
+		return productVariationService.findByState(state);
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	@Override
 	public ProductVariation updateProductVariation(UUID id, ProductVariation productVariation) {
 		productVariation.setId(id);
-		return productVariationRepository.save(productVariation);
+		return productVariationService.save(productVariation);
 	}
 
 	/**
@@ -82,6 +81,6 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public void deleteProductVariation(UUID id) {
-		productVariationRepository.deleteById(id);
+		productVariationService.deleteById(id);
 	}
 }

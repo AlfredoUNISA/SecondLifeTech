@@ -22,10 +22,10 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 	}
 
 	/**
-	 * Salva un indirizzo di spedizione nel database.
+	 * Crea un nuovo indirizzo di spedizione nel database.
 	 *
-	 * @param shippingAddress l'oggetto ShippingAddress da salvare
-	 * @return l'oggetto ShippingAddress salvato
+	 * @param shippingAddress l'oggetto ShippingAddress da creare
+	 * @return l'oggetto ShippingAddress creato
 	 */
 	@Override
 	public ShippingAddress createNewShippingAddress(ShippingAddress shippingAddress) {

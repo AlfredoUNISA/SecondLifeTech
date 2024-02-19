@@ -20,10 +20,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	}
 
 	/**
-	 * Salva un metodo di pagamento nel database.
+	 * Crea un nuovo metodo di pagamento nel database.
 	 *
-	 * @param paymentMethod l'oggetto PaymentMethod da salvare
-	 * @return l'oggetto PaymentMethod salvato
+	 * @param paymentMethod l'oggetto PaymentMethod da creare
+	 * @return l'oggetto PaymentMethod creato
 	 */
 	@Override
 	public PaymentMethod createNewPaymentMethod(PaymentMethod paymentMethod) {

@@ -19,10 +19,10 @@ public class ProductModelServiceImpl implements ProductModelService {
 	}
 
 	/**
-	 * Salva un modello di prodotto nel database.
+	 * Crea un nuovo modello di prodotto nel database.
 	 *
-	 * @param productModel l'oggetto ProductModel da salvare
-	 * @return l'oggetto ProductModel salvato
+	 * @param productModel l'oggetto ProductModel da creare
+	 * @return l'oggetto ProductModel creato
 	 */
 	@Override
 	public ProductModel createNewProductModel(ProductModel productModel) {

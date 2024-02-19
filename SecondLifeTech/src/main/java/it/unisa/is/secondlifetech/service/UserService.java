@@ -10,10 +10,10 @@ import java.util.UUID;
  */
 public interface UserService {
 	/**
-	 * Salva un utente nel database.
+	 * Crea un nuovo utente nel database.
 	 *
-	 * @param user l'oggetto User da salvare
-	 * @return l'oggetto User salvato
+	 * @param user l'oggetto User da creare
+	 * @return l'oggetto User creato
 	 */
 	User createNewUser(User user);
 

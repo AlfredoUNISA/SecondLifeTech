@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public interface PaymentMethodService {
 	/**
-	 * Salva un metodo di pagamento nel database.
+	 * Crea un nuovo metodo di pagamento nel database.
 	 *
-	 * @param paymentMethod l'oggetto PaymentMethod da salvare
-	 * @return l'oggetto PaymentMethod salvato
+	 * @param paymentMethod l'oggetto PaymentMethod da creare
+	 * @return l'oggetto PaymentMethod creato
 	 */
 	PaymentMethod createNewPaymentMethod(PaymentMethod paymentMethod);
 
@@ -24,6 +24,7 @@ public interface PaymentMethodService {
 
 	/**
 	 * Ottiene tutti i metodi di pagamento di un utente dal database tramite l'ID dell'utente.
+	 *
 	 * @param userId l'ID dell'utente di cui cercare i metodi di pagamento
 	 * @return una lista di oggetti PaymentMethod corrispondenti all'ID specificato
 	 */
