@@ -19,7 +19,7 @@ class ProductModelRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationService productVariationService;
+	private ProductVariationRepository productVariationService;
 
 	@Test
 	void ProductModelRepository_FindByName_ReturnCorrectProductModel() {

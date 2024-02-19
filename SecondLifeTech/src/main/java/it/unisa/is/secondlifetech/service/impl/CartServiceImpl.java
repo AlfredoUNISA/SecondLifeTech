@@ -4,10 +4,10 @@ import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationService;
+import it.unisa.is.secondlifetech.service.CartItemService;
 import it.unisa.is.secondlifetech.service.CartService;
+import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,13 @@ public class CartServiceImpl implements CartService {
 
 	private final CartRepository cartRepository;
 	private final ProductVariationService productVariationService;
-	private final CartItemRepository cartItemRepository;
+	private final CartItemService cartItemService;
 
 	@Autowired
-	public CartServiceImpl(CartRepository cartRepository, ProductVariationService productVariationService, CartItemRepository cartItemRepository) {
+	public CartServiceImpl(CartRepository cartRepository, ProductVariationService productVariationService, CartItemService cartItemService) {
 		this.cartRepository = cartRepository;
 		this.productVariationService = productVariationService;
-		this.cartItemRepository = cartItemRepository;
+		this.cartItemService = cartItemService;
 	}
 
 	/**
@@ -36,11 +36,11 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public void addToCart(UUID cartId, UUID productVariationId, int quantity) {
+		// Trova il carrello e la variante di prodotto
 		Cart cart = cartRepository.findById(cartId)
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
-		ProductVariation productVariation = productVariationService.findById(productVariationId)
-			.orElseThrow(() -> new RuntimeException("Variazione del prodotto non trovata"));
+		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
 
 		// Verifica che la quantità richiesta sia disponibile nell'inventario
 		if (productVariation.getQuantityInStock() < quantity) {
@@ -54,12 +54,13 @@ public class CartServiceImpl implements CartService {
 		CartItem cartItem = new CartItem(cart, productVariation, quantity, subTotal);
 		cart.getProducts().add(cartItem);
 
+		cartItemService.createNewCartItem(cartItem);
+
 		// Aggiorna il totale del carrello
 		cart.setTotal(cart.getTotal() + subTotal);
 
 		// Salva le modifiche
 		cartRepository.save(cart);
-		productVariationService.save(productVariation);
 	}
 
 	/**
@@ -74,8 +75,7 @@ public class CartServiceImpl implements CartService {
 		Cart cart = cartRepository.findById(cartId)
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
-		ProductVariation productVariation = productVariationService.findById(productVariationId)
-			.orElseThrow(() -> new RuntimeException("Variazione del prodotto non trovata"));
+		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
 
 		if (productVariation.getQuantityInStock() < newQuantity) {
 			throw new RuntimeException("Quantità non disponibile nell'inventario");
@@ -95,7 +95,7 @@ public class CartServiceImpl implements CartService {
 		}
 
 		cartRepository.save(cart);
-		productVariationService.save(productVariation);
+		//productVariationService.(productVariation);
 	}
 
 	/**

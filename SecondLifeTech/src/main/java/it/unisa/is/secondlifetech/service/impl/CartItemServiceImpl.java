@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Implementazione del servizio per la gestione dei prodotti di un carrello.
+ */
 @Service
 public class CartItemServiceImpl implements CartItemService {
 	private final CartItemRepository cartItemRepository;

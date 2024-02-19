@@ -1,7 +1,8 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.repository.ProductVariationService;
+import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProductVariationServiceImpl implements it.unisa.is.secondlifetech.service.ProductVariationService {
-	private final ProductVariationService productVariationService;
+public class ProductVariationServiceImpl implements ProductVariationService {
+	private final ProductVariationRepository productVariationService;
 
 	@Autowired
-	public ProductVariationServiceImpl(ProductVariationService productVariationService) {
+	public ProductVariationServiceImpl(ProductVariationRepository productVariationService) {
 		this.productVariationService = productVariationService;
 	}
 

@@ -24,4 +24,14 @@ public class UserRole {
 	public static String getRoleName(String role) {
 		return role.replace("ROLE_", "");
 	}
+
+	/**
+	 * Restituisce il ruolo con il prefisso "ROLE_".
+	 *
+	 * @param roleName il nome del ruolo da cui ottenere il ruolo
+	 * @return il ruolo
+	 */
+	public static String getRole(String roleName) {
+		return "ROLE_" + roleName;
+	}
 }

@@ -26,7 +26,7 @@ class CartItemRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationService productVariationService;
+	private ProductVariationRepository productVariationService;
 
 	@Test
 	void CartProductRepository_FindByCartId_ReturnCorrectList() {

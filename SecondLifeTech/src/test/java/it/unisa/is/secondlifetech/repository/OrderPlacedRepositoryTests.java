@@ -22,7 +22,7 @@ class OrderPlacedRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationService productVariationService;
+	private ProductVariationRepository productVariationService;
 	@Autowired
 	private OrderPlacedRepository orderRepository;
 	@Autowired

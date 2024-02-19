@@ -8,7 +8,7 @@ import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationService;
+import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ class CartServiceImplTest {
 	private CartRepository cartRepository;
 
 	@Mock
-	private ProductVariationService productVariationService;
+	private ProductVariationRepository productVariationService;
 
 	@Mock
 	private ProductModelRepository productModelRepository;

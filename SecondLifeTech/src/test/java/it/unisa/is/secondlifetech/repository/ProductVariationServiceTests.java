@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductVariationServiceTests {
 	@Autowired
-	private ProductVariationService productVariationService;
+	private ProductVariationRepository productVariationService;
 	@Autowired
 	private ProductModelRepository productModelRepository;
 
