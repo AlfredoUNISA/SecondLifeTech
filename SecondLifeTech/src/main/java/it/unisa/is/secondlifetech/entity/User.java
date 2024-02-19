@@ -18,7 +18,6 @@ import java.util.UUID;
 @Entity
 @ToString
 public class User {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
@@ -50,7 +49,11 @@ public class User {
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 	@OneToOne
+	// TODO: cambiare il comportamento in modo che non venga creato un carrello per ogni utente
 	private Cart cart = new Cart(0, this);
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private List<OrderPlaced> ordersPlaced = new ArrayList<>();
 
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;
