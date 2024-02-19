@@ -22,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryTests {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private CartRepository cartRepository;
 
 	@Test
 	public void UserRepository_FindByEmail_ReturnCorrectEmail() throws ParseException {
@@ -30,6 +32,7 @@ public class UserRepositoryTests {
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, "CLIENTE", null);
 		User savedUser = userRepository.save(user);
+		cartRepository.save(user.getCart());
 
 		// Act
 		User foundUser = userRepository.findByEmail(savedUser.getEmail()).get();
@@ -69,8 +72,11 @@ public class UserRepositoryTests {
 		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, UserRole.GESTORE_PRODOTTI, "");
 
 		userRepository.save(user1);
+		cartRepository.save(user1.getCart());
 		userRepository.save(user2);
+		cartRepository.save(user2.getCart());
 		userRepository.save(gestore);
+		cartRepository.save(gestore.getCart());
 
 		// Act
 		List<User> foundUsers = userRepository.findByRole(UserRole.CLIENTE);
@@ -80,7 +86,6 @@ public class UserRepositoryTests {
 		assertThat(foundUsers.size()).isEqualTo(2);
 		assertThat(foundUsers).containsOnly(user1, user2);
 		assertThat(foundUsers).doesNotContain(gestore);
-
 	}
 
 	@Autowired
@@ -88,9 +93,7 @@ public class UserRepositoryTests {
 	@Autowired
 	private PaymentMethodRepository paymentMethodRepository;
 	@Autowired
-	private CartRepository cartRepository;
-	@Autowired
-	private CartProductRepository cartProductRepository;
+	private CartItemRepository cartItemRepository;
 
 	@Test
 	public void UserRepository_Save_SetCorrectDependencies() throws ParseException {
@@ -100,6 +103,7 @@ public class UserRepositoryTests {
 
 		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 		userRepository.save(user);
+		cartRepository.save(user.getCart());
 
 		ShippingAddress shippingAddress1 = ShippingAddress.builder()
 			.street("Street1")

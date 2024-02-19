@@ -1,7 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.CartProduct;
+import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
@@ -9,15 +9,11 @@ import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
-import it.unisa.is.secondlifetech.service.CartService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +93,7 @@ class CartServiceImplTest {
 		assertThat(foundCart).isNotNull();
 		assertThat(foundCart.getProducts().size()).isEqualTo(2);
 
-		List<CartProduct> products = foundCart.getProducts();
+		List<CartItem> products = foundCart.getProducts();
 		products.forEach(cartProduct -> {
 			assertThat(cartProduct.getCart()).isEqualTo(foundCart);
 			assertThat(cartProduct.getQuantity()).isEqualTo(1);

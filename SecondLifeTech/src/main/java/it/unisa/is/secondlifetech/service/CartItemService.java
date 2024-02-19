@@ -1,43 +1,43 @@
 package it.unisa.is.secondlifetech.service;
 
-import it.unisa.is.secondlifetech.entity.CartProduct;
+import it.unisa.is.secondlifetech.entity.CartItem;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface CartProductService {
+public interface CartItemService {
 	/**
 	 * Salva un prodotto nel carrello nel database.
 	 *
-	 * @param cartProduct l'oggetto CartProduct da salvare
-	 * @return l'oggetto CartProduct salvato
+	 * @param cartItem l'oggetto CartItem da salvare
+	 * @return l'oggetto CartItem salvato
 	 */
-	CartProduct saveCartProduct(CartProduct cartProduct);
+	CartItem saveCartProduct(CartItem cartItem);
 
 	/**
 	 * Ottiene un prodotto nel carrello dal database tramite l'ID.
 	 *
 	 * @param id l'ID del prodotto nel carrello da cercare
-	 * @return l'oggetto CartProduct corrispondente all'ID specificato, o null se non trovato
+	 * @return l'oggetto CartItem corrispondente all'ID specificato, o null se non trovato
 	 */
-	CartProduct findCartProductById(UUID id);
+	CartItem findCartProductById(UUID id);
 
 	/**
 	 * Ottiene tutti i prodotti nel carrello dal database tramite l'ID del carrello.
 	 *
 	 * @param cartId l'ID del carrello di cui cercare i prodotti
-	 * @return una lista di oggetti CartProduct corrispondenti all'ID specificato
+	 * @return una lista di oggetti CartItem corrispondenti all'ID specificato
 	 */
-	List<CartProduct> findCartProductsByCart(UUID cartId);
+	List<CartItem> findCartProductsByCart(UUID cartId);
 
 	/**
 	 * Aggiorna le informazioni di un prodotto nel carrello nel database.
 	 *
 	 * @param id          l'ID del prodotto nel carrello da aggiornare
-	 * @param cartProduct l'oggetto CartProduct con le nuove informazioni da salvare
-	 * @return l'oggetto CartProduct aggiornato
+	 * @param cartItem l'oggetto CartItem con le nuove informazioni da salvare
+	 * @return l'oggetto CartItem aggiornato
 	 */
-	CartProduct updateCartProduct(UUID id, CartProduct cartProduct);
+	CartItem updateCartProduct(UUID id, CartItem cartItem);
 
 	/**
 	 * Elimina un prodotto nel carrello dal database tramite l'ID.

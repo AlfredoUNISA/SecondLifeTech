@@ -1,12 +1,11 @@
 package it.unisa.is.secondlifetech.controller;
 
 import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.CartProduct;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.repository.CartProductRepository;
+import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
@@ -17,22 +16,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 @Slf4j
 @RequestMapping("/")
 public class GeneralController {
 	private final CartRepository cartRepository;
-	private final CartProductRepository cartProductRepository;
+	private final CartItemRepository cartItemRepository;
 	private final ProductModelRepository productModelRepository;
 	private final ProductVariationRepository productVariationRepository;
 	private final CartService cartService;
 
 	@Autowired
-	public GeneralController(CartRepository cartRepository, CartProductRepository cartProductRepository, ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, CartService cartService) {
+	public GeneralController(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, CartService cartService) {
 		this.cartRepository = cartRepository;
-		this.cartProductRepository = cartProductRepository;
+		this.cartItemRepository = cartItemRepository;
 		this.productModelRepository = productModelRepository;
 		this.productVariationRepository = productVariationRepository;
 		this.cartService = cartService;

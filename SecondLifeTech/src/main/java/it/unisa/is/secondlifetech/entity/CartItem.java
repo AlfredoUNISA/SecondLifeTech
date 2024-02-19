@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-public class CartProduct {
+public class CartItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
@@ -29,7 +29,7 @@ public class CartProduct {
 
 	private double subTotal;
 
-	public CartProduct(Cart cart, ProductVariation productVariation, int quantity, double subTotal) {
+	public CartItem(Cart cart, ProductVariation productVariation, int quantity, double subTotal) {
 		this.cart = cart;
 		this.productVariation = productVariation;
 		this.quantity = quantity;

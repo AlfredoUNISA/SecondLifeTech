@@ -21,6 +21,8 @@ class ShippingAddressRepositoryTests {
 	@Autowired
 	private ShippingAddressRepository shippingAddressRepository;
 	@Autowired
+	private CartRepository cartRepository;
+	@Autowired
 	private UserRepository userRepository;
 
 	@Test
@@ -34,7 +36,9 @@ class ShippingAddressRepositoryTests {
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		userRepository.save(user1);
+		cartRepository.save(user1.getCart());
 		userRepository.save(user2);
+		cartRepository.save(user2.getCart());
 
 		ShippingAddress shippingAddress1 = ShippingAddress.builder()
 			.user(user1)

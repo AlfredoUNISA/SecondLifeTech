@@ -34,7 +34,9 @@ class CartRepositoryTests {
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		userRepository.save(user1);
+		cartRepository.save(user1.getCart());
 		userRepository.save(user2);
+		cartRepository.save(user2.getCart());
 
 		// Act
 		Cart editedByList = user1.getCart();

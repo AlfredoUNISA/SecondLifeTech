@@ -1,7 +1,7 @@
 package it.unisa.is.secondlifetech.repository;
 
 import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.CartProduct;
+import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
@@ -18,11 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CartProductRepositoryTests {
+class CartItemRepositoryTests {
 	@Autowired
 	private CartRepository cartRepository;
 	@Autowired
-	private CartProductRepository cartProductRepository;
+	private CartItemRepository cartItemRepository;
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
@@ -70,26 +70,26 @@ class CartProductRepositoryTests {
 		);
 		productVariationRepository.save(productVariation2);
 
-		CartProduct cartProduct1 = new CartProduct(cart1, productVariation1, 1, productVariation1.getPrice());
-		CartProduct cartProduct2 = new CartProduct(cart1, productVariation2, 2, productVariation1.getPrice()*2);
-		CartProduct cartProduct3 = new CartProduct(cart2, productVariation1, 1, productVariation2.getPrice());
+		CartItem cartItem1 = new CartItem(cart1, productVariation1, 1, productVariation1.getPrice());
+		CartItem cartItem2 = new CartItem(cart1, productVariation2, 2, productVariation1.getPrice()*2);
+		CartItem cartItem3 = new CartItem(cart2, productVariation1, 1, productVariation2.getPrice());
 
-		cartProductRepository.save(cartProduct1);
-		cartProductRepository.save(cartProduct2);
-		cartProductRepository.save(cartProduct3);
+		cartItemRepository.save(cartItem1);
+		cartItemRepository.save(cartItem2);
+		cartItemRepository.save(cartItem3);
 
 		// Act
-		List<CartProduct> foundCartProducts = cartProductRepository.findByCartId(cart1.getId());
+		List<CartItem> foundCartItems = cartItemRepository.findByCartId(cart1.getId());
 
 		// Assert
-		assertThat(foundCartProducts).isNotNull();
-		assertThat(foundCartProducts.size()).isEqualTo(2);
-		assertThat(foundCartProducts.get(0).getCart()).isEqualTo(cart1);
-		assertThat(foundCartProducts.get(1).getCart()).isEqualTo(cart1);
+		assertThat(foundCartItems).isNotNull();
+		assertThat(foundCartItems.size()).isEqualTo(2);
+		assertThat(foundCartItems.get(0).getCart()).isEqualTo(cart1);
+		assertThat(foundCartItems.get(1).getCart()).isEqualTo(cart1);
 
 		List<ProductVariation> variations = new ArrayList<>();
-		variations.add(foundCartProducts.get(0).getProductVariation());
-		variations.add(foundCartProducts.get(1).getProductVariation());
+		variations.add(foundCartItems.get(0).getProductVariation());
+		variations.add(foundCartItems.get(1).getProductVariation());
 
 		assertThat(variations).containsOnly(productVariation1, productVariation2);
 	}

@@ -1,16 +1,15 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.CartProduct;
+import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.repository.CartProductRepository;
+import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import it.unisa.is.secondlifetech.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,13 +17,13 @@ public class CartServiceImpl implements CartService {
 
 	private final CartRepository cartRepository;
 	private final ProductVariationRepository productVariationRepository;
-	private final CartProductRepository cartProductRepository;
+	private final CartItemRepository cartItemRepository;
 
 	@Autowired
-	public CartServiceImpl(CartRepository cartRepository, ProductVariationRepository productVariationRepository, CartProductRepository cartProductRepository) {
+	public CartServiceImpl(CartRepository cartRepository, ProductVariationRepository productVariationRepository, CartItemRepository cartItemRepository) {
 		this.cartRepository = cartRepository;
 		this.productVariationRepository = productVariationRepository;
-		this.cartProductRepository = cartProductRepository;
+		this.cartItemRepository = cartItemRepository;
 	}
 
 	/**
@@ -49,9 +48,9 @@ public class CartServiceImpl implements CartService {
 
 		double subTotal = productVariation.getPrice() * quantity;
 
-		CartProduct cartProduct = new CartProduct(cart, productVariation, quantity, subTotal);
+		CartItem cartItem = new CartItem(cart, productVariation, quantity, subTotal);
 
-		cart.getProducts().add(cartProduct);
+		cart.getProducts().add(cartItem);
 
 		// Aggiorna il totale del carrello
 		cart.setTotal(cart.getTotal() + subTotal);
@@ -82,13 +81,13 @@ public class CartServiceImpl implements CartService {
 			throw new RuntimeException("Quantità non disponibile nell'inventario");
 		}
 
-		for (CartProduct cartProduct : cart.getProducts()) {
-			if (cartProduct.getProductVariation().getId().equals(productVariationId)) {
-				double oldSubTotal = cartProduct.getSubTotal();
+		for (CartItem cartItem : cart.getProducts()) {
+			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
+				double oldSubTotal = cartItem.getSubTotal();
 				double newSubTotal = productVariation.getPrice() * newQuantity;
 
-				cartProduct.setQuantity(newQuantity);
-				cartProduct.setSubTotal(newSubTotal);
+				cartItem.setQuantity(newQuantity);
+				cartItem.setSubTotal(newSubTotal);
 
 				cart.setTotal(cart.getTotal() - oldSubTotal + newSubTotal);
 				break;
@@ -110,10 +109,10 @@ public class CartServiceImpl implements CartService {
 		Cart cart = cartRepository.findById(cartId)
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
-		for (CartProduct cartProduct : cart.getProducts()) {
-			if (cartProduct.getProductVariation().getId().equals(productVariationId)) {
-				cart.setTotal(cart.getTotal() - cartProduct.getSubTotal());
-				cart.getProducts().remove(cartProduct);
+		for (CartItem cartItem : cart.getProducts()) {
+			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
+				cart.setTotal(cart.getTotal() - cartItem.getSubTotal());
+				cart.getProducts().remove(cartItem);
 				break;
 			}
 		}

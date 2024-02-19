@@ -20,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PaymentMethodRepositoryTests {
 	@Autowired
 	private PaymentMethodRepository paymentMethodRepository;
-
+	@Autowired
+	private CartRepository cartRepository;
 	@Autowired
 	private UserRepository userRepository;
 
@@ -35,7 +36,9 @@ class PaymentMethodRepositoryTests {
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
 
 		userRepository.save(user1);
+		cartRepository.save(user1.getCart());
 		userRepository.save(user2);
+		cartRepository.save(user2.getCart());
 
 		PaymentMethod paymentMethod1 = PaymentMethod.builder()
 			.user(user1)
