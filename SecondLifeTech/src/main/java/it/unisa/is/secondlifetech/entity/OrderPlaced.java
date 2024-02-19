@@ -27,7 +27,7 @@ public class OrderPlaced {
 	@Column(nullable = false)
 	private double total;
 	@Column(nullable = false)
-	private boolean isShipped;
+	private boolean shipped;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderItem> orderItems;
@@ -36,11 +36,12 @@ public class OrderPlaced {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	public OrderPlaced(String address, String email, Date orderDate, double total, boolean isShipped) {
+	public OrderPlaced(String address, String email, Date orderDate, double total, boolean isShipped, User user) {
 		this.address = address;
 		this.email = email;
 		this.orderDate = orderDate;
 		this.total = total;
-		this.isShipped = isShipped;
+		this.shipped = isShipped;
+		this.user = user;
 	}
 }

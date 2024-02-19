@@ -3,7 +3,6 @@ package it.unisa.is.secondlifetech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -41,4 +40,26 @@ public class OrderItem {
 	private String storageSize;
 	private String color;
 	private String state;
+
+	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced order, ProductVariation productVariation) {
+		this.quantityOrdered = quantityOrdered;
+		this.subTotal = subTotal;
+		this.order = order;
+		this.productVariation = productVariation;
+	}
+
+	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced order, String modelName, String brand, String category, String year, String ram, String displaySize, String storageSize, String color, String state) {
+		this.quantityOrdered = quantityOrdered;
+		this.subTotal = subTotal;
+		this.order = order;
+		this.modelName = modelName;
+		this.brand = brand;
+		this.category = category;
+		this.year = year;
+		this.ram = ram;
+		this.displaySize = displaySize;
+		this.storageSize = storageSize;
+		this.color = color;
+		this.state = state;
+	}
 }
