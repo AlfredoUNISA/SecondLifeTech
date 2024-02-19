@@ -38,8 +38,9 @@ public class GeneralController {
 	}
 
 	@GetMapping
-	public String index() {
-		return "my-custom-index";
+	public String index(Model model) {
+		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
+		return "index";
 	}
 
 	@GetMapping("/create-user-test")
@@ -47,7 +48,7 @@ public class GeneralController {
 		User user = new User();
 		model.addAttribute("user", user);
 		model.addAttribute("roles", UserRole.ALL_ROLES);
-		return "my-custom-create-user";
+		return "create-user-test";
 	}
 
 	@PostMapping("/create-user-test")
@@ -62,7 +63,7 @@ public class GeneralController {
 		ProductModel productModel = new ProductModel();
 		model.addAttribute("productModel", productModel);
 		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
-		return "my-custom-create-product-model";
+		return "create-product-model-test";
 	}
 
 	@PostMapping("/create-product-model-test")
@@ -79,7 +80,7 @@ public class GeneralController {
 		model.addAttribute("productVariation", productVariation);
 		model.addAttribute("states", ProductState.ALL_STATES);
 		model.addAttribute("productModels", productModelService.findAllProductModels());
-		return "my-custom-create-product-variation";
+		return "create-product-variation-test";
 	}
 
 	@PostMapping("/create-product-variation-test")
@@ -92,16 +93,32 @@ public class GeneralController {
 
 	@GetMapping("/add-to-cart-test")
 	public String addToCart(Model model) {
-		model.addAttribute("users", userService.findAllUsers());
+		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		model.addAttribute("productVariations", productVariationService.findAllProductVariations());
-		return "my-custom-add-to-cart";
+		return "add-to-cart-test";
 	}
 
 	@PostMapping("/add-to-cart-test")
-	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId) {
+	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
 		Cart cart = cartService.findCartByUser(userId);
-		cartService.addToCart(cart.getId(), productVariationId, 1);
+		cartService.addToCart(cart.getId(), productVariationId, quantity);
 		return "redirect:/";
+	}
+
+	@GetMapping("/view-cart-test")
+	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
+		Cart cart = cartService.findCartByUser(userId);
+		User user = userService.findUserById(userId);
+		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
+		model.addAttribute("cart", cart);
+		return "view-cart-test";
+	}
+
+	@GetMapping("/view-product-variations")
+	public String viewProductVariations(Model model) {
+		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
+		model.addAttribute("variations", productVariationService.findAllProductVariations());
+		return "view-product-variations-test";
 	}
 
 

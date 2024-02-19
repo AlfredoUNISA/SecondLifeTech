@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Index</title>
+    <style>
+        form {
+            display: flex;
+            flex-direction: row;
+        }
+        label, input {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h1>Index</h1>
+<ul>
+    <li>
+        <a href="/create-user-test">Create User</a><br/>
+    </li>
+    <li>
+        <a href="/create-product-model-test">Create Product Model</a><br/>
+    </li>
+    <li>
+        <a href="/create-product-variation-test">Create Product Variation</a><br/>
+    </li>
+    <li>
+        <a href="/add-to-cart-test">Add to cart</a><br/>
+    </li>
+    <li>
+        <a href="/view-product-variations">View products</a><br/>
+    </li>
+    <li>
+        View the cart of
+        <form method="get" role="form" th:action="@{/view-cart-test}">
+            <select id="usersSelect" name="userId">
+                <th:block th:each="user : ${users}">
+                    <option th:text="${user.firstName} + ' ' + ${user.lastName}" th:value="${user.id}"></option>
+                </th:block>
+            </select>
+            <button type="submit">View Cart</button>
+        </form>
+    </li>
+</ul>
+</body>
+</html>
