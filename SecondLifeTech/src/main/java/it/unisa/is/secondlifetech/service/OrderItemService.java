@@ -11,7 +11,7 @@ public interface OrderItemService {
 	 * @param orderItem l'oggetto OrderItem da salvare
 	 * @return l'oggetto OrderItem salvato
 	 */
-	OrderItem saveOrderItem(OrderItem orderItem);
+	OrderItem createNewOrderItem(OrderItem orderItem);
 
 	/**
 	 * Ottiene un prodotto nell'ordine dal database tramite l'ID.

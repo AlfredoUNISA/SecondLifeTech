@@ -25,7 +25,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	 * @return l'oggetto OrderItem salvato
 	 */
 	@Override
-	public OrderItem saveOrderItem(OrderItem orderItem) {
+	public OrderItem createNewOrderItem(OrderItem orderItem) {
 		return orderItemRepository.save(orderItem);
 	}
 

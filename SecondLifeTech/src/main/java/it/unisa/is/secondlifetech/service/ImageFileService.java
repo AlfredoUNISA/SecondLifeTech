@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ImageFileService {
-	ImageFile saveImage(MultipartFile file) throws IOException;
+	ImageFile createNewImage(MultipartFile file) throws IOException;
 
 	ImageFile findById(UUID id) throws Exception;
 

@@ -25,7 +25,7 @@ public class CartItemServiceImpl implements CartItemService {
 	 * @return l'oggetto CartItem salvato
 	 */
 	@Override
-	public CartItem saveCartProduct(CartItem cartItem) {
+	public CartItem createNewCartProduct(CartItem cartItem) {
 		return cartItemRepository.save(cartItem);
 	}
 

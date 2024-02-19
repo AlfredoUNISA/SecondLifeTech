@@ -15,7 +15,7 @@ public interface UserService {
 	 * @param user l'oggetto User da salvare
 	 * @return l'oggetto User salvato
 	 */
-	User saveUser(User user);
+	User createNewUser(User user);
 
 	/**
 	 * Ottiene un utente dal database tramite l'ID.

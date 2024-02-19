@@ -25,7 +25,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 * @return l'oggetto ProductVariation salvato
 	 */
 	@Override
-	public ProductVariation saveProductVariation(ProductVariation productVariation) {
+	public ProductVariation createNewProductVariation(ProductVariation productVariation) {
 		return productVariationRepository.save(productVariation);
 	}
 

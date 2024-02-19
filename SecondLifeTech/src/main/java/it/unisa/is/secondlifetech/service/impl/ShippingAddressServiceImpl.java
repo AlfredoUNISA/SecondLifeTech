@@ -28,7 +28,7 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 	 * @return l'oggetto ShippingAddress salvato
 	 */
 	@Override
-	public ShippingAddress saveShippingAddress(ShippingAddress shippingAddress) {
+	public ShippingAddress createNewShippingAddress(ShippingAddress shippingAddress) {
 		return shippingAddressRepository.save(shippingAddress);
 	}
 

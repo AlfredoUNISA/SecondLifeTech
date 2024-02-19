@@ -12,7 +12,7 @@ public interface PaymentMethodService {
 	 * @param paymentMethod l'oggetto PaymentMethod da salvare
 	 * @return l'oggetto PaymentMethod salvato
 	 */
-	PaymentMethod savePaymentMethod(PaymentMethod paymentMethod);
+	PaymentMethod createNewPaymentMethod(PaymentMethod paymentMethod);
 
 	/**
 	 * Ottiene un metodo di pagamento dal database tramite l'ID.

@@ -15,7 +15,7 @@ public interface ShippingAddressService {
 	 * @param shippingAddress l'oggetto ShippingAddress da salvare
 	 * @return l'oggetto ShippingAddress salvato
 	 */
-	ShippingAddress saveShippingAddress(ShippingAddress shippingAddress);
+	ShippingAddress createNewShippingAddress(ShippingAddress shippingAddress);
 
 	/**
 	 * Ottiene un indirizzo di spedizione dal database tramite l'ID.

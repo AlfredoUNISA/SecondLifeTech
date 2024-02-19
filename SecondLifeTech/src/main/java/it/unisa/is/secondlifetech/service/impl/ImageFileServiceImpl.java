@@ -21,7 +21,7 @@ public class ImageFileServiceImpl implements ImageFileService {
 	}
 
 	@Override
-	public ImageFile saveImage(MultipartFile file) throws IOException {
+	public ImageFile createNewImage(MultipartFile file) throws IOException {
 		ImageFile fileObj = new ImageFile();
 		fileObj.setName(file.getOriginalFilename());
 		fileObj.setContentType(file.getContentType());

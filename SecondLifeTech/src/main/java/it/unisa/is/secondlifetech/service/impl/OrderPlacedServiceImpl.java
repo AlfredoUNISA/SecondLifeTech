@@ -26,7 +26,7 @@ public class OrderPlacedServiceImpl implements OrderPlacedService {
 	 * @return l'oggetto OrderPlaced salvato
 	 */
 	@Override
-	public OrderPlaced saveOrder(OrderPlaced order) {
+	public OrderPlaced createNewOrder(OrderPlaced order) {
 		return orderPlacedRepository.save(order);
 	}
 

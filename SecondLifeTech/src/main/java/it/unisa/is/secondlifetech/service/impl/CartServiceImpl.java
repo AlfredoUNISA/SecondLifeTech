@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
@@ -67,7 +68,7 @@ public class CartServiceImpl implements CartService {
 	 *
 	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
 	 * @param productVariationId l'ID della variante di prodotto da modificare
-	 * @param quantity           la nuova quantità del prodotto
+	 * @param newQuantity        la nuova quantità del prodotto
 	 */
 	@Override
 	public void editProductQuantityInCart(UUID cartId, UUID productVariationId, int newQuantity) {
@@ -139,7 +140,9 @@ public class CartServiceImpl implements CartService {
 	 * @return l'oggetto Cart salvato
 	 */
 	@Override
-	public Cart saveCart(Cart cart) {
+	public Cart createNewCart(Cart cart) {
+		if (!cart.getUser().getRole().equals(UserRole.CLIENTE))
+			throw new RuntimeException("L'utente non è un cliente");
 		return cartRepository.save(cart);
 	}
 

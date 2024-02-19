@@ -12,7 +12,7 @@ public interface CartItemService {
 	 * @param cartItem l'oggetto CartItem da salvare
 	 * @return l'oggetto CartItem salvato
 	 */
-	CartItem saveCartProduct(CartItem cartItem);
+	CartItem createNewCartProduct(CartItem cartItem);
 
 	/**
 	 * Ottiene un prodotto nel carrello dal database tramite l'ID.

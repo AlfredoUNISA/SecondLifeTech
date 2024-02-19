@@ -12,7 +12,7 @@ public interface ProductModelService {
 	 * @param productModel l'oggetto ProductModel da salvare
 	 * @return l'oggetto ProductModel salvato
 	 */
-	ProductModel saveProductModel(ProductModel productModel);
+	ProductModel createNewProductModel(ProductModel productModel);
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite l'ID.

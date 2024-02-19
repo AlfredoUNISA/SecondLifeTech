@@ -26,7 +26,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	 * @return l'oggetto PaymentMethod salvato
 	 */
 	@Override
-	public PaymentMethod savePaymentMethod(PaymentMethod paymentMethod) {
+	public PaymentMethod createNewPaymentMethod(PaymentMethod paymentMethod) {
 		return paymentMethodRepository.save(paymentMethod);
 	}
 

@@ -44,7 +44,7 @@ public interface CartService {
 	 * @param cart l'oggetto Cart da salvare
 	 * @return l'oggetto Cart salvato
 	 */
-	Cart saveCart(Cart cart);
+	Cart createNewCart(Cart cart);
 
 	/**
 	 * Ottiene un carrello dal database tramite l'ID.

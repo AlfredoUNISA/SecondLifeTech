@@ -12,7 +12,7 @@ public interface ProductVariationService {
 	 * @param productVariation l'oggetto ProductVariation da salvare
 	 * @return l'oggetto ProductVariation salvato
 	 */
-	ProductVariation saveProductVariation(ProductVariation productVariation);
+	ProductVariation createNewProductVariation(ProductVariation productVariation);
 
 	/**
 	 * Ottiene una variante di prodotto dal database tramite l'ID.

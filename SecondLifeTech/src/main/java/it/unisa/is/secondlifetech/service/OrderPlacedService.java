@@ -13,7 +13,7 @@ public interface OrderPlacedService {
 	 * @param order l'oggetto OrderPlaced da salvare
 	 * @return l'oggetto OrderPlaced salvato
 	 */
-	OrderPlaced saveOrder(OrderPlaced order);
+	OrderPlaced createNewOrder(OrderPlaced order);
 
 	/**
 	 * Ottiene un ordine dal database tramite l'ID.

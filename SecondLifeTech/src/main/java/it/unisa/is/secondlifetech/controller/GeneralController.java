@@ -1,15 +1,8 @@
 package it.unisa.is.secondlifetech.controller;
 
-import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.ProductModel;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.repository.CartItemRepository;
-import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
-import it.unisa.is.secondlifetech.service.CartService;
+import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,51 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequestMapping("/")
 public class GeneralController {
-	private final CartRepository cartRepository;
-	private final CartItemRepository cartItemRepository;
-	private final ProductModelRepository productModelRepository;
-	private final ProductVariationRepository productVariationRepository;
-	private final CartService cartService;
+	private final UserService userService;
 
 	@Autowired
-	public GeneralController(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, CartService cartService) {
-		this.cartRepository = cartRepository;
-		this.cartItemRepository = cartItemRepository;
-		this.productModelRepository = productModelRepository;
-		this.productVariationRepository = productVariationRepository;
-		this.cartService = cartService;
+	public GeneralController(UserService userService) {
+		this.userService = userService;
 	}
 
 	@GetMapping
 	public String index() {
-		// Assert
-		Cart cart1 = new Cart();
-		cartRepository.save(cart1);
+		User cliente = new User("Mario", "Rossi", "email@email.com", "password", null, UserRole.CLIENTE, null);
+		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", null, UserRole.GESTORE_PRODOTTI, "");
 
-		Cart cart2 = new Cart();
-		cartRepository.save(cart2);
+		User savedCliente = userService.createNewUser(cliente);
+		User savedGestore = userService.createNewUser(gestore);
 
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModelRepository.save(productModel);
-
-		ProductVariation productVariation = new ProductVariation(
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			ProductState.ACCETTABILE,
-			productModel
-		);
-		productVariationRepository.save(productVariation);
-
-		cartService.addToCart(cart1.getId(), productVariation.getId(), 2);
+		log.info("Cliente: " + savedCliente.getCart());
+		log.info("Gestore: " + savedGestore.getCart());
 
 		return "my-custom-index";
 	}

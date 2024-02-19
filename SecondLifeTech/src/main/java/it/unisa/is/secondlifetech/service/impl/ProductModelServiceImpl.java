@@ -25,7 +25,7 @@ public class ProductModelServiceImpl implements ProductModelService {
 	 * @return l'oggetto ProductModel salvato
 	 */
 	@Override
-	public ProductModel saveProductModel(ProductModel productModel) {
+	public ProductModel createNewProductModel(ProductModel productModel) {
 		return productModelRepository.save(productModel);
 	}
 
