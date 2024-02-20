@@ -40,7 +40,7 @@ public class ProductVariation{
 	@Column(nullable = false)
 	private String state;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+	@ManyToOne
 	@JoinColumn(name = "product_model_id", nullable = false)
 	private ProductModel productModel;
 

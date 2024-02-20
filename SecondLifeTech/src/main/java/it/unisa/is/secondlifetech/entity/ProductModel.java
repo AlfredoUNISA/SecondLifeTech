@@ -26,7 +26,7 @@ public class ProductModel {
 	@Column(nullable = false)
 	private String category;
 
-	@OneToMany
+	@OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductVariation> productVariations;
 
 	@OneToOne
