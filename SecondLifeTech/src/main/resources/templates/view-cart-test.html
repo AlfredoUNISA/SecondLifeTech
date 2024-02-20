@@ -18,7 +18,7 @@
         <th>Quantity</th>
         <th>Total</th>
     </tr>
-    <th:block th:each="cartItem : ${cart.products}">
+    <th:block th:each="cartItem : ${cart.getItems}">
         <tr>
             <td th:text="${cartItem.productVariation.productModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
             <td th:text="${cartItem.quantity}"></td>

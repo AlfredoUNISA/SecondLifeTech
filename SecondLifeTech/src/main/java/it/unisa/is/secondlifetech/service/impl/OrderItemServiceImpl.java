@@ -41,25 +41,14 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Ottiene tutti i prodotti di un ordine dal database tramite l'ID dell'ordine.
+	 * Ottiene tutti i prodotti di un ordine specifico dal database tramite l'ID dell'ordine.
 	 *
-	 * @param orderId l'ID dell'ordine di cui cercare i prodotti
+	 * @param orderPlacedId l'ID dell'ordine di cui cercare i prodotti
 	 * @return una lista di oggetti OrderItem corrispondenti all'ID specificato
 	 */
 	@Override
-	public List<OrderItem> findOrderItemByOrderId(UUID orderId) {
-		return orderItemRepository.findByOrderId(orderId);
-	}
-
-	/**
-	 * Ottiene tutti i prodotti di un ordine dal database tramite l'ID dell'ordine.
-	 *
-	 * @param orderId l'ID dell'ordine di cui cercare i prodotti
-	 * @return una lista di oggetti OrderItem corrispondenti all'ID specificato
-	 */
-	@Override
-	public List<OrderItem> findOrderItemsByOrder(UUID orderId) {
-		return orderItemRepository.findByOrderId(orderId);
+	public List<OrderItem> findOrderItemsByOrderPlaced(UUID orderPlacedId) {
+		return orderItemRepository.findByOrderPlacedId(orderPlacedId);
 	}
 
 	/**

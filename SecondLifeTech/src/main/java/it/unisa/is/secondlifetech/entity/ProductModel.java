@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class ProductModel {
 	private String category;
 
 	@OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProductVariation> productVariations;
+	private List<ProductVariation> variations = new ArrayList<>();
 
 	@OneToOne
 	private ImageFile imageFile;

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 public class OrderPlacedServiceImpl implements OrderPlacedService {
-	private OrderPlacedRepository orderPlacedRepository;
+	private final OrderPlacedRepository orderPlacedRepository;
 
 	@Autowired
 	public OrderPlacedServiceImpl(OrderPlacedRepository orderPlacedRepository) {
@@ -71,7 +71,7 @@ public class OrderPlacedServiceImpl implements OrderPlacedService {
 	 */
 	@Override
 	public List<OrderPlaced> findOrderByDate(Date orderDate) {
-		return orderPlacedRepository.findByOrderDate(orderDate);
+		return orderPlacedRepository.findByDate(orderDate);
 	}
 
 	/**

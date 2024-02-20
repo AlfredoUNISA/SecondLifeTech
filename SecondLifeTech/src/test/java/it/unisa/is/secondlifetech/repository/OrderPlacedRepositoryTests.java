@@ -61,6 +61,7 @@ class OrderPlacedRepositoryTests {
 			UserRole.CLIENTE,
 			null
 		);
+		user.setCart(new Cart());
 		cartRepository.save(user.getCart());
 		userRepository.save(user);
 
@@ -140,6 +141,7 @@ class OrderPlacedRepositoryTests {
 			UserRole.CLIENTE,
 			null
 		);
+		user.setCart(new Cart());
 		cartRepository.save(user.getCart());
 		userRepository.save(user);
 
@@ -219,6 +221,7 @@ class OrderPlacedRepositoryTests {
 			UserRole.CLIENTE,
 			null
 		);
+		user.setCart(new Cart());
 		cartRepository.save(user.getCart());
 		userRepository.save(user);
 
@@ -259,7 +262,7 @@ class OrderPlacedRepositoryTests {
 		orderItemRepository.save(orderItem2);
 
 		// Act
-		List<OrderPlaced> foundOrders = orderRepository.findByOrderDate(orderDate1);
+		List<OrderPlaced> foundOrders = orderRepository.findByDate(orderDate1);
 
 		// Assert
 		assertThat(foundOrders).isNotNull();

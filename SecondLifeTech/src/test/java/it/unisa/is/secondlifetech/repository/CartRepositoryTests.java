@@ -30,8 +30,9 @@ class CartRepositoryTests {
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
 		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
-
+		user1.setCart(Cart.builder().user(user1).build());
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		user2.setCart(Cart.builder().user(user1).build());
 
 		userRepository.save(user1);
 		cartRepository.save(user1.getCart());

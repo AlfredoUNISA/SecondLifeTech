@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 @Entity
 @ToString
 public class User {
@@ -52,7 +53,7 @@ public class User {
 	private Cart cart;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<OrderPlaced> ordersPlaced = new ArrayList<>();
+	private List<OrderPlaced> orders = new ArrayList<>();
 
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;

@@ -1,14 +1,15 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
-import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,229 +25,78 @@ class OrderPlacedServiceImplTests {
 	@InjectMocks
 	private OrderPlacedServiceImpl orderPlacedService;
 
-	@Test
-	void OrderPlacedService_FindOrderByEmail_ReturnCorrectList() {
-		// Arrange
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			"Smartphone"
-		);
+	private OrderPlaced orderPlaced;
+	private User user;
 
-		ProductVariation productVariation = new ProductVariation(
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			"Accettabile",
-			productModel
-		);
+	@BeforeEach
+	void setup() {
+		user = User.builder()
+			.id(UUID.randomUUID())
+			.email("email@email.com")
+			.orders(new ArrayList<>())
+			.build();
 
-		User user = new User(
-			"Mario",
-			"Rossi",
-			"email@email.com",
-			"password",
-			null,
-			UserRole.CLIENTE,
-			null
-		);
+		// Focus del testing
+		orderPlaced = OrderPlaced.builder()
+			.id(UUID.randomUUID())
+			.items(new ArrayList<>())
+			.user(user)
+			.shipped(true)
+			.date(new Date())
+			.build();
+		user.getOrders().add(orderPlaced);
 
-		OrderPlaced order1 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			250.0,
-			false,
-			user
-		);
-		order1.setId(UUID.randomUUID());
-		OrderItem orderItem1 = new OrderItem(
-			1,
-			productVariation.getPrice()*1,
-			order1,
-			productVariation
-		);
-
-		OrderPlaced order2 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			500.0,
-			false,
-			user
-		);
-		order2.setId(UUID.randomUUID());
-		OrderItem orderItem2 = new OrderItem(
-			2,
-			productVariation.getPrice()*2,
-			order2,
-			productVariation
-		);
-
-		when(orderPlacedRepository.findByEmail(user.getEmail())).thenReturn(List.of(order1, order2));
-
-		// Act
-		List<OrderPlaced> foundOrders = orderPlacedService.findOrderByEmail(user.getEmail());
-
-		// Assert
-		assertThat(foundOrders).isNotNull();
-		assertThat(foundOrders.size()).isEqualTo(2);
-		assertThat(foundOrders).containsOnly(order1, order2);
-		assertThat(foundOrders.get(0).getUser()).isEqualTo(user);
-		assertThat(foundOrders.get(1).getUser()).isEqualTo(user);
+		OrderItem orderItem = OrderItem.builder()
+			.id(UUID.randomUUID())
+			.quantityOrdered(1)
+			.subTotal(10.0)
+			.orderPlaced(orderPlaced)
+			.build();
+		orderPlaced.getItems().add(orderItem);
 	}
 
 	@Test
-	void OrderPlacedService_FindOrderByShipped_ReturnCorrectList() {
+	void OrderPlacedService_FindOrderByEmail_ShouldReturnCorrectList() {
 		// Arrange
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			"Smartphone"
-		);
+		String email = user.getEmail();
 
-		ProductVariation productVariation = new ProductVariation(
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			"Accettabile",
-			productModel
-		);
-
-		User user = new User(
-			"Mario",
-			"Rossi",
-			"email@email.com",
-			"password",
-			null,
-			UserRole.CLIENTE,
-			null
-		);
-
-		OrderPlaced order1 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			250.0,
-			true,
-			user
-		);
-		order1.setId(UUID.randomUUID());
-		OrderItem orderItem1 = new OrderItem(
-			1,
-			productVariation.getPrice()*1,
-			order1,
-			productVariation
-		);
-
-		OrderPlaced order2 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			500.0,
-			false,
-			user
-		);
-		order2.setId(UUID.randomUUID());
-		OrderItem orderItem2 = new OrderItem(
-			2,
-			productVariation.getPrice()*2,
-			order2,
-			productVariation
-		);
-
-		when(orderPlacedRepository.findByShipped(true)).thenReturn(List.of(order1));
+		when(orderPlacedRepository.findByEmail(email)).thenReturn(user.getOrders());
 
 		// Act
-		List<OrderPlaced> foundOrders = orderPlacedService.findOrderByShipped(true);
+		List<OrderPlaced> result = orderPlacedService.findOrderByEmail(email);
 
 		// Assert
-		assertThat(foundOrders).isNotNull();
-		assertThat(foundOrders.size()).isEqualTo(1);
-		assertThat(foundOrders).containsOnly(order1);
-		assertThat(foundOrders.get(0).getUser()).isEqualTo(user);
+		assertThat(result).hasSize(1);
+		assertThat(result).containsOnly(orderPlaced);
 	}
 
 	@Test
-	void OrderPlacedService_FindOrderByDate_ReturnCorrectList() {
+	void OrderPlacedService_FindOrderByShipped_ShouldReturnCorrectList() {
 		// Arrange
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			"Smartphone"
-		);
+		boolean shipped = orderPlaced.isShipped();
 
-		ProductVariation productVariation = new ProductVariation(
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			"Accettabile",
-			productModel
-		);
-
-		User user = new User(
-			"Mario",
-			"Rossi",
-			"email@email.com",
-			"password",
-			null,
-			UserRole.CLIENTE,
-			null
-		);
-
-		OrderPlaced order1 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			250.0,
-			true,
-			user
-		);
-		order1.setId(UUID.randomUUID());
-		OrderItem orderItem1 = new OrderItem(
-			1,
-			productVariation.getPrice()*1,
-			order1,
-			productVariation
-		);
-
-		OrderPlaced order2 = new OrderPlaced(
-			"Via Roma 1",
-			user.getEmail(),
-			new Date(),
-			500.0,
-			false,
-			user
-		);
-		order2.setId(UUID.randomUUID());
-		OrderItem orderItem2 = new OrderItem(
-			2,
-			productVariation.getPrice()*2,
-			order2,
-			productVariation
-		);
-
-		when(orderPlacedRepository.findByOrderDate(order1.getOrderDate())).thenReturn(List.of(order1));
+		when(orderPlacedRepository.findByShipped(shipped)).thenReturn(List.of(orderPlaced));
 
 		// Act
-		List<OrderPlaced> foundOrders = orderPlacedService.findOrderByDate(order1.getOrderDate());
+		List<OrderPlaced> result = orderPlacedService.findOrderByShipped(shipped);
 
 		// Assert
-		assertThat(foundOrders).isNotNull();
-		assertThat(foundOrders.size()).isEqualTo(1);
-		assertThat(foundOrders).containsOnly(order1);
-		assertThat(foundOrders.get(0).getUser()).isEqualTo(user);
+		assertThat(result).hasSize(1);
+		assertThat(result).containsOnly(orderPlaced);
+	}
+
+	@Test
+	void OrderPlacedService_FindOrderByDate_ShouldReturnCorrectList() {
+		// Arrange
+		Date date = orderPlaced.getDate();
+
+		when(orderPlacedRepository.findByDate(date)).thenReturn(List.of(orderPlaced));
+
+		// Act
+		List<OrderPlaced> result = orderPlacedService.findOrderByDate(date);
+
+		// Assert
+		assertThat(result).hasSize(1);
+		assertThat(result).containsOnly(orderPlaced);
 	}
 }

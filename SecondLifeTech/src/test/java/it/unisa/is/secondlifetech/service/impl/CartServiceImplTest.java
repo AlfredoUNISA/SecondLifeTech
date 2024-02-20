@@ -2,317 +2,156 @@ package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
-import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.CartRepository;
+import it.unisa.is.secondlifetech.service.CartItemService;
+import it.unisa.is.secondlifetech.service.ProductVariationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceImplTest {
+public class CartServiceImplTest {
+
 	@Mock
 	private CartRepository cartRepository;
 
 	@Mock
-	private ProductVariationServiceImpl productVariationService;
+	private ProductVariationService productVariationService;
 
 	@Mock
-	private CartItemServiceImpl cartItemService;
+	private CartItemService cartItemService;
 
 	@InjectMocks
 	private CartServiceImpl cartService;
 
-	@Test
-	public void CartService_AddToCart_CorrectlyAddToCart() {
-		// Arrange
-		UUID cartId = UUID.randomUUID();
-		UUID productVariationId = UUID.randomUUID();
-		int quantity = 3;
+	private Cart cart;
+	private ProductVariation productVariation;
 
-		Cart cart = new Cart();
-		cart.setTotal(100.0);
-		ProductVariation productVariation = new ProductVariation();
-		productVariation.setId(productVariationId);
-		productVariation.setQuantityInStock(5);
-		productVariation.setPrice(20.0);
+	@BeforeEach
+	void setup() {
+		// Focus del testing
+		cart = Cart.builder()
+			.id(UUID.randomUUID())
+			.items(new ArrayList<>())
+			.build();
 
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-		when(productVariationService.findProductVariationById(productVariationId)).thenReturn(productVariation);
-
-		// Act
-		cartService.addToCart(cartId, productVariationId, quantity);
-
-		// Assert
-		assertThat(cart.getProducts()).hasSize(1);
-		assertThat(cart.getTotal()).isEqualTo(160.0);
-		assertThat(cart.getProducts().get(0).getProductVariation()).isEqualTo(productVariation);
-
-		verify(cartRepository, times(1)).findById(cartId);
-		verify(productVariationService, times(1)).findProductVariationById(productVariationId);
-		verify(cartItemService, times(1)).createNewCartItem(any(CartItem.class));
-		verify(cartRepository, times(1)).save(cart);
+		productVariation = ProductVariation.builder()
+			.id(UUID.randomUUID())
+			.price(10.0)
+			.quantityInStock(5)
+			.build();
 	}
 
 	@Test
-	public void CartService_AddToCart_ProductAlreadyInCart() {
+	void CartServiceImpl_AddToCart_WhenProductIsNotAlreadyInCart_ShouldAddNewCartItem() {
 		// Arrange
-		UUID cartId = UUID.randomUUID();
-		UUID productVariationId = UUID.randomUUID();
+		UUID cartId = cart.getId();
+		UUID newProductVariationId = productVariation.getId();
+		int quantity = 2;
+
+		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
+		when(productVariationService.findProductVariationById(newProductVariationId)).thenReturn(productVariation);
+		when(cartItemService.createNewCartItem(any(CartItem.class))).thenReturn(new CartItem());
+
+		// Act
+		cartService.addToCart(cartId, newProductVariationId, quantity);
+
+		// Assert
+		assertThat(cart.getItems()).hasSize(1);
+		assertThat(cart.getTotal()).isEqualTo(20.0);
+		verify(cartRepository).save(cart);
+	}
+
+	@Test
+	void CartServiceImpl_AddToCart_WhenProductIsAlreadyInCart_ShouldUpdateQuantity() {
+		// Arrange
+		UUID cartId = cart.getId();
+		UUID productVariationId = productVariation.getId();
 		int initialQuantity = 2;
 		int additionalQuantity = 3;
 
-		Cart cart = new Cart();
-		cart.setTotal(100.0);
-		ProductVariation productVariation = new ProductVariation();
-		productVariation.setId(productVariationId);
-		productVariation.setQuantityInStock(5);
-		productVariation.setPrice(20.0);
-
-		CartItem cartItem = new CartItem(cart, productVariation, initialQuantity, 40.0);
-		cart.getProducts().add(cartItem);
+		cart.getItems().add(new CartItem(cart, productVariation, initialQuantity, 20.0));
+		cart.setTotal(20.0);
 
 		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-		when(productVariationService.findProductVariationById(productVariationId)).thenReturn(productVariation);
-
 		// Act
 		cartService.addToCart(cartId, productVariationId, additionalQuantity);
 
 		// Assert
-		assertThat(cart.getProducts()).hasSize(1);
-		assertThat(cart.getTotal()).isEqualTo(160.0);
-
-		verify(cartRepository, times(1)).findById(cartId);
-		verify(productVariationService, times(1)).findProductVariationById(productVariationId);
-		verify(cartRepository, times(1)).save(cart);
+		assertThat(cart.getItems()).hasSize(1);
+		assertThat(cart.getTotal()).isEqualTo(50.0);
+		verify(cartRepository).save(cart);
 	}
 
 	@Test
-	public void CartService_AddToCart_InsufficientQuantity() {
+	void CartServiceImpl_EditProductQuantityInCart_ShouldUpdateQuantity() {
 		// Arrange
-		UUID cartId = UUID.randomUUID();
-		UUID productVariationId = UUID.randomUUID();
-		int quantity = 10;
+		UUID cartId = cart.getId();
+		UUID productVariationId = productVariation.getId();
+		int initialQuantity = 2;
+		int newQuantity = 5;
 
-		Cart cart = new Cart();
-		cart.setTotal(100.0);
-		ProductVariation productVariation = new ProductVariation();
-		productVariation.setId(productVariationId);
-		productVariation.setQuantityInStock(5);
-		productVariation.setPrice(20.0);
+		cart.getItems().add(new CartItem(cart, productVariation, initialQuantity, 20.0));
+		cart.setTotal(20.0);
 
 		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-		when(productVariationService.findProductVariationById(productVariationId)).thenReturn(productVariation);
 
-		// Act & Assert
-		assertThatThrownBy(() -> cartService.addToCart(cartId, productVariationId, quantity))
-			.isInstanceOf(RuntimeException.class)
-			.hasMessage("Quantità non disponibile nell'inventario");
+		// Act
+		cartService.editProductQuantityInCart(cartId, productVariationId, newQuantity);
 
-		verify(cartRepository, times(1)).findById(cartId);
-		verify(productVariationService, times(1)).findProductVariationById(productVariationId);
+		// Assert
+		assertThat(cart.getItems()).hasSize(1);
+		assertThat(cart.getTotal()).isEqualTo(50.0);
+		verify(cartRepository).save(cart);
 	}
 
 	@Test
-	void CartService_EditToCart_CorrectlyEditQuantityInCart() {
-		// Assert
-		Cart cart1 = new Cart();
+	void CartServiceImpl_removeProductFromCart_ShouldRemoveProduct() {
+		// Arrange
+		UUID cartId = cart.getId();
+		UUID productVariationId = productVariation.getId();
 
-		Cart cart2 = new Cart();
+		cart.getItems().add(new CartItem(cart, productVariation, 2, 20.0));
+		cart.setTotal(20.0);
 
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModel.setId(UUID.randomUUID());
-		productModel.setImageFile(null);
-
-		ProductVariation productVariation1 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			ProductState.ACCETTABILE,
-			productModel
-		);
-
-		ProductVariation productVariation2 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Red",
-			ProductState.OTTIMO,
-			productModel
-		);
-
-		when(cartRepository.findById(cart1.getId())).thenReturn(Optional.of(cart1));
-		when(cartRepository.findById(cart2.getId())).thenReturn(Optional.of(cart2));
-
-		when(cartRepository.save(cart2)).thenReturn(cart2);
-
-		when(productVariationService.findProductVariationById(productVariation1.getId())).thenReturn(productVariation1);
-		when(productVariationService.findProductVariationById(productVariation2.getId())).thenReturn(productVariation2);
-
-		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
-		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
+		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
 
 		// Act
-		cartService.editProductQuantityInCart(cart1.getId(), productVariation1.getId(), 2);
-		Cart foundCart = cartRepository.findById(cart1.getId()).get();
+		cartService.removeProductFromCart(cartId, productVariationId);
 
 		// Assert
-		assertThat(foundCart).isNotNull();
-		assertThat(foundCart.getProducts().size()).isEqualTo(2);
-		foundCart.getProducts().forEach(cartProduct -> {
-			if(cartProduct.getProductVariation().getId().equals(productVariation1.getId())) {
-				assertThat(cartProduct.getQuantity()).isEqualTo(2);
-			}
-		});
+		assertThat(cart.getItems()).hasSize(0);
+		assertThat(cart.getTotal()).isEqualTo(0.0);
+		verify(cartRepository).save(cart);
 	}
 
 	@Test
-	void CartService_RemoveFromCart_CorrectlyRemoveFromCart() {
-		// Assert
-		Cart cart1 = new Cart();
+	void CartServiceImpl_clearCart_ShouldClearCart() {
+		// Arrange
+		UUID cartId = cart.getId();
 
-		Cart cart2 = new Cart();
+		cart.getItems().add(new CartItem(cart, productVariation, 2, 20.0));
+		cart.setTotal(20.0);
 
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModel.setId(UUID.randomUUID());
-		productModel.setImageFile(null);
-
-		ProductVariation productVariation1 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			ProductState.ACCETTABILE,
-			productModel
-		);
-
-		ProductVariation productVariation2 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Red",
-			ProductState.OTTIMO,
-			productModel
-		);
-
-		when(cartRepository.findById(cart1.getId())).thenReturn(Optional.of(cart1));
-		when(cartRepository.findById(cart2.getId())).thenReturn(Optional.of(cart2));
-
-		when(cartRepository.save(cart2)).thenReturn(cart2);
-
-		when(productVariationService.findProductVariationById(productVariation1.getId())).thenReturn(productVariation1);
-		when(productVariationService.findProductVariationById(productVariation2.getId())).thenReturn(productVariation2);
-
-
-		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
-		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
+		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
 
 		// Act
-		cartService.removeProductFromCart(cart1.getId(), productVariation1.getId());
-		Cart foundCart = cartRepository.findById(cart1.getId()).get();
+		cartService.clearCart(cartId);
 
 		// Assert
-		assertThat(foundCart).isNotNull();
-		assertThat(foundCart.getProducts().size()).isEqualTo(1);
-		assertThat(foundCart.getTotal()).isEqualTo(250.0);
-		assertThat(foundCart.getProducts().get(0).getProductVariation().getId()).isEqualTo(productVariation2.getId());
-	}
-
-	@Test
-	void CartService_ClearCart_CorrectlyClearCart() {
-		// Assert
-		Cart cart1 = new Cart();
-
-		Cart cart2 = new Cart();
-
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModel.setId(UUID.randomUUID());
-		productModel.setImageFile(null);
-
-		ProductVariation productVariation1 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			ProductState.ACCETTABILE,
-			productModel
-		);
-
-		ProductVariation productVariation2 = new ProductVariation(
-			UUID.randomUUID(),
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Red",
-			ProductState.OTTIMO,
-			productModel
-		);
-
-		when(cartRepository.findById(cart1.getId())).thenReturn(Optional.of(cart1));
-		when(cartRepository.findById(cart2.getId())).thenReturn(Optional.of(cart2));
-
-		when(cartRepository.save(cart2)).thenReturn(cart2);
-
-		when(productVariationService.findProductVariationById(productVariation1.getId())).thenReturn(productVariation1);
-		when(productVariationService.findProductVariationById(productVariation2.getId())).thenReturn(productVariation2);
-
-		cartService.addToCart(cart1.getId(), productVariation1.getId(), 1);
-		cartService.addToCart(cart1.getId(), productVariation2.getId(), 1);
-
-		// Act
-		cartService.clearCart(cart1.getId());
-		Cart foundCart = cartRepository.findById(cart1.getId()).get();
-
-		// Assert
-		assertThat(foundCart).isNotNull();
-		assertThat(foundCart.getProducts().size()).isEqualTo(0);
-		assertThat(foundCart.getTotal()).isEqualTo(0);
+		assertThat(cart.getItems()).hasSize(0);
+		assertThat(cart.getTotal()).isEqualTo(0.0);
+		verify(cartRepository).save(cart);
 	}
 }

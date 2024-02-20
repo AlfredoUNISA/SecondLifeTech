@@ -31,6 +31,8 @@ public class UserRepositoryTests {
 		String dateOfBirthString = "01/01/2000";
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, "CLIENTE", null);
+		user.setCart(new Cart());
+
 		User savedUser = userRepository.save(user);
 		cartRepository.save(user.getCart());
 
@@ -68,7 +70,9 @@ public class UserRepositoryTests {
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
 		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		user1.setCart(new Cart());
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		user2.setCart(new Cart());
 		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, UserRole.GESTORE_PRODOTTI, "");
 
 		userRepository.save(user1);
@@ -76,7 +80,6 @@ public class UserRepositoryTests {
 		userRepository.save(user2);
 		cartRepository.save(user2.getCart());
 		userRepository.save(gestore);
-		cartRepository.save(gestore.getCart());
 
 		// Act
 		List<User> foundUsers = userRepository.findByRole(UserRole.CLIENTE);
@@ -102,6 +105,8 @@ public class UserRepositoryTests {
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
 		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		user.setCart(new Cart());
+
 		userRepository.save(user);
 		cartRepository.save(user.getCart());
 

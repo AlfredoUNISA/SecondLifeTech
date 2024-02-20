@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @ToString
 @Entity
 public class OrderPlaced {
@@ -23,23 +24,23 @@ public class OrderPlaced {
 	@Column(nullable = false)
 	private String email;
 	@Column(nullable = false)
-	private Date orderDate;
+	private Date date;
 	@Column(nullable = false)
 	private double total;
 	@Column(nullable = false)
 	private boolean shipped;
 
-	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<OrderItem> orderItems;
+	@OneToMany(mappedBy = "orderPlaced", fetch = FetchType.LAZY)
+	private List<OrderItem> items;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	public OrderPlaced(String address, String email, Date orderDate, double total, boolean isShipped, User user) {
+	public OrderPlaced(String address, String email, Date date, double total, boolean isShipped, User user) {
 		this.address = address;
 		this.email = email;
-		this.orderDate = orderDate;
+		this.date = date;
 		this.total = total;
 		this.shipped = isShipped;
 		this.user = user;

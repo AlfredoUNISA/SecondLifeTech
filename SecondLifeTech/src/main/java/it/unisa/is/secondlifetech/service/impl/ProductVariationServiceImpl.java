@@ -26,7 +26,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public ProductVariation createNewProductVariation(ProductVariation productVariation) {
-		productVariation.getProductModel().getProductVariations().add(productVariation);
+		productVariation.getProductModel().getVariations().add(productVariation);
 		return productVariationService.save(productVariation);
 	}
 
