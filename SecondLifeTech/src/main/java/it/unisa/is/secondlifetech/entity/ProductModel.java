@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @ToString
 @Entity
 public class ProductModel {
@@ -27,7 +28,7 @@ public class ProductModel {
 	@Column(nullable = false)
 	private String category;
 
-	@OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "model", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductVariation> variations = new ArrayList<>();
 
 	@OneToOne

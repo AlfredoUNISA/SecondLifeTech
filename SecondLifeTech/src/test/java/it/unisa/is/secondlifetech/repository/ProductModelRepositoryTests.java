@@ -42,6 +42,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel1
 		);
+		productModel1.getVariations().add(productVariation1);
 		productVariationService.save(productVariation1);
 
 		ProductModel productModel2 = new ProductModel(
@@ -49,7 +50,6 @@ class ProductModelRepositoryTests {
 			"Apple",
 			ProductCategory.SMARTPHONE
 		);
-
 		productModelRepository.save(productModel2);
 
 		ProductVariation productVariation2 = new ProductVariation(
@@ -63,6 +63,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel2
 		);
+		productModel2.getVariations().add(productVariation2);
 		productVariationService.save(productVariation2);
 
 		ProductModel productModel3 = new ProductModel(
@@ -70,7 +71,6 @@ class ProductModelRepositoryTests {
 			"Samsung",
 			ProductCategory.TABLET
 		);
-
 		productModelRepository.save(productModel3);
 
 		ProductVariation productVariation3 = new ProductVariation(
@@ -84,11 +84,12 @@ class ProductModelRepositoryTests {
 			ProductState.BUONO,
 			productModel3
 		);
-		productVariationService.save(productVariation2);
+		productModel3.getVariations().add(productVariation3);
+		productVariationService.save(productVariation3);
 
 		// Act
 		ProductModel foundProductModel = productModelRepository.findByName(productModel1.getName());
-		ProductVariation foundProductVariation = productVariationService.findByProductModelId(foundProductModel.getId()).get(0);
+		ProductVariation foundProductVariation = foundProductModel.getVariations().get(0);
 
 		// Assert
 		assertThat(foundProductModel).isNotNull();
@@ -119,6 +120,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel1
 		);
+		productModel1.getVariations().add(productVariation1);
 		productVariationService.save(productVariation1);
 
 		ProductModel productModel2 = new ProductModel(
@@ -126,7 +128,6 @@ class ProductModelRepositoryTests {
 			"Apple",
 			ProductCategory.SMARTPHONE
 		);
-
 		productModelRepository.save(productModel2);
 
 		ProductVariation productVariation2 = new ProductVariation(
@@ -140,6 +141,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel2
 		);
+		productModel2.getVariations().add(productVariation2);
 		productVariationService.save(productVariation2);
 
 		ProductModel productModel3 = new ProductModel(
@@ -147,7 +149,6 @@ class ProductModelRepositoryTests {
 			"Samsung",
 			ProductCategory.TABLET
 		);
-
 		productModelRepository.save(productModel3);
 
 		ProductVariation productVariation3 = new ProductVariation(
@@ -161,7 +162,8 @@ class ProductModelRepositoryTests {
 			ProductState.BUONO,
 			productModel3
 		);
-		productVariationService.save(productVariation2);
+		productModel3.getVariations().add(productVariation3);
+		productVariationService.save(productVariation3);
 
 		// Act
 		List<ProductModel> foundProductModels = productModelRepository.findByBrand(productModel1.getBrand());
@@ -170,7 +172,7 @@ class ProductModelRepositoryTests {
 		ProductModel foundProductModel = foundProductModels.stream().filter(productModel -> productModel.getName().equals("iPhone 11")).findFirst().orElse(null);
 
 		assert foundProductModel != null;
-		ProductVariation foundProductVariation = productVariationService.findByProductModelId(foundProductModel.getId()).get(0);
+		ProductVariation foundProductVariation = foundProductModel.getVariations().get(0);
 
 		// Assert
 		assertThat(foundProductModels).isNotNull();
@@ -203,6 +205,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel1
 		);
+		productModel1.getVariations().add(productVariation1);
 		productVariationService.save(productVariation1);
 
 		ProductModel productModel2 = new ProductModel(
@@ -210,7 +213,6 @@ class ProductModelRepositoryTests {
 			"Apple",
 			ProductCategory.SMARTPHONE
 		);
-
 		productModelRepository.save(productModel2);
 
 		ProductVariation productVariation2 = new ProductVariation(
@@ -224,6 +226,7 @@ class ProductModelRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel2
 		);
+		productModel2.getVariations().add(productVariation2);
 		productVariationService.save(productVariation2);
 
 		ProductModel productModel3 = new ProductModel(
@@ -231,7 +234,6 @@ class ProductModelRepositoryTests {
 			"Samsung",
 			ProductCategory.TABLET
 		);
-
 		productModelRepository.save(productModel3);
 
 		ProductVariation productVariation3 = new ProductVariation(
@@ -245,7 +247,8 @@ class ProductModelRepositoryTests {
 			ProductState.BUONO,
 			productModel3
 		);
-		productVariationService.save(productVariation2);
+		productModel3.getVariations().add(productVariation3);
+		productVariationService.save(productVariation3);
 
 		// Act
 		List<ProductModel> foundProductModels = productModelRepository.findByCategory(productModel1.getCategory());
@@ -254,7 +257,7 @@ class ProductModelRepositoryTests {
 		ProductModel foundProductModel = foundProductModels.stream().filter(productModel -> productModel.getName().equals("iPhone 11")).findFirst().orElse(null);
 
 		assert foundProductModel != null;
-		ProductVariation foundProductVariation = productVariationService.findByProductModelId(foundProductModel.getId()).get(0);
+		ProductVariation foundProductVariation = foundProductModel.getVariations().get(0);
 
 		// Assert
 		assertThat(foundProductModels).isNotNull();

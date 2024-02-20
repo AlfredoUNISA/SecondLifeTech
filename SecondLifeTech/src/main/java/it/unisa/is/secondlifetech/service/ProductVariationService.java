@@ -23,14 +23,6 @@ public interface ProductVariationService {
 	ProductVariation findProductVariationById(UUID id);
 
 	/**
-	 * Ottiene tutte le varianti di un prodotto dal database tramite l'ID del modello.
-	 *
-	 * @param productId l'ID del prodotto di cui cercare le varianti
-	 * @return una lista di oggetti ProductVariation corrispondenti all'ID specificato
-	 */
-	List<ProductVariation> findProductVariationsByProductModelId(UUID productId);
-
-	/**
 	 * Ottiene tutte le varianti di prodotto dal database tramite lo stato.
 	 *
 	 * @param state lo stato delle varianti di prodotto da cercare

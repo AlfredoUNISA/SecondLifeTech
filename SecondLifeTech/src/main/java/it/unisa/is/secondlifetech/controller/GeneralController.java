@@ -85,8 +85,8 @@ public class GeneralController {
 
 	@PostMapping("/create-product-variation-test")
 	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
-		ProductModel productModel = productModelService.findProductModelById(productVariation.getProductModel().getId());
-		productVariation.setProductModel(productModel);
+		ProductModel productModel = productModelService.findProductModelById(productVariation.getModel().getId());
+		productVariation.setModel(productModel);
 		productVariationService.createNewProductVariation(productVariation);
 		return "redirect:/";
 	}

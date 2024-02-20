@@ -43,9 +43,9 @@ public class ProductVariation{
 
 	@ManyToOne
 	@JoinColumn(name = "product_model_id", nullable = false)
-	private ProductModel productModel;
+	private ProductModel model;
 
-	public ProductVariation(int year, int ram, double displaySize, int storageSize, double price, int quantityInStock, String color, String state, ProductModel productModel) {
+	public ProductVariation(int year, int ram, double displaySize, int storageSize, double price, int quantityInStock, String color, String state, ProductModel model) {
 		this.year = year;
 		this.ram = ram;
 		this.displaySize = displaySize;
@@ -54,6 +54,6 @@ public class ProductVariation{
 		this.quantityInStock = quantityInStock;
 		this.color = color;
 		this.state = state;
-		this.productModel = productModel;
+		this.model = model;
 	}
 }

@@ -29,7 +29,7 @@
     </tr>
     <th:block th:each="variation : ${variations}">
         <tr>
-            <td th:text="${variation.productModel.brand + ' ' + variation.productModel.name + ' (' + variation.productModel.category + ') '}"></td>
+            <td th:text="${variation.getModel.brand + ' ' + variation.getModel.name + ' (' + variation.getModel.category + ') '}"></td>
             <td th:text="${variation.color + ' ' + variation.storageSize + 'GB ' + variation.ram + 'GB RAM ' + variation.displaySize + 'inch'}"></td>
             <td th:text="${variation.quantityInStock}"></td>
             <td th:text="${variation.price}"></td>

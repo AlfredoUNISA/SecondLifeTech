@@ -20,7 +20,7 @@
     </tr>
     <th:block th:each="cartItem : ${cart.getItems}">
         <tr>
-            <td th:text="${cartItem.productVariation.productModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
+            <td th:text="${cartItem.productVariation.getModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
             <td th:text="${cartItem.quantity}"></td>
             <td th:text="${cartItem.productVariation.price * cartItem.quantity}"></td>
         </tr>

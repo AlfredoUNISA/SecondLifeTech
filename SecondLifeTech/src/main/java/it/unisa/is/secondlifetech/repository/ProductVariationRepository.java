@@ -10,5 +10,4 @@ import java.util.UUID;
 @Repository
 public interface ProductVariationRepository extends JpaRepository<ProductVariation, UUID> {
 	List<ProductVariation> findByState(String state);
-	List<ProductVariation> findByProductModelId(UUID productModelId);
 }
