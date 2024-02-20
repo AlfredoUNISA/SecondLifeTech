@@ -11,8 +11,9 @@ import java.util.UUID;
 
 @Service
 public class PaymentMethodServiceImpl implements PaymentMethodService {
-
 	private final PaymentMethodRepository paymentMethodRepository;
+
+	// TODO: aggiungi/rimuovi/modifica payment method a user
 
 	@Autowired
 	public PaymentMethodServiceImpl(PaymentMethodRepository paymentMethodRepository) {

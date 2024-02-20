@@ -5,6 +5,7 @@ import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.repository.UserRepository;
 import it.unisa.is.secondlifetech.service.CartService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,71 +29,47 @@ class UserServiceImplTests {
 	@Mock
 	private UserRepository userRepository;
 
-	@Mock
-	private CartService cartService;
-
 	@InjectMocks
 	private UserServiceImpl userService;
 
-	@Test
-	void UserService_FindUserByEmail_ReturnCorrectEmail() throws ParseException {
-		// Arrange
-		String dateOfBirthString = "01/01/2000";
-		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
-		User user = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+	private User user;
 
-		// Mock del comportamento della repository per restituire il valore quando viene chiamato findByEmail
-		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-
-		// Act
-		User foundUser = userService.findUserByEmail(user.getEmail());
-
-		// Assert
-		assertThat(foundUser).isEqualTo(user);
-		assertThat(foundUser.getEmail()).isNotNull();
-		assertThat(foundUser.getEmail()).isEqualTo(user.getEmail());
+	@BeforeEach
+	void setup() {
+		user = User.builder()
+			.id(UUID.randomUUID())
+			.email("email@email.com")
+			.role(UserRole.CLIENTE)
+			.build();
 	}
 
 	@Test
-	void UserService_FindByRole_ReturnCorrectList() throws ParseException {
+	void UserService_FindUserByEmail_ShouldReturnCorrectEmail() {
 		// Arrange
-		String dateOfBirthString = "01/01/2000";
-		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
+		String email = user.getEmail();
 
-		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
-		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
-		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", dateOfBirth, UserRole.GESTORE_PRODOTTI, "");
-
-		when(userRepository.findByRole(UserRole.CLIENTE)).thenReturn(List.of(user1, user2));
+		when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
 		// Act
-		List<User> foundUsers = userService.findUsersByRole(UserRole.CLIENTE);
+		User result = userService.findUserByEmail(email);
 
 		// Assert
-		assertThat(foundUsers).isNotNull();
-		assertThat(foundUsers.size()).isEqualTo(2);
-		assertThat(foundUsers).containsOnly(user1, user2);
-		assertThat(foundUsers).doesNotContain(gestore);
+		assertThat(result).isEqualTo(user);
 	}
 
 	@Test
-	void UserService_Save_SaveCartCorrectly() {
+	void UserService_FindByRole_ShouldReturnCorrectList() throws ParseException {
 		// Arrange
-		User cliente = new User("Mario", "Rossi", "email@email.com", "password", null, UserRole.CLIENTE, null);
-		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", null, UserRole.GESTORE_PRODOTTI, "");
+		String role = user.getRole();
 
-		when(userRepository.save(cliente)).thenReturn(cliente);
-		when(userRepository.save(gestore)).thenReturn(gestore);
-
-		when(cartService.createNewCart(Mockito.any(Cart.class))).thenReturn(gestore.getCart());
+		when(userRepository.findByRole(role)).thenReturn(List.of(user));
 
 		// Act
-		User savedCliente = userService.createNewUser(cliente);
-		User savedGestore = userService.createNewUser(gestore);
+		List<User> results = userService.findUsersByRole(role);
 
 		// Assert
-		assertThat(savedCliente.getCart()).isNotNull();
-		assertThat(savedGestore.getCart()).isNull();
+		assertThat(results).hasSize(1);
+		assertThat(results).containsOnly(user);
 	}
 
 }

@@ -16,6 +16,8 @@ import java.util.UUID;
 public class ShippingAddressServiceImpl implements ShippingAddressService {
 	private final ShippingAddressRepository shippingAddressRepository;
 
+	// TODO: aggiungi/rimuovi/modifica shipping address a user
+
 	@Autowired
 	public ShippingAddressServiceImpl(ShippingAddressRepository shippingAddressRepository) {
 		this.shippingAddressRepository = shippingAddressRepository;
