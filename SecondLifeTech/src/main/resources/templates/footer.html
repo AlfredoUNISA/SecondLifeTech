@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
     <link th:href="@{css/style.css}" rel="stylesheet" >
 </head>
 <body data-bs-theme="dark" th:fragment="footer">
-<footer class="text-center footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4 mb-5 mb-lg-0">
-                <h4 class="text-uppercase mb-4">Location</h4>
-                <p>Via Giovanni Paolo II, 132<br/>Fisciano SA, 84084 </p>
+        <footer class="text-center footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 mb-5 mb-lg-0">
+                        <h4 class="text-uppercase mb-4">Location</h4>
+                        <p>Via Giovanni Paolo II, 132<br/>Fisciano SA, 84084 </p>
+                    </div>
+                    <div class="col-md-4 mb-5 mb-lg-0">
+                        <h4 class="text-uppercase">Puoi trovarci anche su:</h4>
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://facebook.com"><i class="fa fa-facebook fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://gmail.com"><i class="fa fa-google-plus fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://x.com"><i class="fa fa-twitter fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://instagram.com"><i class="fa fa-instagram fa-fw"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-uppercase mb-4">Placeholder</h4>
+                        <p class="lead mb-0"><span> Lorem ipsum dolor sit amet, consectetur adipisicing elit. </span></p>
+                    </div>
+                </div>
+
+                <div class="text-center text-white copyright py-4">
+                    <div class="container-fluid"><small>Copyright © SecondLifeTech 2024</small></div>
+                </div>
             </div>
-            <div class="col-md-4 mb-5 mb-lg-0">
-                <h4 class="text-uppercase">Puoi trovarci anche su:</h4>
-                <ul class="list-inline">
-                    <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://facebook.com"><i class="fa fa-facebook fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://gmail.com"><i class="fa fa-google-plus fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://x.com"><i class="fa fa-twitter fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a class="btn btn-outline-light text-center btn-social rounded-circle" role="button" href="https://instagram.com"><i class="fa fa-instagram fa-fw"></i></a></li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h4 class="text-uppercase mb-4">Perché scegliere ricondizionato?</h4>
-                <p><span>Gli smartphone ricondizionati sono dispositivi usati che sono stati riparati, testati e riportati a condizioni di funzionamento come nuovi.
-                    Vengono sottoposti a un processo di ricondizionamento per garantire la loro qualità e prestazioni.
-                    Inoltre il ricondizionato aiuta sensibilmente l'ambiente riducendo i rifiuti elettronici. </span></p>
-            </div>
-        </div>
-    </div>
-</footer>
-<div class="text-center text-white copyright py-4">
-    <div class="container"><small>Copyright © SecondLifeTech 2024</small></div>
-</div>
+        </footer>
+
 </body>
 </html>
