@@ -91,18 +91,11 @@ public class GeneralController {
 		return "redirect:/";
 	}
 
-	@GetMapping("/add-to-cart-test")
-	public String addToCart(Model model) {
-		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
-		model.addAttribute("productVariations", productVariationService.findAllProductVariations());
-		return "add-to-cart-test";
-	}
-
 	@PostMapping("/add-to-cart-test")
-	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
+	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
 		Cart cart = cartService.findCartByUser(userId);
 		cartService.addToCart(cart.getId(), productVariationId, quantity);
-		return "redirect:/";
+		return "redirect:/view-cart-test?userId=" + userId;
 	}
 
 	@GetMapping("/view-cart-test")

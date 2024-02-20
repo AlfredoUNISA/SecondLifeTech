@@ -42,6 +42,14 @@ public class CartServiceImpl implements CartService {
 		Cart cart = cartRepository.findById(cartId)
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
+		// Se il prodotto è già presente nel carrello, aggiorna la quantità
+		for (CartItem cartItem : cart.getProducts()) {
+			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
+				editQuantity(cart, productVariationId, cartItem.getQuantity() + quantity);
+				return;
+			}
+		}
+
 		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
 
 		// Verifica che la quantità richiesta sia disponibile nell'inventario
@@ -76,6 +84,13 @@ public class CartServiceImpl implements CartService {
 		Cart cart = cartRepository.findById(cartId)
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
+		editQuantity(cart, productVariationId, newQuantity);
+	}
+
+	/**
+	 * Modifica la quantità di un prodotto nel carrello.
+	 */
+	private void editQuantity(Cart cart, UUID productVariationId, int newQuantity) {
 		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
 
 		if (productVariation.getQuantityInStock() < newQuantity) {
