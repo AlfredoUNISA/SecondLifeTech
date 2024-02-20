@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet" >
+</head>
+<body data-bs-theme="dark" th:fragment="header">
+<div class="container-fluid">
+    <nav id="mainNav" class="navbar navbar-expand-lg fixed-top bg-primary text-uppercase navbar-dark " >
+        <div class="container"><a class="navbar-brand" href="#">SecondLifeTech</a>
+            <ul class="navbar-nav"></ul>
+            <button class="navbar-toggler text-white navbar-toggler-right text-uppercase rounded"
+                    data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
+                    aria-expanded="false" aria-label="Toggle navigation" style="background: var(--bs-primary)">
+                <i class="fa fa-bars"></i></button>
+            <div id="navbarResponsive" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/products">Prodotti</a> </li>
+                    <li class="nav-item mx-0 mx-lg-1" th:if="${user==null}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Login/Registrazione</a> </li>
+                    <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole()=='CLIENTE'}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyProfile">Il mio Profilo</a> </li>
+                    <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole()!='CLIENTE'}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyDashboard">La mia Dashboard</a> </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<br/>
+</body>
+</html>
