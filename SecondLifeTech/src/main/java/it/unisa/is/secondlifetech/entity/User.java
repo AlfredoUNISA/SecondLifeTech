@@ -49,8 +49,7 @@ public class User {
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 	@OneToOne
-	// TODO: cambiare il comportamento in modo che non venga creato un carrello per ogni utente
-	private Cart cart = new Cart(0, this);
+	private Cart cart;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<OrderPlaced> ordersPlaced = new ArrayList<>();

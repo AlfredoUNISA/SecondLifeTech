@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -25,6 +26,9 @@ public class ProductModel {
 	@Column(nullable = false)
 	private String category;
 
+	@OneToMany
+	private List<ProductVariation> productVariations;
+
 	@OneToOne
 	private ImageFile imageFile;
 
@@ -33,4 +37,6 @@ public class ProductModel {
 		this.brand = brand;
 		this.category = category;
 	}
+
+
 }

@@ -19,18 +19,18 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Salva un prodotto nell'ordine nel database.
+	 * Crea un prodotto in un ordine nel database.
 	 *
-	 * @param orderItem l'oggetto OrderItem da salvare
-	 * @return l'oggetto OrderItem salvato
+	 * @param orderItem l'oggetto OrderItem da creare
+	 * @return l'oggetto OrderItem creato
 	 */
 	@Override
-	public OrderItem saveOrderItem(OrderItem orderItem) {
+	public OrderItem createNewOrderItem(OrderItem orderItem) {
 		return orderItemRepository.save(orderItem);
 	}
 
 	/**
-	 * Ottiene un prodotto nell'ordine dal database tramite l'ID.
+	 * Ottiene un prodotto di un ordine dal database tramite l'ID.
 	 *
 	 * @param id l'ID del prodotto nell'ordine da cercare
 	 * @return l'oggetto OrderItem corrispondente all'ID specificato, o null se non trovato
@@ -41,7 +41,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Ottiene tutti i prodotti nell'ordine dal database tramite l'ID dell'ordine.
+	 * Ottiene tutti i prodotti di un ordine dal database tramite l'ID dell'ordine.
 	 *
 	 * @param orderId l'ID dell'ordine di cui cercare i prodotti
 	 * @return una lista di oggetti OrderItem corrispondenti all'ID specificato
@@ -52,7 +52,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Ottiene tutti i prodotti nell'ordine dal database tramite l'ID dell'ordine.
+	 * Ottiene tutti i prodotti di un ordine dal database tramite l'ID dell'ordine.
 	 *
 	 * @param orderId l'ID dell'ordine di cui cercare i prodotti
 	 * @return una lista di oggetti OrderItem corrispondenti all'ID specificato
@@ -63,7 +63,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Aggiorna le informazioni di un prodotto nell'ordine nel database.
+	 * Aggiorna le informazioni di un prodotto di un ordine nel database.
 	 *
 	 * @param id        l'ID del prodotto nell'ordine da aggiornare
 	 * @param orderItem l'oggetto OrderItem con le nuove informazioni da salvare
@@ -75,7 +75,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	/**
-	 * Elimina un prodotto nell'ordine dal database tramite l'ID.
+	 * Elimina un prodotto di un ordine dal database tramite l'ID.
 	 *
 	 * @param id l'ID del prodotto nell'ordine da eliminare
 	 */

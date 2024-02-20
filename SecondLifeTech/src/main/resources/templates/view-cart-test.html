@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Index</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="'Cart of ' + ${userName}"></h1>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Total</th>
+    </tr>
+    <th:block th:each="cartItem : ${cart.products}">
+        <tr>
+            <td th:text="${cartItem.productVariation.productModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
+            <td th:text="${cartItem.quantity}"></td>
+            <td th:text="${cartItem.productVariation.price * cartItem.quantity}"></td>
+        </tr>
+    </th:block>
+    <tr>
+        <td colspan="2" style="text-align: end">Total</td>
+        <td th:text="${cart.total}"></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -7,42 +7,42 @@ import java.util.UUID;
 
 public interface CartItemService {
 	/**
-	 * Salva un prodotto nel carrello nel database.
+	 * Salva un nuovo prodotto di un carrello nel database.
 	 *
 	 * @param cartItem l'oggetto CartItem da salvare
 	 * @return l'oggetto CartItem salvato
 	 */
-	CartItem saveCartProduct(CartItem cartItem);
+	CartItem createNewCartItem(CartItem cartItem);
 
 	/**
-	 * Ottiene un prodotto nel carrello dal database tramite l'ID.
+	 * Ottiene un prodotto di un carrello dal database tramite l'ID.
 	 *
 	 * @param id l'ID del prodotto nel carrello da cercare
 	 * @return l'oggetto CartItem corrispondente all'ID specificato, o null se non trovato
 	 */
-	CartItem findCartProductById(UUID id);
+	CartItem findCartItemById(UUID id);
 
 	/**
-	 * Ottiene tutti i prodotti nel carrello dal database tramite l'ID del carrello.
+	 * Ottiene tutti i prodotti di un carrello dal database tramite l'ID del carrello.
 	 *
 	 * @param cartId l'ID del carrello di cui cercare i prodotti
 	 * @return una lista di oggetti CartItem corrispondenti all'ID specificato
 	 */
-	List<CartItem> findCartProductsByCart(UUID cartId);
+	List<CartItem> findCartItemByCart(UUID cartId);
 
 	/**
-	 * Aggiorna le informazioni di un prodotto nel carrello nel database.
+	 * Aggiorna le informazioni del prodotto di un carrello nel database.
 	 *
 	 * @param id          l'ID del prodotto nel carrello da aggiornare
 	 * @param cartItem l'oggetto CartItem con le nuove informazioni da salvare
 	 * @return l'oggetto CartItem aggiornato
 	 */
-	CartItem updateCartProduct(UUID id, CartItem cartItem);
+	CartItem updateCartItem(UUID id, CartItem cartItem);
 
 	/**
-	 * Elimina un prodotto nel carrello dal database tramite l'ID.
+	 * Elimina un prodotto di un carrello dal database tramite l'ID.
 	 *
 	 * @param id l'ID del prodotto nel carrello da eliminare
 	 */
-	void deleteCartProduct(UUID id);
+	void deleteCartItem(UUID id);
 }

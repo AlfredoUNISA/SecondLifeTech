@@ -20,7 +20,7 @@ class OrderItemRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationRepository productVariationService;
 	@Autowired
 	private OrderPlacedRepository orderRepository;
 	@Autowired
@@ -48,7 +48,7 @@ class OrderItemRepositoryTests {
 			"Accettabile",
 			productModel
 		);
-		productVariationRepository.save(productVariation);
+		productVariationService.save(productVariation);
 
 		User user = new User(
 			"Mario",

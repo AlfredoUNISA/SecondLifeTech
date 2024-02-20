@@ -1,12 +1,15 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.repository.UserRepository;
+import it.unisa.is.secondlifetech.service.CartService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
@@ -16,12 +19,16 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTests {
 	@Mock
 	private UserRepository userRepository;
+
+	@Mock
+	private CartService cartService;
 
 	@InjectMocks
 	private UserServiceImpl userService;
@@ -66,4 +73,25 @@ class UserServiceImplTests {
 		assertThat(foundUsers).containsOnly(user1, user2);
 		assertThat(foundUsers).doesNotContain(gestore);
 	}
+
+	@Test
+	void UserService_Save_SaveCartCorrectly() {
+		// Arrange
+		User cliente = new User("Mario", "Rossi", "email@email.com", "password", null, UserRole.CLIENTE, null);
+		User gestore = new User("Antonio", "Arancioni", "emailAziendale@email.com", "password", null, UserRole.GESTORE_PRODOTTI, "");
+
+		when(userRepository.save(cliente)).thenReturn(cliente);
+		when(userRepository.save(gestore)).thenReturn(gestore);
+
+		when(cartService.createNewCart(Mockito.any(Cart.class))).thenReturn(gestore.getCart());
+
+		// Act
+		User savedCliente = userService.createNewUser(cliente);
+		User savedGestore = userService.createNewUser(gestore);
+
+		// Assert
+		assertThat(savedCliente.getCart()).isNotNull();
+		assertThat(savedGestore.getCart()).isNull();
+	}
+
 }

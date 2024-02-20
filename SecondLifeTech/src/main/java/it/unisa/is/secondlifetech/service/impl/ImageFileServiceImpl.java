@@ -20,24 +20,47 @@ public class ImageFileServiceImpl implements ImageFileService {
 		this.imageFileRepository = imageFileRepository;
 	}
 
+	/**
+	 * Crea un nuovo file immagine
+	 * @param file file da creare
+	 * @return file immagine creato
+	 * @throws IOException se si verifica un errore durante la creazione del file
+	 */
 	@Override
-	public ImageFile saveImage(MultipartFile file) throws IOException {
-		ImageFile fileObj = new ImageFile();
-		fileObj.setName(file.getOriginalFilename());
-		fileObj.setContentType(file.getContentType());
-		fileObj.setData(file.getBytes());
-		return imageFileRepository.save(fileObj);
+	public ImageFile createNewImage(MultipartFile file) throws IOException {
+		ImageFile imageFile = new ImageFile();
+		imageFile.setName(file.getOriginalFilename());
+		imageFile.setContentType(file.getContentType());
+		imageFile.setData(file.getBytes());
+		return imageFileRepository.save(imageFile);
 	}
+
+	/**
+	 * Trova un file immagine per id
+	 * @param id id del file immagine
+	 * @return file immagine, null se non esiste
+	 */
 	@Override
 	public ImageFile findById(UUID id) {
 		return imageFileRepository.findById(id).orElse(null);
 	}
 
+	/**
+	 * Aggiorna un file immagine
+	 * @param id id del file immagine
+	 * @param imageFile file immagine
+	 * @return file immagine aggiornato
+	 */
 	@Override
-	public List<ImageFile> findAll() {
-		return imageFileRepository.findAll();
+	public ImageFile updateImage(UUID id, ImageFile imageFile) {
+		imageFile.setId(id);
+		return imageFileRepository.save(imageFile);
 	}
 
+	/**
+	 * Elimina un file immagine per id
+	 * @param id id del file immagine
+	 */
 	@Override
 	public void deleteById(UUID id) {
 		imageFileRepository.deleteById(id);

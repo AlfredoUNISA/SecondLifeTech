@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public interface ProductVariationService {
 	/**
-	 * Salva una variante di prodotto nel database.
+	 * Crea una nuova variante di prodotto nel database.
 	 *
-	 * @param productVariation l'oggetto ProductVariation da salvare
-	 * @return l'oggetto ProductVariation salvato
+	 * @param productVariation l'oggetto ProductVariation da creare
+	 * @return l'oggetto ProductVariation creato
 	 */
-	ProductVariation saveProductVariation(ProductVariation productVariation);
+	ProductVariation createNewProductVariation(ProductVariation productVariation);
 
 	/**
 	 * Ottiene una variante di prodotto dal database tramite l'ID.
@@ -24,6 +24,7 @@ public interface ProductVariationService {
 
 	/**
 	 * Ottiene tutte le varianti di un prodotto dal database tramite l'ID del modello.
+	 *
 	 * @param productId l'ID del prodotto di cui cercare le varianti
 	 * @return una lista di oggetti ProductVariation corrispondenti all'ID specificato
 	 */
@@ -31,10 +32,18 @@ public interface ProductVariationService {
 
 	/**
 	 * Ottiene tutte le varianti di prodotto dal database tramite lo stato.
+	 *
 	 * @param state lo stato delle varianti di prodotto da cercare
 	 * @return una lista di oggetti ProductVariation corrispondenti allo stato specificato
 	 */
 	List<ProductVariation> findProductVariationsByState(String state);
+
+	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @return una lista di tutte le varianti di prodotto
+	 */
+	List<ProductVariation> findAllProductVariations();
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.

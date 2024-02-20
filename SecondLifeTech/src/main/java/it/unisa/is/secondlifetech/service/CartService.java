@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface CartService {
 	/**
-	 * Aggiunge un prodotto al carrello.
+	 * Aggiunge un nuovo prodotto al carrello.
 	 *
 	 * @param cartId             l'ID del carrello in cui aggiungere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
@@ -19,9 +19,9 @@ public interface CartService {
 	 *
 	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
 	 * @param productVariationId l'ID della variante di prodotto da modificare
-	 * @param quantity           la nuova quantità del prodotto
+	 * @param newQuantity           la nuova quantità del prodotto
 	 */
-	void editProductQuantityInCart(UUID cartId, UUID productVariationId, int quantity);
+	void editProductQuantityInCart(UUID cartId, UUID productVariationId, int newQuantity);
 
 	/**
 	 * Rimuove un prodotto dal carrello.
@@ -44,7 +44,7 @@ public interface CartService {
 	 * @param cart l'oggetto Cart da salvare
 	 * @return l'oggetto Cart salvato
 	 */
-	Cart saveCart(Cart cart);
+	Cart createNewCart(Cart cart);
 
 	/**
 	 * Ottiene un carrello dal database tramite l'ID.

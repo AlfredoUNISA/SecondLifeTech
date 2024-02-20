@@ -11,22 +11,23 @@ import java.util.UUID;
 
 @Service
 public class ProductVariationServiceImpl implements ProductVariationService {
-	private final ProductVariationRepository productVariationRepository;
+	private final ProductVariationRepository productVariationService;
 
 	@Autowired
-	public ProductVariationServiceImpl(ProductVariationRepository productVariationRepository) {
-		this.productVariationRepository = productVariationRepository;
+	public ProductVariationServiceImpl(ProductVariationRepository productVariationService) {
+		this.productVariationService = productVariationService;
 	}
 
 	/**
-	 * Salva una variante di prodotto nel database.
+	 * Crea una nuova variante di prodotto nel database.
 	 *
-	 * @param productVariation l'oggetto ProductVariation da salvare
-	 * @return l'oggetto ProductVariation salvato
+	 * @param productVariation l'oggetto ProductVariation da creare
+	 * @return l'oggetto ProductVariation creato
 	 */
 	@Override
-	public ProductVariation saveProductVariation(ProductVariation productVariation) {
-		return productVariationRepository.save(productVariation);
+	public ProductVariation createNewProductVariation(ProductVariation productVariation) {
+		productVariation.getProductModel().getProductVariations().add(productVariation);
+		return productVariationService.save(productVariation);
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public ProductVariation findProductVariationById(UUID id) {
-		return productVariationRepository.findById(id).orElse(null);
+		return productVariationService.findById(id).orElse(null);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public List<ProductVariation> findProductVariationsByProductModelId(UUID productId) {
-		return productVariationRepository.findByProductModelId(productId);
+		return productVariationService.findByProductModelId(productId);
 	}
 
 	/**
@@ -59,7 +60,17 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public List<ProductVariation> findProductVariationsByState(String state) {
-		return productVariationRepository.findByState(state);
+		return productVariationService.findByState(state);
+	}
+
+	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @return una lista di tutte le varianti di prodotto
+	 */
+	@Override
+	public List<ProductVariation> findAllProductVariations() {
+		return productVariationService.findAll();
 	}
 
 	/**
@@ -72,7 +83,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	@Override
 	public ProductVariation updateProductVariation(UUID id, ProductVariation productVariation) {
 		productVariation.setId(id);
-		return productVariationRepository.save(productVariation);
+		return productVariationService.save(productVariation);
 	}
 
 	/**
@@ -82,6 +93,6 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 	 */
 	@Override
 	public void deleteProductVariation(UUID id) {
-		productVariationRepository.deleteById(id);
+		productVariationService.deleteById(id);
 	}
 }

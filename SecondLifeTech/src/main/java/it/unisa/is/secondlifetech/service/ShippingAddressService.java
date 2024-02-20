@@ -10,12 +10,12 @@ import java.util.UUID;
  */
 public interface ShippingAddressService {
 	/**
-	 * Salva un indirizzo di spedizione nel database.
+	 * Crea un nuovo indirizzo di spedizione nel database.
 	 *
-	 * @param shippingAddress l'oggetto ShippingAddress da salvare
-	 * @return l'oggetto ShippingAddress salvato
+	 * @param shippingAddress l'oggetto ShippingAddress da creare
+	 * @return l'oggetto ShippingAddress creato
 	 */
-	ShippingAddress saveShippingAddress(ShippingAddress shippingAddress);
+	ShippingAddress createNewShippingAddress(ShippingAddress shippingAddress);
 
 	/**
 	 * Ottiene un indirizzo di spedizione dal database tramite l'ID.

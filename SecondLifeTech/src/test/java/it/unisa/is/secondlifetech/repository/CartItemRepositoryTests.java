@@ -26,7 +26,7 @@ class CartItemRepositoryTests {
 	@Autowired
 	private ProductModelRepository productModelRepository;
 	@Autowired
-	private ProductVariationRepository productVariationRepository;
+	private ProductVariationRepository productVariationService;
 
 	@Test
 	void CartProductRepository_FindByCartId_ReturnCorrectList() {
@@ -55,7 +55,7 @@ class CartItemRepositoryTests {
 			ProductState.ACCETTABILE,
 			productModel
 		);
-		productVariationRepository.save(productVariation1);
+		productVariationService.save(productVariation1);
 
 		ProductVariation productVariation2 = new ProductVariation(
 			2020,
@@ -68,7 +68,7 @@ class CartItemRepositoryTests {
 			ProductState.OTTIMO,
 			productModel
 		);
-		productVariationRepository.save(productVariation2);
+		productVariationService.save(productVariation2);
 
 		CartItem cartItem1 = new CartItem(cart1, productVariation1, 1, productVariation1.getPrice());
 		CartItem cartItem2 = new CartItem(cart1, productVariation2, 2, productVariation1.getPrice()*2);

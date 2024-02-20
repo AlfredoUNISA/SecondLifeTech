@@ -1,7 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.repository.UserRepository;
+import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,21 +18,35 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
+	private final CartService cartService;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, CartService cartService) {
 		this.userRepository = userRepository;
+		this.cartService = cartService;
 	}
 
 	/**
-	 * Salva un utente nel database.
+	 * Salva un nuovo utente nel database.
 	 *
 	 * @param user l'oggetto User da salvare
 	 * @return l'oggetto User salvato
 	 */
 	@Override
-	public User saveUser(User user) {
+	public User createNewUser(User user) {
 		// TODO: implementare la logica di encoding della password
+
+		if (user.getId() != null)
+			throw new RuntimeException("Usare la funzione di aggiornamento per modificare un utente esistente");
+
+		if (user.getRole().equals(UserRole.CLIENTE)) {
+			Cart cart = new Cart(0, user);
+			cartService.createNewCart(cart);
+
+			user.setCart(cart);
+			return userRepository.save(user);
+		}
+
 		return userRepository.save(user);
 	}
 

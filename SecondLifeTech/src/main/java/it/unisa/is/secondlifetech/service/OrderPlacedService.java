@@ -8,12 +8,12 @@ import java.util.UUID;
 
 public interface OrderPlacedService {
 	/**
-	 * Salva un ordine nel database.
+	 * Crea un nuovo ordine nel database.
 	 *
-	 * @param order l'oggetto OrderPlaced da salvare
-	 * @return l'oggetto OrderPlaced salvato
+	 * @param order l'oggetto OrderPlaced da creare
+	 * @return l'oggetto OrderPlaced creato
 	 */
-	OrderPlaced saveOrder(OrderPlaced order);
+	OrderPlaced createNewOrder(OrderPlaced order);
 
 	/**
 	 * Ottiene un ordine dal database tramite l'ID.

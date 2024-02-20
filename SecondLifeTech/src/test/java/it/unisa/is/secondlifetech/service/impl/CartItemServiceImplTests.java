@@ -71,7 +71,7 @@ class CartItemServiceImplTests {
 		when(cartItemRepository.findByCartId(cart1.getId())).thenReturn(List.of(cartItem1, cartItem2));
 
 		// Act
-		List<CartItem> foundCartItems = cartProductService.findCartProductsByCart(cart1.getId());
+		List<CartItem> foundCartItems = cartProductService.findCartItemByCart(cart1.getId());
 
 		// Assert
 		assertThat(foundCartItems).isNotNull();

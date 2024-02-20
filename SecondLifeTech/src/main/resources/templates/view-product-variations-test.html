@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Index</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+        form {
+            display: flex;
+            flex-direction: row;
+        }
+        label, input {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Variations</h1>
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Variation</th>
+        <th>Quantity in stock</th>
+        <th>Price</th>
+        <th>Insert in cart</th>
+    </tr>
+    <th:block th:each="variation : ${variations}">
+        <tr>
+            <td th:text="${variation.productModel.brand + ' ' + variation.productModel.name + ' (' + variation.productModel.category + ') '}"></td>
+            <td th:text="${variation.color + ' ' + variation.storageSize + 'GB ' + variation.ram + 'GB RAM ' + variation.displaySize + 'inch'}"></td>
+            <td th:text="${variation.quantityInStock}"></td>
+            <td th:text="${variation.price}"></td>
+            <td>
+                <form method="post" role="form" action="/add-to-cart-test">
+                    <input type="hidden" th:value="${variation.id}" name="productVariationId">
+                    <label for="quantity">Quantity: </label>
+                    <input type="number" id="quantity" name="quantity">
+                    <label for="user"> User: </label>
+                    <select id="user" name="userId">
+                        <th:block th:each="user : ${users}">
+                            <option th:text="${user.firstName} + ' ' + ${user.lastName}" th:value="${user.id}"></option>
+                        </th:block>
+                    </select>
+                    <button type="submit">Add to cart</button>
+                </form>
+            </td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>

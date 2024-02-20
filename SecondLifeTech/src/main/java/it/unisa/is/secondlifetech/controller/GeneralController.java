@@ -3,71 +3,117 @@ package it.unisa.is.secondlifetech.controller;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.repository.CartItemRepository;
-import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
-import it.unisa.is.secondlifetech.service.CartService;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 @Slf4j
 @RequestMapping("/")
 public class GeneralController {
-	private final CartRepository cartRepository;
-	private final CartItemRepository cartItemRepository;
-	private final ProductModelRepository productModelRepository;
-	private final ProductVariationRepository productVariationRepository;
+	private final UserService userService;
+	private final ImageFileService imageFileService;
+	private final ProductModelService productModelService;
+	private final ProductVariationService productVariationService;
 	private final CartService cartService;
 
 	@Autowired
-	public GeneralController(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, CartService cartService) {
-		this.cartRepository = cartRepository;
-		this.cartItemRepository = cartItemRepository;
-		this.productModelRepository = productModelRepository;
-		this.productVariationRepository = productVariationRepository;
+	public GeneralController(UserService userService, ImageFileService imageFileService, ProductModelService productModelService, ProductVariationService productVariationService, CartService cartService) {
+		this.userService = userService;
+		this.imageFileService = imageFileService;
+		this.productModelService = productModelService;
+		this.productVariationService = productVariationService;
 		this.cartService = cartService;
 	}
 
 	@GetMapping
-	public String index() {
-		// Assert
-		Cart cart1 = new Cart();
-		cartRepository.save(cart1);
-
-		Cart cart2 = new Cart();
-		cartRepository.save(cart2);
-
-		ProductModel productModel = new ProductModel(
-			"iPhone 11",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModelRepository.save(productModel);
-
-		ProductVariation productVariation = new ProductVariation(
-			2020,
-			4,
-			6.0,
-			128,
-			250.0,
-			3,
-			"Green",
-			ProductState.ACCETTABILE,
-			productModel
-		);
-		productVariationRepository.save(productVariation);
-
-		cartService.addToCart(cart1.getId(), productVariation.getId(), 2);
-
-		return "my-custom-index";
+	public String index(Model model) {
+		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
+		return "index";
 	}
+
+	@GetMapping("/create-user-test")
+	public String createUser(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		model.addAttribute("roles", UserRole.ALL_ROLES);
+		return "create-user-test";
+	}
+
+	@PostMapping("/create-user-test")
+	public String createUserPOST(@ModelAttribute("user") User user) {
+		user.setRole(UserRole.getRole(user.getRole()));
+		userService.createNewUser(user);
+		return "redirect:/";
+	}
+
+	@GetMapping("/create-product-model-test")
+	public String createProductModel(Model model) {
+		ProductModel productModel = new ProductModel();
+		model.addAttribute("productModel", productModel);
+		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
+		return "create-product-model-test";
+	}
+
+	@PostMapping("/create-product-model-test")
+	public String createProductModelPOST(@ModelAttribute("productModel") ProductModel productModel,
+	                                 @RequestAttribute("image") MultipartFile image) throws IOException {
+		productModel.setImageFile(imageFileService.createNewImage(image));
+		productModelService.createNewProductModel(productModel);
+		return "redirect:/";
+	}
+
+	@GetMapping("/create-product-variation-test")
+	public String createProductVariation(Model model) {
+		ProductVariation productVariation = new ProductVariation();
+		model.addAttribute("productVariation", productVariation);
+		model.addAttribute("states", ProductState.ALL_STATES);
+		model.addAttribute("productModels", productModelService.findAllProductModels());
+		return "create-product-variation-test";
+	}
+
+	@PostMapping("/create-product-variation-test")
+	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
+		ProductModel productModel = productModelService.findProductModelById(productVariation.getProductModel().getId());
+		productVariation.setProductModel(productModel);
+		productVariationService.createNewProductVariation(productVariation);
+		return "redirect:/";
+	}
+
+	@PostMapping("/add-to-cart-test")
+	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
+		Cart cart = cartService.findCartByUser(userId);
+		cartService.addToCart(cart.getId(), productVariationId, quantity);
+		return "redirect:/view-cart-test?userId=" + userId;
+	}
+
+	@GetMapping("/view-cart-test")
+	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
+		Cart cart = cartService.findCartByUser(userId);
+		User user = userService.findUserById(userId);
+		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
+		model.addAttribute("cart", cart);
+		return "view-cart-test";
+	}
+
+	@GetMapping("/view-product-variations")
+	public String viewProductVariations(Model model) {
+		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
+		model.addAttribute("variations", productVariationService.findAllProductVariations());
+		return "view-product-variations-test";
+	}
+
 
 	// TODO: aggiungere la pagina di errore
 }
