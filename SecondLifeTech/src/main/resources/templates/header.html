@@ -19,8 +19,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/products">Prodotti</a> </li>
                     <li class="nav-item mx-0 mx-lg-1" th:if="${user==null}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Login/Registrazione</a> </li>
-                    <li class="nav-item mx-0 mx-lg-1" th:if="${user.getRole()=='CLIENTE'}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyProfile">Il mio Profilo</a> </li>
-                    <li class="nav-item mx-0 mx-lg-1" th:if="${user.getRole()!='CLIENTE' && user!=null}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyDashboard">La mia Dashboard</a> </li>
+                    <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole()=='CLIENTE'}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyProfile">Il mio Profilo</a> </li>
+                    <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole()!='CLIENTE'}"> <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/MyDashboard">La mia Dashboard</a> </li>
                 </ul>
             </div>
         </div>
