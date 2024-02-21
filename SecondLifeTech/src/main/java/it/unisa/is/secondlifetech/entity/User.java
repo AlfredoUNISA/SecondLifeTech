@@ -55,6 +55,26 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<OrderPlaced> orders = new ArrayList<>();
 
+	public void addShippingAddress(ShippingAddress shippingAddress) {
+		shippingAddresses.add(shippingAddress);
+		shippingAddress.setUser(this);
+	}
+
+	public void removeShippingAddress(ShippingAddress shippingAddress) {
+		shippingAddresses.remove(shippingAddress);
+		shippingAddress.setUser(null);
+	}
+
+	public void addPaymentMethod(PaymentMethod paymentMethod) {
+		paymentMethods.add(paymentMethod);
+		paymentMethod.setUser(this);
+	}
+
+	public void removePaymentMethod(PaymentMethod paymentMethod) {
+		paymentMethods.remove(paymentMethod);
+		paymentMethod.setUser(null);
+	}
+
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;
 		this.lastName = lastName;

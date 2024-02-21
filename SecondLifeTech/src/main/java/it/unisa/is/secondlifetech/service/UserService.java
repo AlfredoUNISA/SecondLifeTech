@@ -1,5 +1,7 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.entity.PaymentMethod;
+import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 
 import java.util.List;
@@ -9,6 +11,15 @@ import java.util.UUID;
  * Interfaccia per il servizio di gestione degli utenti.
  */
 public interface UserService {
+
+	void addShippingAddress(User user, ShippingAddress shippingAddress);
+	void removeShippingAddress(User user, ShippingAddress shippingAddress);
+	void updateShippingAddress(User user, ShippingAddress shippingAddress);
+
+	void addPaymentMethod(User user, PaymentMethod paymentMethod);
+	void removePaymentMethod(User user, PaymentMethod paymentMethod);
+	void updatePaymentMethod(User user, PaymentMethod paymentMethod);
+
 	/**
 	 * Crea un nuovo utente nel database.
 	 *

@@ -50,6 +50,17 @@
             <button type="submit">View Orders</button>
         </form>
     </li>
+    <li>
+        View the profile of
+        <form method="get" role="form" th:action="@{/view-user-test}">
+            <select id="usersProfileSelect" name="userId">
+                <th:block th:each="user : ${users}">
+                    <option th:text="${user.firstName} + ' ' + ${user.lastName}" th:value="${user.id}"></option>
+                </th:block>
+            </select>
+            <button type="submit">View Profile</button>
+        </form>
+    </li>
 </ul>
 </body>
 </html>
