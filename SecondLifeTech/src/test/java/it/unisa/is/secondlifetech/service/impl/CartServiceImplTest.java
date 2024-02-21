@@ -5,7 +5,7 @@ import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.service.ProductVariationService;
+import it.unisa.is.secondlifetech.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +26,7 @@ public class CartServiceImplTest {
 	private CartRepository cartRepository;
 
 	@Mock
-	private ProductVariationService productVariationService;
+	private ProductService productService;
 
 	@Mock
 	private CartItemRepository cartItemRepository;
@@ -59,7 +58,7 @@ public class CartServiceImplTest {
 		UUID newProductVariationId = productVariation.getId();
 		int quantity = 2;
 
-		when(productVariationService.findProductVariationById(newProductVariationId)).thenReturn(productVariation);
+		when(productService.findVariationById(newProductVariationId)).thenReturn(productVariation);
 		when(cartItemRepository.save(any(CartItem.class))).thenReturn(new CartItem());
 
 		// Act

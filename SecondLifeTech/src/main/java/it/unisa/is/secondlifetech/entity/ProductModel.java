@@ -34,6 +34,16 @@ public class ProductModel {
 	@OneToOne
 	private ImageFile imageFile;
 
+	public void addVariation(ProductVariation variation) {
+		variations.add(variation);
+		variation.setModel(this);
+	}
+
+	public void removeVariation(ProductVariation variation) {
+		variations.remove(variation);
+		variation.setModel(null);
+	}
+
 	public ProductModel(String name, String brand, String category) {
 		this.name = name;
 		this.brand = brand;

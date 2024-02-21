@@ -1,9 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.ProductModel;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductModelServiceImplTests {
+class ProductServiceImplTests {
 
 	@Mock
 	private ProductModelRepository productModelRepository;
 
 	@InjectMocks
-	private ProductModelServiceImpl productModelService;
+	private ProductServiceImpl productModelService;
 
 	private ProductModel productModel;
 
@@ -48,7 +46,7 @@ class ProductModelServiceImplTests {
 		when(productModelRepository.findByName(name)).thenReturn(productModel);
 
 		// Act
-		ProductModel result = productModelService.findProductModelByName(name);
+		ProductModel result = productModelService.findModelByName(name);
 
 		// Assert
 		assertThat(result).isEqualTo(productModel);
@@ -62,7 +60,7 @@ class ProductModelServiceImplTests {
 		when(productModelRepository.findByBrand(brand)).thenReturn(List.of(productModel));
 
 		// Act
-		List<ProductModel> results = productModelService.findProductModelsByBrand(brand);
+		List<ProductModel> results = productModelService.findModelsByBrand(brand);
 
 		// Assert
 		assertThat(results).hasSize(1);
@@ -77,7 +75,7 @@ class ProductModelServiceImplTests {
 		when(productModelRepository.findByCategory(category)).thenReturn(List.of(productModel));
 
 		// Act
-		List<ProductModel> results = productModelService.findProductModelsByCategory(category);
+		List<ProductModel> results = productModelService.findModelsByCategory(category);
 
 		// Assert
 		assertThat(results).hasSize(1);

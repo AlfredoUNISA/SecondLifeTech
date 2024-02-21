@@ -3,10 +3,9 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.OrderService;
-import it.unisa.is.secondlifetech.service.ProductVariationService;
+import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +17,16 @@ import java.util.UUID;
 public class CartServiceImpl implements CartService {
 
 	private final CartRepository cartRepository;
-	private final ProductVariationService productVariationService;
 	private final CartItemRepository cartItemRepository;
-	private final OrderItemRepository orderItemRepository;
 	private final OrderService orderService;
+	private final ProductService productService;
 
 	@Autowired
-	public CartServiceImpl(CartRepository cartRepository, ProductVariationService productVariationService, CartItemRepository cartItemRepository, OrderItemRepository orderItemRepository, OrderService orderService) {
+	public CartServiceImpl(CartRepository cartRepository, CartItemRepository cartItemRepository, OrderService orderService, ProductService productService) {
 		this.cartRepository = cartRepository;
-		this.productVariationService = productVariationService;
 		this.cartItemRepository = cartItemRepository;
-		this.orderItemRepository = orderItemRepository;
 		this.orderService = orderService;
+		this.productService = productService;
 	}
 
 	/**
@@ -51,19 +48,19 @@ public class CartServiceImpl implements CartService {
 		}
 
 		// Trova la variante di prodotto
-		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
+		ProductVariation productVariation = productService.findVariationById(productVariationId);
 
 		verifyQuantityInStock(quantity, productVariation);
 
 		// Calcola il subtotale del prodotto
 		double subTotal = productVariation.getPrice() * quantity;
 
-		// Crea un nuovo oggetto CartItem e lo aggiunge al carrello
+		// Crea un nuovo oggetto CartItem
 		CartItem cartItem = new CartItem(productVariation, quantity, subTotal);
-		cartItemRepository.save(cartItem);
 		cart.addItem(cartItem); // Aggiorna anche il totale del carrello
 
 		// Salva le modifiche
+		cartItemRepository.save(cartItem);
 		cartRepository.save(cart);
 	}
 
@@ -192,7 +189,7 @@ public class CartServiceImpl implements CartService {
 			);
 
 			productVariation.setQuantityInStock(productVariation.getQuantityInStock() - cartItem.getQuantity());
-			productVariationService.updateProductVariation(productVariation.getId(), productVariation);
+			productService.updateVariation(productVariation.getId(), productVariation);
 
 			order.addItem(orderItem);
 		}

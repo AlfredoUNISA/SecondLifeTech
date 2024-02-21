@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 @Controller
@@ -23,18 +21,14 @@ import java.util.UUID;
 public class GeneralController {
 	private final UserService userService;
 	private final ImageFileService imageFileService;
-	private final ProductModelService productModelService;
-	private final ProductVariationService productVariationService;
-	private final OrderService orderService;
+	private final ProductService productService;
 	private final CartService cartService;
 
 	@Autowired
-	public GeneralController(UserService userService, ImageFileService imageFileService, ProductModelService productModelService, ProductVariationService productVariationService, OrderService orderService, CartService cartService) {
+	public GeneralController(UserService userService, ImageFileService imageFileService, ProductService productService, CartService cartService) {
 		this.userService = userService;
 		this.imageFileService = imageFileService;
-		this.productModelService = productModelService;
-		this.productVariationService = productVariationService;
-		this.orderService = orderService;
+		this.productService = productService;
 		this.cartService = cartService;
 	}
 
@@ -72,7 +66,7 @@ public class GeneralController {
 	                                 @RequestAttribute("image") MultipartFile image) throws IOException {
 		ImageFile imageFile = imageFileService.createNewImage(image);
 		productModel.setImageFile(imageFile);
-		productModelService.createNewProductModel(productModel);
+		productService.createNewModel(productModel);
 		return "redirect:/";
 	}
 
@@ -81,15 +75,15 @@ public class GeneralController {
 		ProductVariation productVariation = new ProductVariation();
 		model.addAttribute("productVariation", productVariation);
 		model.addAttribute("states", ProductState.ALL_STATES);
-		model.addAttribute("productModels", productModelService.findAllProductModels());
+		model.addAttribute("productModels", productService.findAllModels());
 		return "create-product-variation-test";
 	}
 
 	@PostMapping("/create-product-variation-test")
 	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
-		ProductModel productModel = productModelService.findProductModelById(productVariation.getModel().getId());
+		ProductModel productModel = productService.findModelById(productVariation.getModel().getId());
 		productVariation.setModel(productModel);
-		productVariationService.createNewProductVariation(productVariation);
+		productService.createNewVariation(productVariation);
 		return "redirect:/";
 	}
 
@@ -126,7 +120,7 @@ public class GeneralController {
 	@GetMapping("/view-product-variations")
 	public String viewProductVariations(Model model) {
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
-		model.addAttribute("variations", productVariationService.findAllProductVariations());
+		model.addAttribute("variations", productService.findAllVariations());
 		return "view-product-variations-test";
 	}
 
