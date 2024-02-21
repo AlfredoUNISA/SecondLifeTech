@@ -55,14 +55,6 @@ public interface CartService {
 	Cart findCartById(UUID id);
 
 	/**
-	 * Ottiene un carrello dal database tramite l'ID dell'utente.
-	 *
-	 * @param userId l'ID dell'utente di cui cercare il carrello
-	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
-	 */
-	Cart findCartByUser(UUID userId);
-
-	/**
 	 * Aggiorna le informazioni di un carrello nel database.
 	 *
 	 * @param id   l'ID del carrello da aggiornare

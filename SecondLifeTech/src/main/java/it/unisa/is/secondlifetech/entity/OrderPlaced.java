@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@ToString
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class OrderPlaced {
 	@Id
@@ -53,5 +53,19 @@ public class OrderPlaced {
 	 */
 	public void addOrderItem(OrderItem item) {
 		items.add(item);
+	}
+
+	@Override
+	public String toString() {
+		return "OrderPlaced{" +
+			"id=" + id +
+			", userId=" + user.getId() +
+			", address='" + address + '\'' +
+			", email='" + email + '\'' +
+			", date=" + date +
+			", total=" + total +
+			", shipped=" + shipped +
+			", items=" + items +
+			'}';
 	}
 }

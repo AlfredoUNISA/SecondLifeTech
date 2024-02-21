@@ -40,13 +40,6 @@ public class GeneralController {
 
 	@GetMapping
 	public String index(Model model) {
-		ImageFile imageFile = ImageFile.builder()
-			.contentType("test")
-			.build();
-		imageFileService.createNewImage(imageFile);
-		imageFile.setContentType("test2");
-		imageFileService.updateImage(imageFile.getId(), imageFile);
-
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		return "index";
 	}
@@ -101,17 +94,17 @@ public class GeneralController {
 
 	@PostMapping("/add-to-cart-test")
 	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
-		Cart cart = cartService.findCartByUser(userId);
-		cartService.addToCart(cart, productVariationId, quantity);
+		User user = userService.findUserById(userId);
+		cartService.addToCart(user.getCart(), productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;
 	}
 
 	@GetMapping("/view-cart-test")
 	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
-		Cart cart = cartService.findCartByUser(userId);
 		User user = userService.findUserById(userId);
+		log.info("Cart: " + user.getCart());
 		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
-		model.addAttribute("cart", cart);
+		model.addAttribute("cart", user.getCart());
 		return "view-cart-test";
 	}
 

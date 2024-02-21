@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Builder
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class ImageFile {
 	@Id
@@ -40,4 +42,15 @@ public class ImageFile {
 		return Base64.encodeBase64String(this.data);
 	}
 
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		return "ImageFile{" +
+			"id=" + id +
+			", name='" + name + '\'' +
+			", contentType='" + contentType + '\'' +
+			", dataSize=" + data.length +
+			", modelId=" + model.getId() +
+			'}';
+	}
 }

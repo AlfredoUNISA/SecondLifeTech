@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@ToString
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class ProductVariation{
 	@Id
@@ -56,4 +56,23 @@ public class ProductVariation{
 		this.state = state;
 		this.model = model;
 	}
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		return "ProductVariation{" +
+			"id=" + id +
+			", model=" + model.getId() +
+			", year=" + year +
+			", ram=" + ram +
+			", displaySize=" + displaySize +
+			", storageSize=" + storageSize +
+			", price=" + price +
+			", quantityInStock=" + quantityInStock +
+			", color='" + color + '\'' +
+			", state='" + state + '\'' +
+			'}';
+	}
+
+
 }

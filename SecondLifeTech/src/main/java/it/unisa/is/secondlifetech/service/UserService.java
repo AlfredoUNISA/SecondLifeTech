@@ -41,6 +41,14 @@ public interface UserService {
 	List<User> findUsersByRole(String role);
 
 	/**
+	 * Ottiene l'utente a cui è associato un carrello.
+	 *
+	 * @param cartId l'ID del carrello di cui cercare l'utente
+	 * @return l'oggetto User corrispondente al carrello specificato, o null se non trovato
+	 */
+	User findUserByCartId(UUID cartId);
+
+	/**
 	 * Ottiene tutti gli utenti presenti nel database.
 	 *
 	 * @return una lista di tutti gli utenti presenti nel database

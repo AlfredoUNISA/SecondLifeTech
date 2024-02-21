@@ -175,8 +175,6 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public Cart createNewCart(Cart cart) {
-		if (!cart.getUser().getRole().equals(UserRole.CLIENTE))
-			throw new RuntimeException("L'utente non è un cliente");
 		return cartRepository.save(cart);
 	}
 
@@ -189,17 +187,6 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public Cart findCartById(UUID id) {
 		return cartRepository.findById(id).orElse(null);
-	}
-
-	/**
-	 * Ottiene un carrello dal database tramite l'ID dell'utente.
-	 *
-	 * @param userId l'ID dell'utente di cui cercare il carrello
-	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
-	 */
-	@Override
-	public Cart findCartByUser(UUID userId) {
-		return cartRepository.findByUserId(userId).orElse(null);
 	}
 
 	/**

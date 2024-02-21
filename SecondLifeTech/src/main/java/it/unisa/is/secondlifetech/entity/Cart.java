@@ -12,14 +12,16 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
+	@Builder.Default
 	@Column(nullable = false)
-	private double total;
+	private double total = 0;
 
 	@OneToOne(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = false)
 	private User user;
@@ -36,8 +38,19 @@ public class Cart {
 		item.setCart(this);
 	}
 
-	public Cart(double total, User user) {
+	public Cart(double total) {
 		this.total = total;
-		this.user = user;
+	}
+
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		return "Cart{" +
+			"id=" + id +
+			", userId=" + user.getId() +
+			", total=" + total +
+			", items=" + items +
+			'}';
 	}
 }

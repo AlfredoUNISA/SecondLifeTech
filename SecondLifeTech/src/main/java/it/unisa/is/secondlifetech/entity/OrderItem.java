@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@ToString
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class OrderItem {
 	@Id
@@ -62,5 +62,31 @@ public class OrderItem {
 		this.storageSize = storageSize;
 		this.color = color;
 		this.state = state;
+	}
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		String toReturn = "OrderItem{" +
+			"id=" + id +
+			", orderPlacedId=" + orderPlaced.getId() +
+			", quantityOrdered=" + quantityOrdered +
+			", subTotal=" + subTotal;
+
+		if (productVariation != null) {
+			toReturn += ", productVariation=" + productVariation;
+		} else {
+			toReturn += ", modelName='" + modelName + '\'' +
+				", brand='" + brand + '\'' +
+				", category='" + category + '\'' +
+				", year='" + year + '\'' +
+				", ram='" + ram + '\'' +
+				", displaySize='" + displaySize + '\'' +
+				", storageSize='" + storageSize + '\'' +
+				", color='" + color + '\'' +
+				", state='" + state + '\'';
+		}
+
+		return toReturn + '}';
 	}
 }

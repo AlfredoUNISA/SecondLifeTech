@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException("Usare la funzione di aggiornamento per modificare un utente esistente");
 
 		if (user.getRole().equals(UserRole.CLIENTE)) {
-			Cart cart = new Cart(0, user);
+			Cart cart = new Cart();
 			cartService.createNewCart(cart);
 
 			user.setCart(cart);
@@ -81,6 +81,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findUsersByRole(String role) {
 		return userRepository.findByRole(role);
+	}
+
+	/**
+	 * Ottiene l'utente a cui è associato un carrello.
+	 *
+	 * @param cartId l'ID del carrello di cui cercare l'utente
+	 * @return l'oggetto User corrispondente al carrello specificato, o null se non trovato
+	 */
+	@Override
+	public User findUserByCartId(UUID cartId) {
+		return userRepository.findByCartId(cartId).orElse(null);
 	}
 
 	/**
