@@ -31,12 +31,23 @@
     <li>
         View the cart of
         <form method="get" role="form" th:action="@{/view-cart-test}">
-            <select id="usersSelect" name="userId">
+            <select id="usersCartSelect" name="userId">
                 <th:block th:each="user : ${users}">
                     <option th:text="${user.firstName} + ' ' + ${user.lastName}" th:value="${user.id}"></option>
                 </th:block>
             </select>
             <button type="submit">View Cart</button>
+        </form>
+    </li>
+    <li>
+        View the orders of
+        <form method="get" role="form" th:action="@{/view-orders-test}">
+            <select id="usersOrderSelect" name="userId">
+                <th:block th:each="user : ${users}">
+                    <option th:text="${user.firstName} + ' ' + ${user.lastName}" th:value="${user.id}"></option>
+                </th:block>
+            </select>
+            <button type="submit">View Orders</button>
         </form>
     </li>
 </ul>

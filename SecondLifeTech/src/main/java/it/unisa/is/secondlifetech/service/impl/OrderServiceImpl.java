@@ -33,11 +33,11 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public OrderPlaced createNewOrder(OrderPlaced order) throws RuntimeException {
-		OrderPlaced result = orderPlacedRepository.save(order);
-
-		if (order.getItems().isEmpty())
+		if (order.getItems().isEmpty()) {
 			throw new RuntimeException("Un ordine non deve essere vuoto");
+		}
 
+		OrderPlaced result = orderPlacedRepository.save(order);
 		orderItemRepository.saveAll(order.getItems());
 		return result;
 	}

@@ -30,5 +30,10 @@
         <td th:text="${cart.total}"></td>
     </tr>
 </table>
+
+<form action="/finalize-order-test" method="post">
+    <input type="hidden" name="cartId" th:value="${cart.id}">
+    <input type="submit" value="Checkout">
+</form>
 </body>
 </html>

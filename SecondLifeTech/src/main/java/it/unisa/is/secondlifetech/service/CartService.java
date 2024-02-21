@@ -26,17 +26,24 @@ public interface CartService {
 	/**
 	 * Rimuove un prodotto dal carrello.
 	 *
-	 * @param cartId             l'ID del carrello da cui rimuovere il prodotto
+	 * @param cart               il carrello dell'utente da cui rimuovere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da rimuovere
 	 */
-	void removeProductFromCart(UUID cartId, UUID productVariationId);
+	void removeProductFromCart(Cart cart, UUID productVariationId);
 
 	/**
 	 * Svuota il carrello.
 	 *
-	 * @param cartId l'ID del carrello da svuotare
+	 * @param cart il carrello da svuotare
 	 */
-	void clearCart(UUID cartId);
+	void clearCart(Cart cart);
+
+	/**
+	 * Finalizza un ordine.
+	 *
+	 * @param cart il carrello con gli oggetti da inserire nell'ordine
+	 */
+	void finalizeOrder(Cart cart);
 
 	/**
 	 * Salva un carrello nel database.

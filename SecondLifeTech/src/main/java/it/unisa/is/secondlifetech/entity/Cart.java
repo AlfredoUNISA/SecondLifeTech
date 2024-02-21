@@ -19,23 +19,45 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@Builder.Default
 	@Column(nullable = false)
 	private double total = 0;
 
 	@OneToOne(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = false)
 	private User user;
 
-	@Builder.Default
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CartItem> items = new ArrayList<>();
 
 	/**
-	 * Aggiunge e imposta un nuovo oggetto CartItem al carrello.
+	 * Aggiunge un nuovo oggetto CartItem al carrello, aggiorna il totale del carrello
+	 * e aggancia il carrello al CartItem.
+	 *
+	 * @param item l'oggetto CartItem da aggiungere
 	 */
 	public void addItem(CartItem item) {
 		items.add(item);
 		item.setCart(this);
+		this.total += item.getSubTotal();
+	}
+
+	/**
+	 * Rimuove un oggetto CartItem dal carrello, aggiorna il totale del carrello
+	 * e sgancia il carrello dal CartItem.
+	 *
+	 * @param item l'oggetto CartItem da rimuovere
+	 */
+	public void removeItem(CartItem item) {
+		items.remove(item);
+		item.setCart(null);
+		this.total -= item.getSubTotal();
+	}
+
+	/**
+	 * Svuota il carrello, rimuovendo tutti gli oggetti CartItem e azzerando il totale.
+	 */
+	public void clear() {
+		items.clear();
+		this.total = 0;
 	}
 
 	public Cart(double total) {

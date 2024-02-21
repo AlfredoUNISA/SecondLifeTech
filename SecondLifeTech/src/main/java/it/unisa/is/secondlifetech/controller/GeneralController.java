@@ -70,7 +70,8 @@ public class GeneralController {
 	@PostMapping("/create-product-model-test")
 	public String createProductModelPOST(@ModelAttribute("productModel") ProductModel productModel,
 	                                 @RequestAttribute("image") MultipartFile image) throws IOException {
-		productModel.setImageFile(imageFileService.createNewImage(image));
+		ImageFile imageFile = imageFileService.createNewImage(image);
+		productModel.setImageFile(imageFile);
 		productModelService.createNewProductModel(productModel);
 		return "redirect:/";
 	}
@@ -102,7 +103,6 @@ public class GeneralController {
 	@GetMapping("/view-cart-test")
 	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
 		User user = userService.findUserById(userId);
-		log.info("Cart: " + user.getCart());
 		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
 		model.addAttribute("cart", user.getCart());
 		return "view-cart-test";
@@ -113,6 +113,21 @@ public class GeneralController {
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		model.addAttribute("variations", productVariationService.findAllProductVariations());
 		return "view-product-variations-test";
+	}
+
+	@PostMapping("/finalize-order-test")
+	public String createOrder(@RequestParam("cartId") UUID cartId) {
+		Cart cart = cartService.findCartById(cartId);
+		cartService.finalizeOrder(cart);
+		return "redirect:/view-orders-test?userId=" + cart.getUser().getId();
+	}
+
+	@GetMapping("/view-orders-test")
+	public String viewOrders(@RequestParam("userId") UUID userId, Model model) {
+		User user = userService.findUserById(userId);
+		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
+		model.addAttribute("orders", user.getOrders());
+		return "view-orders-test";
 	}
 
 

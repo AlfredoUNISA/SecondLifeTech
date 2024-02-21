@@ -31,7 +31,6 @@ public class OrderPlaced {
 	@Column(nullable = false)
 	private boolean shipped;
 
-	@Builder.Default
 	@OneToMany(mappedBy = "orderPlaced", fetch = FetchType.LAZY)
 	private List<OrderItem> items = new ArrayList<>();
 
@@ -51,7 +50,7 @@ public class OrderPlaced {
 	/**
 	 * Aggiunge un oggetto OrderItem alla lista di oggetti.
 	 */
-	public void addOrderItem(OrderItem item) {
+	public void addItem(OrderItem item) {
 		items.add(item);
 	}
 

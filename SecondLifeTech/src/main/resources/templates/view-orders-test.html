@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Orders</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="'Orders of ' + ${userName}"></h1>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Products</th>
+        <th>Quantity</th>
+        <th>Shipped</th>
+        <th>Total</th>
+    </tr>
+    <th:block th:each="order : ${orders}">
+        <tr>
+            <td th:text="${order.date}"></td>
+            <td>
+                <th:block th:each="orderItem : ${order.getItems}">
+                    <p th:text="${orderItem.productVariation.getModel.name + ' ' + orderItem.productVariation.color + ' ' + orderItem.productVariation.storageSize + 'GB ' + orderItem.productVariation.ram + 'GB RAM ' + orderItem.productVariation.displaySize + 'inch'}"></p>
+                </th:block>
+            </td>
+            <td>
+                <th:block th:each="orderItem : ${order.getItems}">
+                    <p th:text="${orderItem.quantityOrdered}"></p>
+                </th:block>
+            </td>
+            <td th:text="${order.shipped}"></td>
+            <td th:text="${order.total}"></td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>

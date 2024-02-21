@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ public class CartServiceImplTest {
 	private ProductVariationService productVariationService;
 
 	@Mock
-	private CartItemService cartItemService;
+	private CartItemRepository cartItemRepository;
 
 	@InjectMocks
 	private CartServiceImpl cartService;
@@ -55,16 +56,14 @@ public class CartServiceImplTest {
 	@Test
 	void CartServiceImpl_AddToCart_WhenProductIsNotAlreadyInCart_ShouldAddNewCartItem() {
 		// Arrange
-		UUID cartId = cart.getId();
 		UUID newProductVariationId = productVariation.getId();
 		int quantity = 2;
 
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
 		when(productVariationService.findProductVariationById(newProductVariationId)).thenReturn(productVariation);
-		when(cartItemService.createNewCartItem(any(CartItem.class))).thenReturn(new CartItem());
+		when(cartItemRepository.save(any(CartItem.class))).thenReturn(new CartItem());
 
 		// Act
-		cartService.addToCart(cartId, newProductVariationId, quantity);
+		cartService.addToCart(cart, newProductVariationId, quantity);
 
 		// Assert
 		assertThat(cart.getItems()).hasSize(1);
@@ -82,10 +81,9 @@ public class CartServiceImplTest {
 
 		cart.getItems().add(new CartItem(cart, productVariation, initialQuantity, 20.0));
 		cart.setTotal(20.0);
-
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
+		
 		// Act
-		cartService.addToCart(cartId, productVariationId, additionalQuantity);
+		cartService.addToCart(cart, productVariationId, additionalQuantity);
 
 		// Assert
 		assertThat(cart.getItems()).hasSize(1);
@@ -96,7 +94,6 @@ public class CartServiceImplTest {
 	@Test
 	void CartServiceImpl_EditProductQuantityInCart_ShouldUpdateQuantity() {
 		// Arrange
-		UUID cartId = cart.getId();
 		UUID productVariationId = productVariation.getId();
 		int initialQuantity = 2;
 		int newQuantity = 5;
@@ -104,10 +101,8 @@ public class CartServiceImplTest {
 		cart.getItems().add(new CartItem(cart, productVariation, initialQuantity, 20.0));
 		cart.setTotal(20.0);
 
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-
 		// Act
-		cartService.editProductQuantityInCart(cartId, productVariationId, newQuantity);
+		cartService.editProductQuantityInCart(cart, productVariationId, newQuantity);
 
 		// Assert
 		assertThat(cart.getItems()).hasSize(1);
@@ -118,16 +113,13 @@ public class CartServiceImplTest {
 	@Test
 	void CartServiceImpl_removeProductFromCart_ShouldRemoveProduct() {
 		// Arrange
-		UUID cartId = cart.getId();
 		UUID productVariationId = productVariation.getId();
 
 		cart.getItems().add(new CartItem(cart, productVariation, 2, 20.0));
 		cart.setTotal(20.0);
 
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-
 		// Act
-		cartService.removeProductFromCart(cartId, productVariationId);
+		cartService.removeProductFromCart(cart, productVariationId);
 
 		// Assert
 		assertThat(cart.getItems()).hasSize(0);
@@ -138,15 +130,11 @@ public class CartServiceImplTest {
 	@Test
 	void CartServiceImpl_clearCart_ShouldClearCart() {
 		// Arrange
-		UUID cartId = cart.getId();
-
 		cart.getItems().add(new CartItem(cart, productVariation, 2, 20.0));
 		cart.setTotal(20.0);
 
-		when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-
 		// Act
-		cartService.clearCart(cartId);
+		cartService.clearCart(cart);
 
 		// Assert
 		assertThat(cart.getItems()).hasSize(0);
