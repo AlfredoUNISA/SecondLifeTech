@@ -1,6 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class OrderPlacedServiceImplTests {
+class OrderServiceImplTests {
 	@Mock
 	private OrderPlacedRepository orderPlacedRepository;
 
+	@Mock
+	private OrderItemRepository orderItemRepository;
+
 	@InjectMocks
-	private OrderPlacedServiceImpl orderPlacedService;
+	private OrderServiceImpl orderPlacedService;
 
 	private OrderPlaced orderPlaced;
 	private User user;
@@ -53,6 +57,23 @@ class OrderPlacedServiceImplTests {
 			.orderPlaced(orderPlaced)
 			.build();
 		orderPlaced.getItems().add(orderItem);
+	}
+
+	@Test
+	void OrderPlacedService_CreateNewOrder_ShouldSaveItems() {
+		// Arrange
+		when(orderPlacedRepository.save(orderPlaced)).thenReturn(orderPlaced);
+		when(orderItemRepository.saveAll(orderPlaced.getItems())).thenReturn(orderPlaced.getItems());
+		when(orderItemRepository.findByOrderPlacedId(orderPlaced.getId())).thenReturn(orderPlaced.getItems());
+
+		// Act
+		OrderPlaced result = orderPlacedService.createNewOrder(orderPlaced);
+		List<OrderItem> items = orderItemRepository.findByOrderPlacedId(orderPlaced.getId());
+
+		// Assert
+		assertThat(orderPlaced.getItems()).isNotEmpty();
+		assertThat(items).isNotEmpty();
+		assertThat(result).isEqualTo(orderPlaced);
 	}
 
 	@Test

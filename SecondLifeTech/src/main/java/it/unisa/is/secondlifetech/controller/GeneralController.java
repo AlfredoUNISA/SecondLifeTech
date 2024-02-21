@@ -1,9 +1,6 @@
 package it.unisa.is.secondlifetech.controller;
 
-import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.ProductModel;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
@@ -16,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 @Controller
@@ -26,19 +25,60 @@ public class GeneralController {
 	private final ImageFileService imageFileService;
 	private final ProductModelService productModelService;
 	private final ProductVariationService productVariationService;
+	private final OrderService orderService;
 	private final CartService cartService;
 
 	@Autowired
-	public GeneralController(UserService userService, ImageFileService imageFileService, ProductModelService productModelService, ProductVariationService productVariationService, CartService cartService) {
+	public GeneralController(UserService userService, ImageFileService imageFileService, ProductModelService productModelService, ProductVariationService productVariationService, OrderService orderService, CartService cartService) {
 		this.userService = userService;
 		this.imageFileService = imageFileService;
 		this.productModelService = productModelService;
 		this.productVariationService = productVariationService;
+		this.orderService = orderService;
 		this.cartService = cartService;
 	}
 
 	@GetMapping
 	public String index(Model model) {
+		ProductModel productModel = new ProductModel(
+			"Iphone 20",
+			"Apple",
+			ProductCategory.SMARTPHONE
+		);
+		productModelService.createNewProductModel(productModel);
+
+		ProductVariation productVariation = new ProductVariation(
+			2022,
+			8,
+			6.7,
+			256,
+			1200.0,
+			10,
+			"Black",
+			ProductState.OTTIMO,
+			productModel
+		);
+		productVariationService.createNewProductVariation(productVariation);
+
+		OrderPlaced orderPlaced = OrderPlaced.builder()
+			.address("address")
+			.email("email")
+			.date(new Date())
+			.total(10.0)
+			.items(new ArrayList<>())
+			.shipped(false)
+			.build();
+
+		OrderItem orderItem = new OrderItem(
+			1,
+			10.0,
+			orderPlaced,
+			productVariation
+		);
+		orderPlaced.addOrderItem(orderItem);
+
+		orderService.createNewOrder(orderPlaced);
+
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		return "index";
 	}
