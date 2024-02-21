@@ -40,7 +40,7 @@ public class GeneralController {
 	@GetMapping
 	public String index(Model model) {
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
-		return "index";
+		return "homepage";
 	}
 
 	@GetMapping("/create-user-test")
