@@ -8,6 +8,7 @@ import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,31 @@ public class GeneralController {
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		return "homepage";
 	}
+
+	@GetMapping("/register")
+	public String showRegistrationForm(HttpServletRequest request, Model model){
+		if (request.getUserPrincipal() != null)
+			return "redirect:/";
+
+		User user = new User();
+		model.addAttribute("user", user);
+		return "register";
+	}
+	@PostMapping("/register/save")
+	public String registration(@ModelAttribute("user") User user, Model model){
+		User existing = userService.findUserByEmail(user.getEmail());
+
+		if (existing != null) {
+			model.addAttribute("error", "Email already exists");
+			model.addAttribute("user", user);
+			return "register";
+		}
+
+		user.setRole(UserRole.CLIENTE);
+		userService.createNewUser(user);
+		return "register-success";
+	}
+
 
 	@GetMapping("/create-user-test")
 	public String createUser(Model model) {

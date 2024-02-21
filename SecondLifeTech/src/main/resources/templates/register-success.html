@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Successo registrazione</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark" data-bs-spy="scroll" data-bs-offset="72" class="d-flex flex-column vh-100">
+
+<div class="container-fluid">
+    <div th:replace="header :: header"></div>
+    <br/>
+        <div class="container mt-5 text-center p-10">
+            <h2 class="mb-4">Registrazione Effettuata!</h2>
+            <a href="/login" class="btn btn-primary">Vai al Login</a>
+        </div>
+    <br class="m-10"/>
+    <br class="m-10"/>
+    <footer th:replace="footer :: footer" ></footer>
+</div>
+</body>
+</html>

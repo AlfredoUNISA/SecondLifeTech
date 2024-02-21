@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrazione</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark" data-bs-spy="scroll" data-bs-offset="72">
+
+<div class="container-fluid">
+    <div th:replace="header :: header"></div>
+    <br/>
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2>Registrazione</h2>
+                    <p class="w-lg-50">Registra ora il tuo account!</p>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center mb-1">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card mb-5">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4 bg-primary d-flex justify-content-center align-items-center rounded-circle" style="width: 3em; height: 3em;">
+                                <svg class="bi bi-person" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"></path>
+                                </svg>
+                            </div>
+                            <form class="text-center" method="post" role="form" th:action="@{/register/save}" th:object="${user}"  >
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Inserisci il tuo nome"
+                                           th:field="*{firstName}">
+                                    <p th:errors="*{firstName}" class="text-danger" th:if="${#fields.hasErrors('firstName')}"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Cognome</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Inserisci il tuo cognome"
+                                           th:field="*{lastName}">
+                                    <p th:errors="*{lastName}" class="text-danger" th:if="${#fields.hasErrors('lastName')}"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Inserisci la tua email"
+                                           th:field="*{email}">
+                                    <p th:errors="*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Inserisci la tua password"
+                                           th:field="*{password}">
+                                    <p th:errors="*{password}" class="text-danger" th:if="${#fields.hasErrors('password')}"></p>
+                                </div>
+                                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Registrati</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--    <br/>-->
+    <footer th:insert="footer :: footer" ></footer>
+</div>
+</body>
+</html>
