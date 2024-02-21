@@ -17,6 +17,13 @@ public interface ImageFileService {
 	ImageFile createNewImage(MultipartFile file) throws IOException;
 
 	/**
+	 * Crea un nuovo file immagine
+	 * @param file file da creare
+	 * @return file immagine creato
+	 */
+	ImageFile createNewImage(ImageFile file);
+
+	/**
 	 * Trova un file immagine per id
 	 * @param id id del file immagine
 	 * @return file immagine

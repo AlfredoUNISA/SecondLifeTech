@@ -28,6 +28,7 @@ public class ProductModel {
 	@Column(nullable = false)
 	private String category;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "model", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductVariation> variations = new ArrayList<>();
 

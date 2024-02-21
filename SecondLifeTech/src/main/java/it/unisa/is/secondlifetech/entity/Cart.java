@@ -24,8 +24,17 @@ public class Cart {
 	@OneToOne(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = false)
 	private User user;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CartItem> items = new ArrayList<>();
+
+	/**
+	 * Aggiunge e imposta un nuovo oggetto CartItem al carrello.
+	 */
+	public void addItem(CartItem item) {
+		items.add(item);
+		item.setCart(this);
+	}
 
 	public Cart(double total, User user) {
 		this.total = total;

@@ -8,20 +8,20 @@ public interface CartService {
 	/**
 	 * Aggiunge un nuovo prodotto al carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui aggiungere il prodotto
+	 * @param cart               il carrello dell'utente in cui aggiungere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
 	 * @param quantity           la quantità del prodotto da aggiungere
 	 */
-	void addToCart(UUID cartId, UUID productVariationId, int quantity);
+	void addToCart(Cart cart, UUID productVariationId, int quantity);
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
+	 * @param cart               il carrello dell'utente in cui modificare la quantità del prodotto
 	 * @param productVariationId l'ID della variante di prodotto da modificare
-	 * @param newQuantity           la nuova quantità del prodotto
+	 * @param newQuantity        la nuova quantità del prodotto
 	 */
-	void editProductQuantityInCart(UUID cartId, UUID productVariationId, int newQuantity);
+	boolean editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity);
 
 	/**
 	 * Rimuove un prodotto dal carrello.

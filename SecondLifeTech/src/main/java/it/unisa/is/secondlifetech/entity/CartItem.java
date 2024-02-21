@@ -29,6 +29,12 @@ public class CartItem {
 
 	private double subTotal;
 
+	public CartItem(ProductVariation productVariation, int quantity, double subTotal) {
+		this.productVariation = productVariation;
+		this.quantity = quantity;
+		this.subTotal = subTotal;
+	}
+
 	public CartItem(Cart cart, ProductVariation productVariation, int quantity, double subTotal) {
 		this.cart = cart;
 		this.productVariation = productVariation;

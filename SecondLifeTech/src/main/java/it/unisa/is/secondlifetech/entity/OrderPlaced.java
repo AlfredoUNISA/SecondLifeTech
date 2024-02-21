@@ -31,6 +31,7 @@ public class OrderPlaced {
 	@Column(nullable = false)
 	private boolean shipped;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "orderPlaced", fetch = FetchType.LAZY)
 	private List<OrderItem> items = new ArrayList<>();
 

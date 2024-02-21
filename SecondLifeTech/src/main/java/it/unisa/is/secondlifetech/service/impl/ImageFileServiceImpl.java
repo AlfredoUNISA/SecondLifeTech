@@ -34,6 +34,11 @@ public class ImageFileServiceImpl implements ImageFileService {
 		return imageFileRepository.save(imageFile);
 	}
 
+	@Override
+	public ImageFile createNewImage(ImageFile file) {
+		return imageFileRepository.save(file);
+	}
+
 	/**
 	 * Trova un file immagine per id
 	 * @param id id del file immagine

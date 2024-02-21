@@ -40,44 +40,12 @@ public class GeneralController {
 
 	@GetMapping
 	public String index(Model model) {
-		ProductModel productModel = new ProductModel(
-			"Iphone 20",
-			"Apple",
-			ProductCategory.SMARTPHONE
-		);
-		productModelService.createNewProductModel(productModel);
-
-		ProductVariation productVariation = new ProductVariation(
-			2022,
-			8,
-			6.7,
-			256,
-			1200.0,
-			10,
-			"Black",
-			ProductState.OTTIMO,
-			productModel
-		);
-		productVariationService.createNewProductVariation(productVariation);
-
-		OrderPlaced orderPlaced = OrderPlaced.builder()
-			.address("address")
-			.email("email")
-			.date(new Date())
-			.total(10.0)
-			.items(new ArrayList<>())
-			.shipped(false)
+		ImageFile imageFile = ImageFile.builder()
+			.contentType("test")
 			.build();
-
-		OrderItem orderItem = new OrderItem(
-			1,
-			10.0,
-			orderPlaced,
-			productVariation
-		);
-		orderPlaced.addOrderItem(orderItem);
-
-		orderService.createNewOrder(orderPlaced);
+		imageFileService.createNewImage(imageFile);
+		imageFile.setContentType("test2");
+		imageFileService.updateImage(imageFile.getId(), imageFile);
 
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		return "index";
@@ -134,7 +102,7 @@ public class GeneralController {
 	@PostMapping("/add-to-cart-test")
 	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
 		Cart cart = cartService.findCartByUser(userId);
-		cartService.addToCart(cart.getId(), productVariationId, quantity);
+		cartService.addToCart(cart, productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;
 	}
 

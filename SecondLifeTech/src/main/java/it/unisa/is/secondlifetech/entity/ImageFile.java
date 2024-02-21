@@ -1,16 +1,16 @@
 package it.unisa.is.secondlifetech.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import java.util.UUID;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
+@Builder
 @Entity
 public class ImageFile {
 	@Id

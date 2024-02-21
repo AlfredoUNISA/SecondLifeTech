@@ -4,8 +4,8 @@ import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.service.CartItemService;
 import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,29 +19,25 @@ public class CartServiceImpl implements CartService {
 
 	private final CartRepository cartRepository;
 	private final ProductVariationService productVariationService;
-	private final CartItemService cartItemService;
+	private final CartItemRepository cartItemRepository;
 
 	@Autowired
-	public CartServiceImpl(CartRepository cartRepository, ProductVariationService productVariationService, CartItemService cartItemService) {
+	public CartServiceImpl(CartRepository cartRepository, ProductVariationService productVariationService, CartItemRepository cartItemRepository) {
 		this.cartRepository = cartRepository;
 		this.productVariationService = productVariationService;
-		this.cartItemService = cartItemService;
+		this.cartItemRepository = cartItemRepository;
 	}
 
 	/**
-	 * Aggiunge un prodotto al carrello.
+	 * Aggiunge un nuovo prodotto al carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui aggiungere il prodotto
+	 * @param cart               il carrello dell'utente in cui aggiungere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
 	 * @param quantity           la quantità del prodotto da aggiungere
 	 */
 	@Override
 	@Transactional
-	public void addToCart(UUID cartId, UUID productVariationId, int quantity) {
-		// Trova il carrello
-		Cart cart = cartRepository.findById(cartId)
-			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
-
+	public void addToCart(Cart cart, UUID productVariationId, int quantity) {
 		// Se il prodotto è già presente nel carrello, aggiorna la quantità
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
@@ -53,18 +49,15 @@ public class CartServiceImpl implements CartService {
 		// Trova la variante di prodotto
 		ProductVariation productVariation = productVariationService.findProductVariationById(productVariationId);
 
-		// Verifica che la quantità richiesta sia disponibile nell'inventario
-		if (productVariation.getQuantityInStock() < quantity) {
-			throw new RuntimeException("Quantità non disponibile nell'inventario");
-		}
+		verifyQuantityInStock(quantity, productVariation);
 
 		// Calcola il subtotale del prodotto
 		double subTotal = productVariation.getPrice() * quantity;
 
 		// Crea un nuovo oggetto CartItem e lo aggiunge al carrello
-		CartItem cartItem = new CartItem(cart, productVariation, quantity, subTotal);
-		cartItemService.createNewCartItem(cartItem);
-		cart.getItems().add(cartItem);
+		CartItem cartItem = new CartItem(productVariation, quantity, subTotal);
+		cartItemRepository.save(cartItem);
+		cart.addItem(cartItem);
 
 		// Aggiorna il totale del carrello
 		cart.setTotal(cart.getTotal() + subTotal);
@@ -76,36 +69,30 @@ public class CartServiceImpl implements CartService {
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
+	 * @param cart               il carrello dell'utente in cui modificare la quantità del prodotto
 	 * @param productVariationId l'ID della variante di prodotto da modificare
 	 * @param newQuantity        la nuova quantità del prodotto
+	 * @return true se è stato trovato il prodotto ed è modificato, false altrimenti
 	 */
 	@Override
-	public void editProductQuantityInCart(UUID cartId, UUID productVariationId, int newQuantity) {
-		// Trova il carrello
-		Cart cart = cartRepository.findById(cartId)
-			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
-
+	public boolean editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) {
 		// Cerca il prodotto nel carrello
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
 				editQuantity(cartItem, newQuantity);
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
 	 */
 	private void editQuantity(CartItem cartItem, int newQuantity) {
-		// Trova la variante di prodotto
 		ProductVariation productVariation = cartItem.getProductVariation();
 
-		// Verifica che la nuova quantità sia disponibile nell'inventario
-		if (productVariation.getQuantityInStock() < newQuantity) {
-			throw new RuntimeException("Quantità non disponibile nell'inventario");
-		}
+		verifyQuantityInStock(newQuantity, productVariation);
 
 		double oldSubTotal = cartItem.getSubTotal();
 
@@ -118,8 +105,17 @@ public class CartServiceImpl implements CartService {
 		cart.setTotal(cart.getTotal() - oldSubTotal + newSubTotal);
 
 		// Salva le modifiche nel database
-		cartItemService.updateCartItem(cartItem.getId(), cartItem);
+		cartItemRepository.save(cartItem);
 		cartRepository.save(cart);
+	}
+
+	/**
+	 * Verifica che la quantità richiesta sia disponibile nell'inventario.
+	 */
+	private static void verifyQuantityInStock(int newQuantity, ProductVariation productVariation) {
+		if (productVariation.getQuantityInStock() < newQuantity) {
+			throw new RuntimeException("Quantità non disponibile nell'inventario");
+		}
 	}
 
 	/**
@@ -142,7 +138,7 @@ public class CartServiceImpl implements CartService {
 				cart.getItems().remove(cartItem);
 
 				// Salva le modifiche
-				cartItemService.deleteCartItem(cartItem.getId());
+				cartItemRepository.delete(cartItem);
 				cartRepository.save(cart);
 				break;
 			}
@@ -161,9 +157,7 @@ public class CartServiceImpl implements CartService {
 			.orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
 		// Rimuovi tutti i prodotti dal database
-		for(CartItem cartItem : cart.getItems()) {
-			cartItemService.deleteCartItem(cartItem.getId());
-		}
+		cartItemRepository.deleteAll(cart.getItems());
 
 		// Svuota il carrello
 		cart.getItems().clear();

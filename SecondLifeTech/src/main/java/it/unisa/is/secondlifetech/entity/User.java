@@ -43,15 +43,18 @@ public class User {
 
 	private String phoneNumber;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ShippingAddress> shippingAddresses = new ArrayList<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 	@OneToOne
 	private Cart cart;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<OrderPlaced> orders = new ArrayList<>();
 

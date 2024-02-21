@@ -4,7 +4,6 @@ import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.repository.CartRepository;
-import it.unisa.is.secondlifetech.service.CartItemService;
 import it.unisa.is.secondlifetech.service.ProductVariationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
