@@ -21,14 +21,12 @@ import java.util.UUID;
 @RequestMapping("/")
 public class GeneralController {
 	private final UserService userService;
-	private final ImageFileService imageFileService;
 	private final ProductService productService;
 	private final CartService cartService;
 
 	@Autowired
-	public GeneralController(UserService userService, ImageFileService imageFileService, ProductService productService, CartService cartService) {
+	public GeneralController(UserService userService, ProductService productService, CartService cartService) {
 		this.userService = userService;
-		this.imageFileService = imageFileService;
 		this.productService = productService;
 		this.cartService = cartService;
 	}
@@ -68,9 +66,8 @@ public class GeneralController {
 	@PostMapping("/create-product-model-test")
 	public String createProductModelPOST(@ModelAttribute("productModel") ProductModel productModel,
 	                                 @RequestAttribute("image") MultipartFile image) throws IOException {
-		ImageFile imageFile = imageFileService.createNewImage(image);
-		productModel.setImageFile(imageFile);
 		productService.createNewModel(productModel);
+		productService.changeImageModel(productModel, image);
 		return "redirect:/";
 	}
 
@@ -90,21 +87,21 @@ public class GeneralController {
 	}
 
 	@PostMapping("/add-to-cart-test")
-	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
+	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
 		User user = userService.findUserById(userId);
 		cartService.addToCart(user.getCart(), productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;
 	}
 
 	@PostMapping("/remove-from-cart-test")
-	public String removeFromCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, Model model) {
+	public String removeFromCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId) {
 		User user = userService.findUserById(userId);
 		cartService.removeProductFromCart(user.getCart(), productVariationId);
 		return "redirect:/view-cart-test?userId=" + userId;
 	}
 
 	@PostMapping("/update-cart-test")
-	public String updateCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity, Model model) {
+	public String updateCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
 		User user = userService.findUserById(userId);
 		cartService.editProductQuantityInCart(user.getCart(), productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;

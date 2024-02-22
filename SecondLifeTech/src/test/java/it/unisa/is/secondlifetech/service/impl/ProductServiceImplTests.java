@@ -1,10 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constant.ProductState;
+import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
@@ -15,7 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,11 +37,16 @@ class ProductServiceImplTests {
 	@Mock
 	private OrderItemRepository orderItemRepository;
 
+	@Mock
+	private ImageFileRepository imageFileRepository;
+
 	@InjectMocks
 	private ProductServiceImpl productService;
 
 	private ProductModel productModel;
 	private ProductVariation productVariation;
+
+	private ImageFile imageFile;
 
 	@BeforeEach
 	void setup() {
@@ -49,6 +56,9 @@ class ProductServiceImplTests {
 		productVariation = new ProductVariation();
 		productVariation.setId(UUID.randomUUID());
 		productVariation.setModel(productModel);
+
+		imageFile = new ImageFile();
+		imageFile.setModel(productModel);
 	}
 
 
@@ -85,6 +95,52 @@ class ProductServiceImplTests {
 		verify(productModelRepository).save(productModel);
 	}
 
+	@Test
+	void ProductServiceImpl_ChangeImageModel_WhenImageFileIsNotEmpty_ShouldChangeImage() throws IOException {
+		// Arrange
+		MockMultipartFile image = new MockMultipartFile("image", "hello.png", "image/png", "some image".getBytes());
+
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
+		when(imageFileRepository.save(any(ImageFile.class))).thenReturn(imageFile);
+
+		// Act
+		ImageFile result = productService.changeImageModel(productModel, image);
+
+		// Assert
+		verify(productModelRepository).save(productModel);
+		verify(imageFileRepository).save(any(ImageFile.class));
+		assertThat(result).isEqualTo(imageFile);
+	}
+
+	@Test
+	void ProductServiceImpl_ChangeImageModel_WhenImageFileIsEmpty_ShouldNotChangeImage() throws IOException {
+		// Arrange
+		MockMultipartFile image = new MockMultipartFile("image", "", "image/png", "".getBytes());
+
+		// Act
+		ImageFile result = productService.changeImageModel(productModel, image);
+
+		// Assert
+		verify(productModelRepository, times(0)).save(productModel);
+		verify(imageFileRepository, times(0)).save(any(ImageFile.class));
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void ProductServiceImpl_ChangeImageModel_WhenImageFileIsProvided_ShouldChangeImage() {
+		// Arrange
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
+		when(imageFileRepository.save(any(ImageFile.class))).thenReturn(imageFile);
+
+		// Act
+		ImageFile result = productService.changeImageModel(productModel, imageFile);
+
+		// Assert
+		verify(productModelRepository).save(productModel);
+		verify(imageFileRepository).save(imageFile);
+		assertThat(result).isEqualTo(imageFile);
+	}
+
 
 
 	// ================================================================================================================
@@ -113,6 +169,32 @@ class ProductServiceImplTests {
 
 		// Assert
 		assertThat(foundVariation).isEqualTo(productVariation);
+	}
+
+	@Test
+	void ProductServiceImpl_findImageById_WhenImageExists_ShouldReturnImage() {
+		// Arrange
+		UUID imageId = UUID.randomUUID();
+		when(imageFileRepository.findById(imageId)).thenReturn(Optional.of(imageFile));
+
+		// Act
+		ImageFile foundImage = productService.findImageById(imageId);
+
+		// Assert
+		assertThat(foundImage).isEqualTo(imageFile);
+	}
+
+	@Test
+	void ProductServiceImpl_findImageById_WhenImageDoesNotExist_ShouldReturnNull() {
+		// Arrange
+		UUID imageId = UUID.randomUUID();
+		when(imageFileRepository.findById(imageId)).thenReturn(Optional.empty());
+
+		// Act
+		ImageFile foundImage = productService.findImageById(imageId);
+
+		// Assert
+		assertThat(foundImage).isNull();
 	}
 
 	@Test
@@ -264,36 +346,18 @@ class ProductServiceImplTests {
 		verify(productModelRepository, times(1)).save(productModel);
 	}
 
-	/*
 	@Test
-	void ProductModelService_DeleteVariation__WhenIsInOrder_ShouldRemoveVariationFromModelAndDatabase() {
+	void ProductServiceImpl_deleteImage_WhenCalled_ShouldCallRemoveImageSaveAndDelete() {
 		// Arrange
-		UUID modelId = productModel.getId();
-		UUID variationId = productVariation.getId();
-
-		when(orderItemRepository.findAll()).thenReturn(List.of(orderItem));
+		when(productModelRepository.save(productModel)).thenReturn(productModel);
+		doNothing().when(imageFileRepository).delete(imageFile);
 
 		// Act
-		productModelService.deleteVariation(productVariation);
+		productService.deleteImage(imageFile);
 
 		// Assert
-		assertThat(orderItem.getBrand()).isEqualTo(productModel.getBrand());
-		assertThat(orderItem.getModelName()).isEqualTo(productModel.getName());
-		assertThat(orderItem.getCategory()).isEqualTo(productModel.getCategory());
-		assertThat(orderItem.getState()).isEqualTo(productVariation.getState());
-		assertThat(orderItem.getColor()).isEqualTo(productVariation.getColor());
-		assertThat(orderItem.getDisplaySize()).isEqualTo(productVariation.getDisplaySize());
-		assertThat(orderItem.getStorageSize()).isEqualTo(productVariation.getStorageSize());
-		assertThat(orderItem.getRam()).isEqualTo(productVariation.getRam());
-		assertThat(orderItem.getYear()).isEqualTo(productVariation.getYear());
-
-		assertThat(orderItem.getProductVariation()).isNull();
-
-		verify(orderItemRepository, times(1)).save(orderItem);
 		verify(productModelRepository, times(1)).save(productModel);
-		verify(productVariationRepository, times(1)).deleteById(variationId);
-		assertThat(productModel.getVariations()).doesNotContain(productVariation);
+		verify(imageFileRepository, times(1)).delete(imageFile);
 	}
-	*/
 
 }

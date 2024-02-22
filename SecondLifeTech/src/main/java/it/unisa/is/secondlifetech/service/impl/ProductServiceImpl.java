@@ -1,8 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
@@ -10,7 +12,9 @@ import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,13 +25,15 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductVariationRepository productVariationRepository;
 	private final OrderService orderService;
 	private final OrderItemRepository orderItemRepository;
+	private final ImageFileRepository imageFileRepository;
 
 	@Autowired
-	public ProductServiceImpl(ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, OrderService orderService, OrderItemRepository orderItemRepository) {
+	public ProductServiceImpl(ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, OrderService orderService, OrderItemRepository orderItemRepository, ImageFileRepository imageFileRepository) {
 		this.productModelRepository = productModelRepository;
 		this.productVariationRepository = productVariationRepository;
 		this.orderService = orderService;
 		this.orderItemRepository = orderItemRepository;
+		this.imageFileRepository = imageFileRepository;
 	}
 
 
@@ -62,6 +68,46 @@ public class ProductServiceImpl implements ProductService {
 		return toReturn;
 	}
 
+	/**
+	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
+	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
+	 *
+	 * @param model il modello di prodotto a cui aggiungere l'immagine
+	 * @param image il file da aggiungere
+	 * @return l'oggetto ImageFile aggiunto
+	 */
+	@Override
+	public ImageFile changeImageModel(ProductModel model, MultipartFile image) throws IOException {
+		if (image.isEmpty())
+			return changeImageModel(model, (ImageFile) null);
+
+		ImageFile imageFile = new ImageFile();
+		imageFile.setName(image.getOriginalFilename());
+		imageFile.setContentType(image.getContentType());
+		imageFile.setData(image.getBytes());
+
+
+		return changeImageModel(model, imageFile);
+	}
+
+	/**
+	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
+	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
+	 *
+	 * @param model     il modello di prodotto a cui aggiungere l'immagine
+	 * @param imageFile l'immagine da aggiungere
+	 * @return l'oggetto ImageFile aggiunto
+	 */
+	@Override
+	public ImageFile changeImageModel(ProductModel model, ImageFile imageFile) {
+		if (imageFile == null)
+			return null;
+
+		model.changeImage(imageFile);
+		productModelRepository.save(model);
+		return imageFileRepository.save(imageFile);
+	}
+
 
 	// ================================================================================================================
 	// =============== READ ============================================================================================
@@ -87,6 +133,17 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductVariation findVariationById(UUID id) {
 		return productVariationRepository.findById(id).orElse(null);
+	}
+
+	/**
+	 * Ottiene un'immagine dal database tramite l'ID.
+	 *
+	 * @param id l'ID dell'immagine da cercare
+	 * @return l'oggetto ImageFile corrispondente all'ID specificato, o null se non trovato
+	 */
+	@Override
+	public ImageFile findImageById(UUID id) {
+		return imageFileRepository.findById(id).orElse(null);
 	}
 
 	/**
@@ -233,5 +290,17 @@ public class ProductServiceImpl implements ProductService {
 		model.removeVariation(variation);
 		productVariationRepository.delete(variation);
 		productModelRepository.save(model);
+	}
+
+	/**
+	 * Elimina un'immagine dal database.
+	 *
+	 * @param image l'oggetto ImageFile da eliminare
+	 */
+	@Override
+	public void deleteImage(ImageFile image) {
+		image.getModel().removeImage();
+		productModelRepository.save(image.getModel());
+		imageFileRepository.delete(image);
 	}
 }

@@ -54,6 +54,15 @@ public class ProductModel {
 		variation.setModel(null);
 	}
 
+	public void changeImage(ImageFile imageFile) {
+		this.imageFile = imageFile;
+		imageFile.setModel(this);
+	}
+
+	public void removeImage() {
+		this.imageFile = null;
+	}
+
 	public ProductModel(String name, String brand, String category) {
 		this.name = name;
 		this.brand = brand;
