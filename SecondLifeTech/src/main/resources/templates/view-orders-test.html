@@ -20,6 +20,7 @@
         <th>Quantity</th>
         <th>Shipped</th>
         <th>Total</th>
+        <th>Address</th>
     </tr>
     <th:block th:each="order : ${orders}">
         <tr>
@@ -36,6 +37,7 @@
             </td>
             <td th:text="${order.shipped}"></td>
             <td th:text="${order.total}"></td>
+            <td th:text="${order.address}"></td>
         </tr>
     </th:block>
 </table>

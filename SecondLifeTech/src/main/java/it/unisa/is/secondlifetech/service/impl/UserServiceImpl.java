@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
 		List<OrderPlaced> orders = user.getOrders();
 
 		if (cart != null)
-			cartService.deleteCart(cart.getId());
+			cartService.deleteCart(cart);
 
 		if (!paymentMethods.isEmpty())
 			paymentMethodRepository.deleteAll(paymentMethods);

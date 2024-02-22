@@ -27,7 +27,7 @@
             <td th:text="${cartItem.productVariation.price * cartItem.quantity}"></td>
             <td>
                 <form action="/remove-from-cart-test" method="post">
-                    <input type="hidden" name="productVariationId" th:value="${cartItem.productVariation.id}">
+                    <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
                     <input type="hidden" name="userId" th:value="${user.id}">
                     <input type="submit" value="Remove">
                 </form>
@@ -47,14 +47,12 @@
 </table>
 
 <form method="post" role="form" th:action="@{/finalize-order-test}">
-
     <label for="shippingAddressSelect">Shipping Address</label>
-    <select id="shippingAddressSelect" name="userId">
+    <select id="shippingAddressSelect" name="shippingAddressId">
         <th:block th:each="shippingAddress : ${user.shippingAddresses}">
-            <option th:text="${shippingAddress.fullAddress()}" th:value="${user.id}"></option>
+            <option th:text="${shippingAddress.fullAddress()}" th:value="${shippingAddress.id}"></option>
         </th:block>
     </select>
-
 
     <input type="hidden" name="cartId" th:value="${user.cart.id}">
     <input type="submit" value="Checkout">

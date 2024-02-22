@@ -17,18 +17,18 @@
 <table>
     <tr>
         <th>Street</th>
-        <th>State</th>
         <th>City</th>
+        <th>State</th>
+        <th>Zip code</th>
         <th>Country</th>
-        <th>Postal code</th>
         <th></th>
     </tr>
     <tr th:each="address : ${shippingAddresses}">
         <td th:text="${address.street}"></td>
-        <td th:text="${address.state}"></td>
         <td th:text="${address.city}"></td>
-        <td th:text="${address.country}"></td>
+        <td th:text="${address.state}"></td>
         <td th:text="${address.zipCode}"></td>
+        <td th:text="${address.country}"></td>
         <td>
             <form action="/delete-shipping-address-test" method="post">
                 <input type="hidden" name="userId" th:value="${user.id}">
@@ -43,14 +43,14 @@
     <input type="hidden" name="userId" th:value="${user.id}">
     <label for="street">Street</label>
     <input type="text" id="street" name="street" required th:field="*{street}">
-    <label for="state">Address</label>
-    <input type="text" id="state" name="state" required th:field="*{state}">
     <label for="city">City</label>
     <input type="text" id="city" name="city" required th:field="*{city}">
+    <label for="state">State</label>
+    <input type="text" id="state" name="state" required th:field="*{state}">
+    <label for="zipCode">Zip code</label>
+    <input type="text" id="zipCode" name="zipCode" required th:field="*{zipCode}">
     <label for="country">Country</label>
     <input type="text" id="country" name="country" required th:field="*{country}">
-    <label for="zipCode">Postal code</label>
-    <input type="text" id="zipCode" name="zipCode" required th:field="*{zipCode}">
     <input type="submit" value="Add address">
 </form>
 

@@ -82,7 +82,8 @@ public class GeneralController {
 
 	@PostMapping("/create-product-variation-test")
 	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
-		productService.createNewVariation(productVariation.getModel(), productVariation);
+		ProductModel productModel = productService.findModelById(productVariation.getModel().getId());
+		productService.createNewVariation(productModel, productVariation);
 		return "redirect:/";
 	}
 
@@ -94,9 +95,9 @@ public class GeneralController {
 	}
 
 	@PostMapping("/remove-from-cart-test")
-	public String removeFromCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId) {
+	public String removeFromCartPOST(@RequestParam("userId") UUID userId, @RequestParam("cartItemId") UUID cartItemId) {
 		User user = userService.findUserById(userId);
-		cartService.removeProductFromCart(user.getCart(), productVariationId);
+		cartService.removeProductFromCart(user.getCart(), cartItemId);
 		return "redirect:/view-cart-test?userId=" + userId;
 	}
 
@@ -145,10 +146,6 @@ public class GeneralController {
 	@GetMapping("/view-user-test")
 	public String viewUser(@RequestParam("userId") UUID userId, Model model) {
 		User user = userService.findUserById(userId);
-		log.info("Cart: " + user.getCart());
-		log.info("Orders: " + user.getOrders());
-		log.info("Shipping addresses: " + user.getShippingAddresses());
-		log.info("Payment methods: " + user.getPaymentMethods());
 
 		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
 		model.addAttribute("user", user);

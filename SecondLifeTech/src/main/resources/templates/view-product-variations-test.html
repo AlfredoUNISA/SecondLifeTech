@@ -20,9 +20,9 @@
 <body>
 <a href="/">← Back to index</a>
 <h1>Product Model</h1>
-<h6 th:text="'Name: ' + ${model.name}"></h6>
-<h6 th:text="'Brand: ' + ${model.brand}"></h6>
-<h6 th:text="'Category: ' + ${model.category}"></h6>
+<h4 th:text="'Name: ' + ${model.name}"></h4>
+<h4 th:text="'Brand: ' + ${model.brand}"></h4>
+<h4 th:text="'Category: ' + ${model.category}"></h4>
 <th:block th:if="${model.imageFile != null}">
     <img th:src="${model.imageFile.generateBase64Image()}" alt="Image of the product model" width="200" height="200">
 </th:block>
@@ -46,7 +46,7 @@
                 <form method="post" role="form" action="/add-to-cart-test">
                     <input type="hidden" th:value="${variation.id}" name="productVariationId">
                     <label for="quantity">Quantity: </label>
-                    <input type="number" id="quantity" name="quantity">
+                    <input type="number" id="quantity" min="1" value="1" name="quantity">
                     <label for="user"> User: </label>
                     <select id="user" name="userId">
                         <th:block th:each="user : ${users}">
