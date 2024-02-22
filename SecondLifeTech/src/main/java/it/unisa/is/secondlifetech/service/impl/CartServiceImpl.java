@@ -146,6 +146,17 @@ public class CartServiceImpl implements CartService {
 	}
 
 	/**
+	 * Ottiene un carrello dal database tramite l'ID dell'utente a cui è associato.
+	 *
+	 * @param userId l'ID dell'utente a cui è associato il carrello
+	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
+	 */
+	@Override
+	public Cart findCartByUserId(UUID userId) {
+		return cartRepository.findByUserId(userId).orElse(null);
+	}
+
+	/**
 	 * Ottiene un oggetto CartItem dal database tramite l'ID.
 	 *
 	 * @param id l'ID dell'oggetto da cercare

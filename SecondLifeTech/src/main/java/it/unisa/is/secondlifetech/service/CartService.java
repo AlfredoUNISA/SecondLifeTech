@@ -53,6 +53,15 @@ public interface CartService {
 	 */
 	Cart findCartById(UUID id);
 
+
+	/**
+	 * Ottiene un carrello dal database tramite l'ID dell'utente a cui è associato.
+	 *
+	 * @param userId l'ID dell'utente a cui è associato il carrello
+	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
+	 */
+	Cart findCartByUserId(UUID userId);
+
 	/**
 	 * Ottiene un oggetto CartItem dal database tramite l'ID.
 	 *

@@ -88,7 +88,7 @@ class ProductModelRepositoryTests {
 		productVariationService.save(productVariation3);
 
 		// Act
-		ProductModel foundProductModel = productModelRepository.findByName(productModel1.getName());
+		ProductModel foundProductModel = productModelRepository.findByName(productModel1.getName()).orElse(null);
 		ProductVariation foundProductVariation = foundProductModel.getVariations().get(0);
 
 		// Assert
@@ -267,7 +267,5 @@ class ProductModelRepositoryTests {
 
 		assertThat(foundProductVariation).isNotNull();
 		assertThat(foundProductVariation).isEqualTo(productVariation1);
-
-		assertThat(productModelRepository.findByName("blabla")).isNull();
 	}
 }

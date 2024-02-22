@@ -202,7 +202,7 @@ class ProductServiceImplTests {
 		// Arrange
 		String name = "Test Model";
 		productModel.setName(name);
-		when(productModelRepository.findByName(name)).thenReturn(productModel);
+		when(productModelRepository.findByName(name)).thenReturn(Optional.of(productModel));
 
 		// Act
 		ProductModel foundModel = productService.findModelByName(name);

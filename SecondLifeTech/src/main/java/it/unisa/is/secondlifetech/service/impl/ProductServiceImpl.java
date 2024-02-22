@@ -154,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductModel findModelByName(String name) {
-		return productModelRepository.findByName(name);
+		return productModelRepository.findByName(name).orElse(null);
 	}
 
 	/**
