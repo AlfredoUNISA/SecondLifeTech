@@ -11,6 +11,7 @@ import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -193,7 +194,8 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteModel(ProductModel model) {
 		List<ProductVariation> variations = model.getVariations();
 
-		for (ProductVariation variation : variations)
+		// Copia della lista per evitare ConcurrentModificationException
+		for (ProductVariation variation : new ArrayList<>(variations))
 			deleteVariation(variation);
 
 		productModelRepository.delete(model);

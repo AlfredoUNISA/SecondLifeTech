@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTests {
-
 	@Mock
 	private ProductModelRepository productModelRepository;
 
@@ -33,104 +32,240 @@ class ProductServiceImplTests {
 	private OrderItemRepository orderItemRepository;
 
 	@InjectMocks
-	private ProductServiceImpl productModelService;
+	private ProductServiceImpl productService;
 
 	private ProductModel productModel;
 	private ProductVariation productVariation;
-	private OrderItem orderItem;
 
 	@BeforeEach
-	void setUp() {
-		productModel = ProductModel.builder()
-			.id(UUID.randomUUID())
-			.variations(new ArrayList<>())
-			.brand("Brand")
-			.name("Name")
-			.category(ProductCategory.SMARTPHONE)
-			.build();
+	void setup() {
+		productModel = new ProductModel();
+		productModel.setId(UUID.randomUUID());
 
-		productVariation = ProductVariation.builder()
-			.id(UUID.randomUUID())
-			.state(ProductState.OTTIMO)
-			.ram(4)
-			.storageSize(64)
-			.year(2020)
-			.color("Black")
-			.model(productModel)
-			.build();
-		productModel.addVariation(productVariation);
+		productVariation = new ProductVariation();
+		productVariation.setId(UUID.randomUUID());
+		productVariation.setModel(productModel);
 
-		orderItem = OrderItem.builder()
-			.id(UUID.randomUUID())
-			.quantityOrdered(1)
-			.subTotal(1000)
-			.productVariation(productVariation)
-			.build();
+		List<ProductVariation> variations = new ArrayList<>();
+		variations.add(productVariation);
+		productModel.setVariations(variations);
+	}
+
+
+
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
+
+	@Test
+	void ProductServiceImpl_CreateNewModel_ShouldReturnCreatedModel() {
+		// Arrange
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
+
+		// Act
+		ProductModel createdModel = productService.createNewModel(productModel);
+
+		// Assert
+		assertThat(createdModel).isEqualTo(productModel);
+		verify(productModelRepository).save(productModel);
 	}
 
 	@Test
-	void ProductModelService_FindProductModelByName_ShouldReturnCorrectProductModel() {
+	void ProductServiceImpl_CreateNewVariation_ShouldReturnCreatedVariation() {
 		// Arrange
-		String name = productModel.getName();
+		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
 
+		// Act
+		ProductVariation createdVariation = productService.createNewVariation(productModel, productVariation);
+
+		// Assert
+		assertThat(createdVariation).isEqualTo(productVariation);
+		verify(productVariationRepository).save(productVariation);
+		verify(productModelRepository).save(productModel);
+	}
+
+
+
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
+
+	@Test
+	void ProductServiceImpl_FindModelById_ShouldReturnProductModel() {
+		// Arrange
+		when(productModelRepository.findById(productModel.getId())).thenReturn(Optional.of(productModel));
+
+		// Act
+		ProductModel foundModel = productService.findModelById(productModel.getId());
+
+		// Assert
+		assertThat(foundModel).isEqualTo(productModel);
+	}
+
+	@Test
+	void ProductServiceImpl_FindVariationById_ShouldReturnProductVariation() {
+		// Arrange
+		when(productVariationRepository.findById(productVariation.getId())).thenReturn(Optional.of(productVariation));
+
+		// Act
+		ProductVariation foundVariation = productService.findVariationById(productVariation.getId());
+
+		// Assert
+		assertThat(foundVariation).isEqualTo(productVariation);
+	}
+
+	@Test
+	void ProductServiceImpl_FindModelByName_ShouldReturnProductModel() {
+		// Arrange
+		String name = "Test Model";
+		productModel.setName(name);
 		when(productModelRepository.findByName(name)).thenReturn(productModel);
 
 		// Act
-		ProductModel result = productModelService.findModelByName(name);
+		ProductModel foundModel = productService.findModelByName(name);
 
 		// Assert
-		assertThat(result).isEqualTo(productModel);
+		assertThat(foundModel).isEqualTo(productModel);
 	}
 
 	@Test
-	void ProductModelService_FindProductModelsByBrand_ShouldReturnCorrectList() {
+	void ProductServiceImpl_FindModelsByBrand_ShouldReturnListOfProductModels() {
 		// Arrange
-		String brand = productModel.getBrand();
-
-		when(productModelRepository.findByBrand(brand)).thenReturn(List.of(productModel));
+		String brand = "Test Brand";
+		List<ProductModel> models = Collections.singletonList(productModel);
+		when(productModelRepository.findByBrand(brand)).thenReturn(models);
 
 		// Act
-		List<ProductModel> results = productModelService.findModelsByBrand(brand);
+		List<ProductModel> foundModels = productService.findModelsByBrand(brand);
 
 		// Assert
-		assertThat(results).hasSize(1);
-		assertThat(results).containsOnly(productModel);
+		assertThat(foundModels).isEqualTo(models);
 	}
 
 	@Test
-	void ProductModelService_FindProductModelsByCategory_ShouldReturnCorrectList() {
+	void ProductServiceImpl_FindModelsByCategory_ShouldReturnListOfProductModels() {
 		// Arrange
-		String category = productModel.getCategory();
-
-		when(productModelRepository.findByCategory(category)).thenReturn(List.of(productModel));
+		String category = "Test Category";
+		List<ProductModel> models = Collections.singletonList(productModel);
+		when(productModelRepository.findByCategory(category)).thenReturn(models);
 
 		// Act
-		List<ProductModel> results = productModelService.findModelsByCategory(category);
+		List<ProductModel> foundModels = productService.findModelsByCategory(category);
 
 		// Assert
-		assertThat(results).hasSize(1);
-		assertThat(results).containsOnly(productModel);
+		assertThat(foundModels).isEqualTo(models);
 	}
 
 	@Test
-	void ProductModelService_DeleteVariation__WhenNotInOrders_ShouldRemoveVariationFromModelAndDatabase() {
+	void ProductServiceImpl_FindVariationsByState_ShouldReturnListOfProductVariations() {
 		// Arrange
-		UUID modelId = productModel.getId();
-		UUID variationId = productVariation.getId();
-
-		when(orderItemRepository.findAll()).thenReturn(Collections.emptyList());
-		when(productModelRepository.findById(modelId)).thenReturn(Optional.of(productModel));
-		when(productVariationRepository.findById(variationId)).thenReturn(Optional.of(productVariation));
+		String state = "Test State";
+		List<ProductVariation> variations = Collections.singletonList(productVariation);
+		when(productVariationRepository.findByState(state)).thenReturn(variations);
 
 		// Act
-		productModelService.deleteVariation(productVariation);
+		List<ProductVariation> foundVariations = productService.findVariationsByState(state);
 
 		// Assert
+		assertThat(foundVariations).isEqualTo(variations);
+	}
+
+	@Test
+	void ProductServiceImpl_FindAllModels_ShouldReturnListOfProductModels() {
+		// Arrange
+		List<ProductModel> models = Collections.singletonList(productModel);
+		when(productModelRepository.findAll()).thenReturn(models);
+
+		// Act
+		List<ProductModel> foundModels = productService.findAllModels();
+
+		// Assert
+		assertThat(foundModels).isEqualTo(models);
+	}
+
+	@Test
+	void ProductServiceImpl_FindAllVariations_ShouldReturnListOfProductVariations() {
+		// Arrange
+		List<ProductVariation> variations = Collections.singletonList(productVariation);
+		when(productVariationRepository.findAll()).thenReturn(variations);
+
+		// Act
+		List<ProductVariation> foundVariations = productService.findAllVariations();
+
+		// Assert
+		assertThat(foundVariations).isEqualTo(variations);
+	}
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	@Test
+	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() {
+		// Arrange
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
+
+		// Act
+		ProductModel updatedProductModel = productService.updateModel(productModel);
+
+		// Assert
+		assertThat(updatedProductModel).isEqualTo(productModel);
 		verify(productModelRepository).save(productModel);
-		verify(productVariationRepository).deleteById(variationId);
-		assertThat(productModel.getVariations()).doesNotContain(productVariation);
 	}
 
+	@Test
+	void ProductServiceImpl_UpdateVariation_ShouldUpdateVariation() {
+		// Arrange
+		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
+
+		// Act
+		ProductVariation updatedProductVariation = productService.updateVariation(productVariation);
+
+		// Assert
+		assertThat(updatedProductVariation).isEqualTo(productVariation);
+		verify(productVariationRepository).save(productVariation);
+	}
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
+
+	@Test
+	void ProductServiceImpl_deleteModel_ShouldDeleteModelAndItsVariations() {
+		// Arrange
+		doNothing().when(productVariationRepository).delete(any(ProductVariation.class));
+		doNothing().when(productModelRepository).delete(any(ProductModel.class));
+
+		// Act
+		productService.deleteModel(productModel);
+
+		// Assert
+		verify(productVariationRepository).delete(productVariation);
+		verify(productModelRepository).delete(productModel);
+	}
+
+	@Test
+	void ProductServiceImpl_deleteVariation_ShouldDeleteVariationAndUpdateOrderItems() {
+		// Arrange
+		OrderItem orderItem = new OrderItem();
+		List<OrderItem> orderItems = new ArrayList<>();
+		orderItems.add(orderItem);
+
+		when(orderItemRepository.findByProductVariationId(any(UUID.class))).thenReturn(orderItems);
+		doNothing().when(productVariationRepository).delete(any(ProductVariation.class));
+
+		// Act
+		productService.deleteVariation(productVariation);
+
+		// Assert
+		verify(orderItemRepository).save(orderItem);
+		verify(productVariationRepository).delete(productVariation);
+		verify(productModelRepository).save(productModel);
+	}
+
+	/*
 	@Test
 	void ProductModelService_DeleteVariation__WhenIsInOrder_ShouldRemoveVariationFromModelAndDatabase() {
 		// Arrange
@@ -160,5 +295,6 @@ class ProductServiceImplTests {
 		verify(productVariationRepository, times(1)).deleteById(variationId);
 		assertThat(productModel.getVariations()).doesNotContain(productVariation);
 	}
+	*/
 
 }
