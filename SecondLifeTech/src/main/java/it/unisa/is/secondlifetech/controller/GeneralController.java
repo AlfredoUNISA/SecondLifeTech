@@ -203,6 +203,22 @@ public class GeneralController {
 		return "redirect:/view-user-test?userId=" + userId;
 	}
 
+	@PostMapping("/delete-variation-test")
+	public String deleteVariation(@RequestParam("productVariationId") UUID productVariationId) {
+		ProductVariation variation = productService.findVariationById(productVariationId);
+		UUID modelId = variation.getModel().getId();
+
+		productService.deleteVariation(variation);
+		return "redirect:/view-product-variations?productModelId=" + modelId;
+	}
+
+	@PostMapping("/delete-model-test")
+	public String deleteModel(@RequestParam("productModelId") UUID productModelId) {
+		ProductModel model = productService.findModelById(productModelId);
+		productService.deleteModel(model);
+		return "redirect:/";
+	}
+
 
 	// TODO: aggiungere la pagina di errore
 }

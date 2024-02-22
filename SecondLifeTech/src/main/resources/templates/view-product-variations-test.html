@@ -27,6 +27,12 @@
     <img th:src="${model.imageFile.generateBase64Image()}" alt="Image of the product model" width="200" height="200">
 </th:block>
 
+<form method="post" role="form" th:action="@{/delete-model-test}">
+    <input type="hidden" name="productModelId" th:value="${model.id}">
+    <button type="submit">Delete Model</button>
+</form>
+
+
 <h1>Product Variations</h1>
 <table>
     <tr>
@@ -35,6 +41,7 @@
         <th>Quantity in stock</th>
         <th>Price</th>
         <th>Insert in cart</th>
+        <th>Delete Variation</th>
     </tr>
     <th:block th:each="variation : ${variations}">
         <tr>
@@ -54,6 +61,12 @@
                         </th:block>
                     </select>
                     <button type="submit">Add to cart</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" role="form" action="/delete-variation-test">
+                    <input type="hidden" th:value="${variation.id}" name="productVariationId">
+                    <button type="submit">Delete</button>
                 </form>
             </td>
         </tr>

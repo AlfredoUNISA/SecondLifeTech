@@ -26,7 +26,7 @@
         <a href="/create-product-variation-test">Create Product Variation</a><br/>
     </li>
     <li>
-        View product variations of
+        View <span style="color: #69a8ff">product variations</span> of
         <form method="get" role="form" th:action="@{/view-product-variations}">
             <select id="productModelSelect" name="productModelId">
                 <th:block th:each="productModel : ${productModels}">
@@ -37,7 +37,7 @@
         </form>
     </li>
     <li>
-        View the cart of
+        View the <span style="color: #30ff30">cart</span> of
         <form method="get" role="form" th:action="@{/view-cart-test}">
             <select id="usersCartSelect" name="userId">
                 <th:block th:each="user : ${users}">
@@ -48,7 +48,7 @@
         </form>
     </li>
     <li>
-        View the orders of
+        View the <span style="color: yellow">orders</span> of
         <form method="get" role="form" th:action="@{/view-orders-test}">
             <select id="usersOrderSelect" name="userId">
                 <th:block th:each="user : ${users}">
@@ -59,7 +59,7 @@
         </form>
     </li>
     <li>
-        View the profile of
+        View the <span style="color: #ff3c3c">cart</span> of
         <form method="get" role="form" th:action="@{/view-user-test}">
             <select id="usersProfileSelect" name="userId">
                 <th:block th:each="user : ${users}">
