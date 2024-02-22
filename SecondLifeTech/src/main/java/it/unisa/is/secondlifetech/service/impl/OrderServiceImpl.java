@@ -1,6 +1,8 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
+import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
@@ -22,24 +24,31 @@ public class OrderServiceImpl implements OrderService {
 		this.orderItemRepository = orderItemRepository;
 	}
 
+
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
+
 	/**
-	 * Crea un nuovo ordine nel database.
-	 * Salva anche tutti gli OrderItems all'interno della lista.
+	 * Crea un nuovo ordine nel database.<br/><br/>
+	 * <b>Salva anche tutti gli OrderItems all'interno della sua lista</b>, pertanto bisogna assicurarsi che siano presenti
+	 * tutti gli OrderItem necessari.
 	 *
 	 * @param order l'oggetto OrderPlaced da creare
 	 * @return l'oggetto OrderPlaced creato
-	 * @throws RuntimeException se l'ordine è vuoto
 	 */
 	@Override
-	public OrderPlaced createNewOrder(OrderPlaced order) throws RuntimeException {
-		if (order.getItems().isEmpty()) {
-			throw new RuntimeException("Un ordine non deve essere vuoto");
-		}
-
-		OrderPlaced result = orderPlacedRepository.save(order);
+	public OrderPlaced createAndPlaceNewOrder(OrderPlaced order) throws RuntimeException {
+		OrderPlaced toReturn = orderPlacedRepository.save(order);
 		orderItemRepository.saveAll(order.getItems());
-		return result;
+		return toReturn;
 	}
+
+
+
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Ottiene un ordine dal database tramite l'ID.
@@ -53,13 +62,14 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * Ottiene tutti gli ordini dal database.
+	 * Ottiene un oggetto all'interno di un ordine dal database tramite l'ID.
 	 *
-	 * @return una lista di oggetti OrderPlaced
+	 * @param id l'ID dell'oggetto da cercare
+	 * @return l'oggetto OrderItem corrispondente all'ID specificato, o null se non trovato
 	 */
 	@Override
-	public List<OrderPlaced> findAllOrders() {
-		return orderPlacedRepository.findAll();
+	public OrderItem findOrderItemById(UUID id) {
+		return orderItemRepository.findById(id).orElse(null);
 	}
 
 	/**
@@ -96,27 +106,69 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * Ottiene tutti gli oggetti all'interno di un ordine dal database tramite il prodotto.
+	 *
+	 * @param productVariation il prodotto di cui cercare gli oggetti
+	 * @return una lista di oggetti OrderItem
+	 */
+	@Override
+	public List<OrderItem> findOrderItemsByProductVariation(ProductVariation productVariation) {
+		return orderItemRepository.findByProductVariationId(productVariation.getId());
+	}
+
+	/**
+	 * Ottiene tutti gli ordini dal database.
+	 *
+	 * @return una lista di oggetti OrderPlaced
+	 */
+	@Override
+	public List<OrderPlaced> findAllOrders() {
+		return orderPlacedRepository.findAll();
+	}
+
+	/**
+	 * Ottiene tutti gli oggetti all'interno di un ordine dal database.
+	 *
+	 * @return una lista di oggetti OrderItem
+	 */
+	@Override
+	public List<OrderItem> findAllOrderItems() {
+		return orderItemRepository.findAll();
+	}
+
+
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	/**
 	 * Aggiorna le informazioni di un ordine nel database.
 	 *
-	 * @param id l'ID dell'ordine da aggiornare
 	 * @param order l'oggetto OrderPlaced con le nuove informazioni da salvare
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
 	@Override
-	public OrderPlaced updateOrder(UUID id, OrderPlaced order) {
-		order.setId(id);
+	public OrderPlaced updateOrder(OrderPlaced order) {
 		return orderPlacedRepository.save(order);
 	}
 
 	/**
-	 * Elimina un ordine e tutti gli oggetti al suo interno dal database tramite l'ID.
+	 * Aggiorna le informazioni di un oggetto all'interno di un ordine nel database.
 	 *
-	 * @param id l'ID dell'ordine da eliminare
+	 * @param orderItem l'oggetto OrderItem con le nuove informazioni da salvare
+	 * @return l'oggetto OrderItem aggiornato
 	 */
 	@Override
-	public void deleteOrder(UUID id) {
-		orderPlacedRepository.deleteById(id);
+	public OrderItem updateOrderItem(OrderItem orderItem) {
+		return orderItemRepository.save(orderItem);
 	}
+
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Elimina un ordine e tutti gli oggetti al suo interno dal database.
@@ -125,6 +177,17 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public void deleteOrder(OrderPlaced order) {
+		orderItemRepository.deleteAll(order.getItems());
 		orderPlacedRepository.delete(order);
+	}
+
+	/**
+	 * Elimina un oggetto all'interno di un ordine dal database.
+	 *
+	 * @param orderItem l'oggetto da eliminare
+	 */
+	@Override
+	public void deleteOrderItem(OrderItem orderItem) {
+		orderItemRepository.delete(orderItem);
 	}
 }

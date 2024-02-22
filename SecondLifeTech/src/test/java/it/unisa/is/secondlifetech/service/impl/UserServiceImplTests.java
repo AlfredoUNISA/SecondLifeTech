@@ -221,7 +221,7 @@ class UserServiceImplTests {
 		verify(cartService).deleteCart(cart.getId());
 		verify(paymentMethodRepository).deleteAll(user.getPaymentMethods());
 		verify(shippingAddressRepository).deleteAll(user.getShippingAddresses());
-		verify(orderService).updateOrder(order.getId(), order);
+		verify(orderService).updateOrder(order);
 		verify(userRepository).delete(user);
 	}
 

@@ -2,22 +2,35 @@ package it.unisa.is.secondlifetech.service;
 
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
+import it.unisa.is.secondlifetech.entity.ProductVariation;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Interfaccia per il servizio di gestione degli ordini.<br/><br/>
+ * <i>Non si dovrebbero eliminare gli ordini o i loro oggetti, ma sono comunque presenti i metodi appositi.</i>
+ */
 public interface OrderService {
 
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
+
 	/**
-	 * Crea un nuovo ordine nel database.
-	 * Salva anche tutti gli OrderItems all'interno della lista.
+	 * Crea un nuovo ordine nel database.<br/><br/>
+	 * <b>Salva anche tutti gli OrderItems all'interno della sua lista</b>, pertanto bisogna assicurarsi che siano presenti
+	 * tutti gli OrderItem necessari.
 	 *
 	 * @param order l'oggetto OrderPlaced da creare
 	 * @return l'oggetto OrderPlaced creato
-	 * @throws RuntimeException se l'ordine è vuoto
 	 */
-	OrderPlaced createNewOrder(OrderPlaced order) throws RuntimeException;
+	OrderPlaced createAndPlaceNewOrder(OrderPlaced order);
+
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Ottiene un ordine dal database tramite l'ID.
@@ -28,11 +41,12 @@ public interface OrderService {
 	OrderPlaced findOrderById(UUID id);
 
 	/**
-	 * Ottiene tutti gli ordini dal database.
+	 * Ottiene un oggetto all'interno di un ordine dal database tramite l'ID.
 	 *
-	 * @return una lista di oggetti OrderPlaced
+	 * @param id l'ID dell'oggetto da cercare
+	 * @return l'oggetto OrderItem corrispondente all'ID specificato, o null se non trovato
 	 */
-	List<OrderPlaced> findAllOrders();
+	OrderItem findOrderItemById(UUID id);
 
 	/**
 	 * Ottiene tutti gli ordini dal database tramite l'email dell'utente.
@@ -59,20 +73,54 @@ public interface OrderService {
 	List<OrderPlaced> findOrderByDate(Date orderDate);
 
 	/**
+	 * Ottiene tutti gli oggetti all'interno di un ordine dal database tramite il prodotto.
+	 *
+	 * @param productVariation il prodotto di cui cercare gli oggetti
+	 * @return una lista di oggetti OrderItem
+	 */
+	List<OrderItem> findOrderItemsByProductVariation(ProductVariation productVariation);
+
+	/**
+	 * Ottiene tutti gli ordini dal database.
+	 *
+	 * @return una lista di oggetti OrderPlaced
+	 */
+	List<OrderPlaced> findAllOrders();
+
+	/**
+	 * Ottiene tutti gli oggetti all'interno di un ordine dal database.
+	 *
+	 * @return una lista di oggetti OrderItem
+	 */
+	List<OrderItem> findAllOrderItems();
+
+
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	/**
 	 * Aggiorna le informazioni di un ordine nel database.
 	 *
-	 * @param id l'ID dell'ordine da aggiornare
 	 * @param order l'oggetto OrderPlaced con le nuove informazioni da salvare
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
-	OrderPlaced updateOrder(UUID id, OrderPlaced order);
+	OrderPlaced updateOrder(OrderPlaced order);
 
 	/**
-	 * Elimina un ordine e tutti gli oggetti al suo interno dal database tramite l'ID.
+	 * Aggiorna le informazioni di un oggetto all'interno di un ordine nel database.
 	 *
-	 * @param id l'ID dell'ordine da eliminare
+	 * @param orderItem l'oggetto OrderItem con le nuove informazioni da salvare
+	 * @return l'oggetto OrderItem aggiornato
 	 */
-	void deleteOrder(UUID id);
+	OrderItem updateOrderItem(OrderItem orderItem);
+
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Elimina un ordine e tutti gli oggetti al suo interno dal database.
@@ -80,4 +128,11 @@ public interface OrderService {
 	 * @param order l'ordine da eliminare
 	 */
 	void deleteOrder(OrderPlaced order);
+
+	/**
+	 * Elimina un oggetto all'interno di un ordine dal database.
+	 *
+	 * @param orderItem l'oggetto da eliminare
+	 */
+	void deleteOrderItem(OrderItem orderItem);
 }

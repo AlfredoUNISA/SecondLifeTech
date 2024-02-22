@@ -8,6 +8,7 @@ import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ class ProductServiceImplTests {
 	private ProductVariationRepository productVariationRepository;
 
 	@Mock
+	private OrderService orderService;
+
+	@Mock
 	private OrderItemRepository orderItemRepository;
 
 	@InjectMocks
@@ -45,10 +49,6 @@ class ProductServiceImplTests {
 		productVariation = new ProductVariation();
 		productVariation.setId(UUID.randomUUID());
 		productVariation.setModel(productModel);
-
-		List<ProductVariation> variations = new ArrayList<>();
-		variations.add(productVariation);
-		productModel.setVariations(variations);
 	}
 
 
@@ -233,36 +233,35 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_deleteModel_ShouldDeleteModelAndItsVariations() {
+	void ProductServiceImpl_deleteModel_ShouldDeleteModel() {
 		// Arrange
-		doNothing().when(productVariationRepository).delete(any(ProductVariation.class));
-		doNothing().when(productModelRepository).delete(any(ProductModel.class));
+		List<ProductVariation> variations = new ArrayList<>();
+		variations.add(productVariation);
+		productModel.setVariations(variations);
 
 		// Act
 		productService.deleteModel(productModel);
 
 		// Assert
-		verify(productVariationRepository).delete(productVariation);
-		verify(productModelRepository).delete(productModel);
+		verify(productModelRepository, times(1)).delete(productModel);
 	}
 
 	@Test
-	void ProductServiceImpl_deleteVariation_ShouldDeleteVariationAndUpdateOrderItems() {
+	void ProductServiceImpl_deleteVariation_ShouldDeleteVariation() {
 		// Arrange
-		OrderItem orderItem = new OrderItem();
+		productVariation.setModel(productModel);
 		List<OrderItem> orderItems = new ArrayList<>();
+		OrderItem orderItem = new OrderItem();
 		orderItems.add(orderItem);
-
-		when(orderItemRepository.findByProductVariationId(any(UUID.class))).thenReturn(orderItems);
-		doNothing().when(productVariationRepository).delete(any(ProductVariation.class));
+		when(orderService.findOrderItemsByProductVariation(productVariation)).thenReturn(orderItems);
 
 		// Act
 		productService.deleteVariation(productVariation);
 
 		// Assert
-		verify(orderItemRepository).save(orderItem);
-		verify(productVariationRepository).delete(productVariation);
-		verify(productModelRepository).save(productModel);
+		verify(orderItemRepository, times(1)).save(orderItem);
+		verify(productVariationRepository, times(1)).delete(productVariation);
+		verify(productModelRepository, times(1)).save(productModel);
 	}
 
 	/*

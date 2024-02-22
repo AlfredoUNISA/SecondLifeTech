@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
 		if (!orders.isEmpty()) {
 			for (OrderPlaced order : orders) {
 				order.setUser(null);
-				orderService.updateOrder(order.getId(), order);
+				orderService.updateOrder(order);
 			}
 		}
 

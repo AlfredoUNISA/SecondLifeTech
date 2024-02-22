@@ -186,7 +186,7 @@ public class ProductServiceImpl implements ProductService {
 	// ================================================================================================================
 
 	/**
-	 * Elimina un modello di prodotto dal database.
+	 * Elimina un modello di prodotto e le sue variazioni dal database.
 	 *
 	 * @param model l'oggetto ProductModel da eliminare
 	 */
@@ -211,7 +211,7 @@ public class ProductServiceImpl implements ProductService {
 		ProductModel model = variation.getModel();
 
 		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
-		for (OrderItem item : orderItemRepository.findByProductVariationId(variation.getId())) {
+		for (OrderItem item : orderService.findOrderItemsByProductVariation(variation)) {
 			// Informazioni Modello
 			item.setModelName(model.getName());
 			item.setBrand(model.getBrand());

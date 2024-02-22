@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface ProductService {
 
-
-
-// =============== CREATE ===============
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Crea un nuovo modello di prodotto nel database.
@@ -23,14 +23,16 @@ public interface ProductService {
 	/**
 	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
 	 *
-	 * @param modelId   l'ID del modello di prodotto a cui aggiungere la variante
+	 * @param model     il modello di prodotto a cui aggiungere la variante
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
 	ProductVariation createNewVariation(ProductModel model, ProductVariation variation);
 
 
 
-// =============== READ ===============
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite l'ID.
@@ -96,7 +98,9 @@ public interface ProductService {
 
 
 
-// =============== UPDATE ===============
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Aggiorna le informazioni di un modello di prodotto nel database.
@@ -116,10 +120,12 @@ public interface ProductService {
 
 
 
-// =============== DELETE ===============
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
 
 	/**
-	 * Elimina un modello di prodotto dal database.
+	 * Elimina un modello di prodotto e le sue variazioni dal database.
 	 *
 	 * @param model l'oggetto ProductModel da eliminare
 	 */

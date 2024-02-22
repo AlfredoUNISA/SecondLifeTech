@@ -166,6 +166,10 @@ public class CartServiceImpl implements CartService {
 	@Override
 	@Transactional
 	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress) {
+		if (cart.getItems().isEmpty()) {
+			throw new RuntimeException("Un ordine non deve essere vuoto");
+		}
+
 		User user = cart.getUser();
 
 		OrderPlaced order = new OrderPlaced(
@@ -195,7 +199,7 @@ public class CartServiceImpl implements CartService {
 			order.addItem(orderItem);
 		}
 
-		orderService.createNewOrder(order);
+		orderService.createAndPlaceNewOrder(order);
 		clearCart(cart);
 	}
 
