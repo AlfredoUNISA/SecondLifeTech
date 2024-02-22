@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
+
 	/**
 	 * Crea un nuovo ordine nel database.
 	 * Salva anche tutti gli OrderItems all'interno della lista.
@@ -24,6 +26,13 @@ public interface OrderService {
 	 * @return l'oggetto OrderPlaced corrispondente all'ID specificato, o null se non trovato
 	 */
 	OrderPlaced findOrderById(UUID id);
+
+	/**
+	 * Ottiene tutti gli ordini dal database.
+	 *
+	 * @return una lista di oggetti OrderPlaced
+	 */
+	List<OrderPlaced> findAllOrders();
 
 	/**
 	 * Ottiene tutti gli ordini dal database tramite l'email dell'utente.
@@ -59,9 +68,16 @@ public interface OrderService {
 	OrderPlaced updateOrder(UUID id, OrderPlaced order);
 
 	/**
-	 * Elimina un ordine dal database.
+	 * Elimina un ordine e tutti gli oggetti al suo interno dal database tramite l'ID.
 	 *
 	 * @param id l'ID dell'ordine da eliminare
 	 */
-	void deleteOrder(OrderPlaced id);
+	void deleteOrder(UUID id);
+
+	/**
+	 * Elimina un ordine e tutti gli oggetti al suo interno dal database.
+	 *
+	 * @param order l'ordine da eliminare
+	 */
+	void deleteOrder(OrderPlaced order);
 }

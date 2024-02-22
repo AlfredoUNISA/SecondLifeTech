@@ -76,4 +76,6 @@ public interface CartService {
 	 * @param id l'ID del carrello da eliminare
 	 */
 	void deleteCart(UUID id);
+
+	void deleteCart(Cart cart);
 }

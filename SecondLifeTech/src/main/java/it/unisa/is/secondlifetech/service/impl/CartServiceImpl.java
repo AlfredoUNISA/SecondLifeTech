@@ -234,12 +234,24 @@ public class CartServiceImpl implements CartService {
 	}
 
 	/**
-	 * Elimina un carrello dal database tramite l'ID.
+	 * Elimina un carrello dal database e tutti gli oggetti al suo interno tramite l'ID.
 	 *
 	 * @param id l'ID del carrello da eliminare
 	 */
 	@Override
 	public void deleteCart(UUID id) {
-		cartRepository.deleteById(id);
+		Cart cart = findCartById(id);
+		deleteCart(cart);
+	}
+
+	/**
+	 * Elimina un carrello e tutti gli oggetti al suo interno.
+	 *
+	 * @param cart il carrello da eliminare
+	 */
+	@Override
+	public void deleteCart(Cart cart) {
+		cartItemRepository.deleteAll(cart.getItems());
+		cartRepository.delete(cart);
 	}
 }

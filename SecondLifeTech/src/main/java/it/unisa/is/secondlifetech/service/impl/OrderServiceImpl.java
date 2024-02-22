@@ -1,6 +1,5 @@
 package it.unisa.is.secondlifetech.service.impl;
 
-import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
@@ -54,6 +53,16 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
+	 * Ottiene tutti gli ordini dal database.
+	 *
+	 * @return una lista di oggetti OrderPlaced
+	 */
+	@Override
+	public List<OrderPlaced> findAllOrders() {
+		return orderPlacedRepository.findAll();
+	}
+
+	/**
 	 * Ottiene tutti gli ordini dal database tramite l'email dell'utente.
 	 *
 	 * @param email l'email dell'utente di cui cercare gli ordini
@@ -100,12 +109,22 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * Elimina un ordine dal database.
+	 * Elimina un ordine e tutti gli oggetti al suo interno dal database tramite l'ID.
 	 *
 	 * @param id l'ID dell'ordine da eliminare
 	 */
 	@Override
-	public void deleteOrder(OrderPlaced id) {
-		orderPlacedRepository.delete(id);
+	public void deleteOrder(UUID id) {
+		orderPlacedRepository.deleteById(id);
+	}
+
+	/**
+	 * Elimina un ordine e tutti gli oggetti al suo interno dal database.
+	 *
+	 * @param order l'ordine da eliminare
+	 */
+	@Override
+	public void deleteOrder(OrderPlaced order) {
+		orderPlacedRepository.delete(order);
 	}
 }

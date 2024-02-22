@@ -1,14 +1,12 @@
 package it.unisa.is.secondlifetech.service.impl;
 
-import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.PaymentMethod;
-import it.unisa.is.secondlifetech.entity.ShippingAddress;
-import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
 import it.unisa.is.secondlifetech.repository.UserRepository;
 import it.unisa.is.secondlifetech.service.CartService;
+import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +23,15 @@ public class UserServiceImpl implements UserService {
 	private final CartService cartService;
 	private final ShippingAddressRepository shippingAddressRepository;
 	private final PaymentMethodRepository paymentMethodRepository;
+	private final OrderService orderService;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, CartService cartService, ShippingAddressRepository shippingAddressRepository, PaymentMethodRepository paymentMethodRepository) {
+	public UserServiceImpl(UserRepository userRepository, CartService cartService, ShippingAddressRepository shippingAddressRepository, PaymentMethodRepository paymentMethodRepository, OrderService orderService) {
 		this.userRepository = userRepository;
 		this.cartService = cartService;
 		this.shippingAddressRepository = shippingAddressRepository;
 		this.paymentMethodRepository = paymentMethodRepository;
+		this.orderService = orderService;
 	}
 
 	/**
@@ -209,5 +209,32 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(UUID id) {
 		userRepository.deleteById(id);
+		//User user = findUserById(id);
+		//deleteUser(user);
+	}
+
+	public void deleteUser(User user) {
+		Cart cart = user.getCart();
+		List<PaymentMethod> paymentMethods = user.getPaymentMethods();
+		List<ShippingAddress> shippingAddresses = user.getShippingAddresses();
+		List<OrderPlaced> orders = user.getOrders();
+
+		if (cart != null)
+			cartService.deleteCart(cart.getId());
+
+		if (!paymentMethods.isEmpty())
+			paymentMethodRepository.deleteAll(paymentMethods);
+
+		if (!shippingAddresses.isEmpty())
+			shippingAddressRepository.deleteAll(shippingAddresses);
+
+		if (!orders.isEmpty()) {
+			for (OrderPlaced order : orders) {
+				order.setUser(null);
+				orderService.updateOrder(order.getId(), order);
+			}
+		}
+
+		userRepository.delete(user);
 	}
 }
