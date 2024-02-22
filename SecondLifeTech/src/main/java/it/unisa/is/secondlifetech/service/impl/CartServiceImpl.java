@@ -161,14 +161,15 @@ public class CartServiceImpl implements CartService {
 	 * Finalizza un ordine.
 	 *
 	 * @param cart il carrello con gli oggetti da inserire nell'ordine
+	 * @param shippingAddress l'indirizzo di spedizione dell'ordine
 	 */
 	@Override
 	@Transactional
-	public void finalizeOrder(Cart cart) {
+	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress) {
 		User user = cart.getUser();
 
 		OrderPlaced order = new OrderPlaced(
-			"address",
+			shippingAddress.fullAddress(),
 			user.getEmail(),
 			new Date(),
 			cart.getTotal(),
@@ -189,7 +190,7 @@ public class CartServiceImpl implements CartService {
 			);
 
 			productVariation.setQuantityInStock(productVariation.getQuantityInStock() - cartItem.getQuantity());
-			productService.updateVariation(productVariation.getId(), productVariation);
+			productService.updateVariation(productVariation);
 
 			order.addItem(orderItem);
 		}

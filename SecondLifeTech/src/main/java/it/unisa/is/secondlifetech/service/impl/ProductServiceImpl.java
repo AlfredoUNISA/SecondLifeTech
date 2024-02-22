@@ -1,7 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.OrderItem;
-import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
@@ -31,81 +30,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 
-	/**
-	 * Aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
-	 *
-	 * @param modelId   l'ID del modello di prodotto a cui aggiungere la variante
-	 * @param variation l'oggetto ProductVariation da aggiungere
-	 */
-	@Override
-	public void createAndAddVariationToModel(UUID modelId, ProductVariation variation) {
-		ProductModel model = findModelById(modelId);
-		model.addVariation(variation);
-		productVariationRepository.save(variation);
-		productModelRepository.save(model);
-	}
-
-	/**
-	 * Crea solamente una nuova variante di prodotto nel database.
-	 *
-	 * @param productVariation l'oggetto ProductVariation da creare
-	 * @return l'oggetto ProductVariation creato
-	 */
-	@Override
-	public ProductVariation createNewVariation(ProductVariation productVariation) {
-		return productVariationRepository.save(productVariation);
-	}
-
-
-	/**
-	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
-	 *
-	 * @param modelId     l'ID del modello di prodotto da cui rimuovere la variante
-	 * @param variationId l'ID della variante di prodotto da rimuovere
-	 */
-	@Override
-	public void deleteVariation(UUID modelId, UUID variationId) {
-		ProductModel model = null;
-		ProductVariation variation = null;
-
-		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine con quelle del modello
-		for (OrderItem item : orderItemRepository.findAll()) {
-			variation = item.getProductVariation();
-			if (variation.getId().equals(variationId)) {
-				model = variation.getModel();
-
-				// Modello
-				item.setModelName(model.getName());
-				item.setBrand(model.getBrand());
-				item.setCategory(model.getCategory());
-
-				// Variante
-				item.setColor(variation.getColor());
-				item.setDisplaySize(variation.getDisplaySize());
-				item.setStorageSize(variation.getStorageSize());
-				item.setRam(variation.getRam());
-				item.setState(variation.getState());
-				item.setYear(variation.getYear());
-
-				// Salva
-				item.setProductVariation(null);
-				orderItemRepository.save(item);
-				break;
-			} else {
-				variation = null;
-			}
-		}
-
-		if (model == null)
-			model = findModelById(modelId);
-
-		if (variation == null)
-			variation = findVariationById(variationId);
-
-		model.removeVariation(variation);
-		productModelRepository.save(model);
-		productVariationRepository.deleteById(variationId);
-	}
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Crea un nuovo modello di prodotto nel database.
@@ -119,6 +46,27 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
+	 * Aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
+	 *
+	 * @param model     l'oggetto ProductModel a cui aggiungere la variante
+	 * @param variation l'oggetto ProductVariation da aggiungere
+	 */
+	@Override
+	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) {
+		model.addVariation(variation);
+
+		ProductVariation toReturn = productVariationRepository.save(variation);
+		productModelRepository.save(model);
+
+		return toReturn;
+	}
+
+
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
+
+	/**
 	 * Ottiene un modello di prodotto dal database tramite l'ID.
 	 *
 	 * @param id l'ID del modello di prodotto da cercare
@@ -130,13 +78,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
-	 * Ottiene tutti i modelli di prodotto dal database.
+	 * Ottiene una variante di prodotto dal database tramite l'ID.
 	 *
-	 * @return una lista di oggetti ProductModel
+	 * @param id l'ID della variante di prodotto da cercare
+	 * @return l'oggetto ProductVariation corrispondente all'ID specificato, o null se non trovato
 	 */
 	@Override
-	public List<ProductModel> findAllModels() {
-		return productModelRepository.findAll();
+	public ProductVariation findVariationById(UUID id) {
+		return productVariationRepository.findById(id).orElse(null);
 	}
 
 	/**
@@ -173,44 +122,6 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
-	 * Aggiorna le informazioni di un modello di prodotto nel database.
-	 *
-	 * @param id           l'ID del modello di prodotto da aggiornare
-	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
-	 * @return l'oggetto ProductModel aggiornato
-	 */
-	@Override
-	public ProductModel updateModel(UUID id, ProductModel productModel) {
-		productModel.setId(id);
-		return productModelRepository.save(productModel);
-	}
-
-	/**
-	 * Elimina un modello di prodotto dal database tramite l'ID.
-	 *
-	 * @param id l'ID del modello di prodotto da eliminare
-	 */
-	@Override
-	public void deleteModel(UUID id) {
-		productVariationRepository.deleteAll(
-			findModelById(id).getVariations()
-		);
-
-		productModelRepository.deleteById(id);
-	}
-
-	/**
-	 * Ottiene una variante di prodotto dal database tramite l'ID.
-	 *
-	 * @param id l'ID della variante di prodotto da cercare
-	 * @return l'oggetto ProductVariation corrispondente all'ID specificato, o null se non trovato
-	 */
-	@Override
-	public ProductVariation findVariationById(UUID id) {
-		return productVariationRepository.findById(id).orElse(null);
-	}
-
-	/**
 	 * Ottiene tutte le varianti di prodotto dal database.
 	 *
 	 * @param state lo stato delle varianti di prodotto da cercare
@@ -219,6 +130,16 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductVariation> findVariationsByState(String state) {
 		return productVariationRepository.findByState(state);
+	}
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	@Override
+	public List<ProductModel> findAllModels() {
+		return productModelRepository.findAll();
 	}
 
 	/**
@@ -231,16 +152,84 @@ public class ProductServiceImpl implements ProductService {
 		return productVariationRepository.findAll();
 	}
 
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Aggiorna le informazioni di un modello di prodotto nel database.
+	 *
+	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @return l'oggetto ProductModel aggiornato
+	 */
+	@Override
+	public ProductModel updateModel(ProductModel productModel) {
+		return productModelRepository.save(productModel);
+	}
+
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.
 	 *
-	 * @param variationId      l'ID della variante di prodotto da aggiornare
 	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
 	@Override
-	public ProductVariation updateVariation(UUID variationId, ProductVariation productVariation) {
-		productVariation.setId(variationId);
+	public ProductVariation updateVariation(ProductVariation productVariation) {
 		return productVariationRepository.save(productVariation);
+	}
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Elimina un modello di prodotto dal database.
+	 *
+	 * @param model l'oggetto ProductModel da eliminare
+	 */
+	@Override
+	public void deleteModel(ProductModel model) {
+		List<ProductVariation> variations = model.getVariations();
+
+		for (ProductVariation variation : variations)
+			deleteVariation(variation);
+
+		productModelRepository.delete(model);
+	}
+
+	/**
+	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
+	 *
+	 * @param variation l'oggetto ProductVariation da rimuovere
+	 */
+	@Override
+	public void deleteVariation(ProductVariation variation) {
+		ProductModel model = variation.getModel();
+
+		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
+		for (OrderItem item : orderItemRepository.findByProductVariationId(variation.getId())) {
+			// Informazioni Modello
+			item.setModelName(model.getName());
+			item.setBrand(model.getBrand());
+			item.setCategory(model.getCategory());
+
+			// Informazioni Variante
+			item.setColor(variation.getColor());
+			item.setDisplaySize(variation.getDisplaySize());
+			item.setStorageSize(variation.getStorageSize());
+			item.setRam(variation.getRam());
+			item.setState(variation.getState());
+			item.setYear(variation.getYear());
+
+			// Salva
+			item.setProductVariation(null);
+			orderItemRepository.save(item);
+		}
+
+		model.removeVariation(variation);
+		productVariationRepository.delete(variation);
+		productModelRepository.save(model);
 	}
 }

@@ -34,13 +34,23 @@ public class ProductModel {
 	@OneToOne
 	private ImageFile imageFile;
 
+	/**
+	 * Aggiunge una nuova variante di prodotto a questo modello.
+	 *
+	 * @param variation la variante da aggiungere
+	 */
 	public void addVariation(ProductVariation variation) {
-		variations.add(variation);
+		this.variations.add(variation);
 		variation.setModel(this);
 	}
 
+	/**
+	 * Rimuove una variante di prodotto da questo modello.
+	 *
+	 * @param variation la variante da rimuovere
+	 */
 	public void removeVariation(ProductVariation variation) {
-		variations.remove(variation);
+		this.variations.remove(variation);
 		variation.setModel(null);
 	}
 

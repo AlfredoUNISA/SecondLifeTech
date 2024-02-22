@@ -12,8 +12,6 @@ public interface ProductService {
 
 // =============== CREATE ===============
 
-
-
 	/**
 	 * Crea un nuovo modello di prodotto nel database.
 	 *
@@ -22,28 +20,17 @@ public interface ProductService {
 	 */
 	ProductModel createNewModel(ProductModel productModel);
 
-
-
 	/**
 	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
 	 *
 	 * @param modelId   l'ID del modello di prodotto a cui aggiungere la variante
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
-	void createAndAddVariationToModel(UUID modelId, ProductVariation variation);
-
-	/**
-	 * Crea solamente una nuova variante di prodotto nel database.
-	 *
-	 * @return l'oggetto ProductVariation creato
-	 */
-	ProductVariation createNewVariation(ProductVariation productVariation);
+	ProductVariation createNewVariation(ProductModel model, ProductVariation variation);
 
 
 
 // =============== READ ===============
-
-
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite l'ID.
@@ -60,20 +47,6 @@ public interface ProductService {
 	 * @return l'oggetto ProductVariation corrispondente all'ID specificato, o null se non trovato
 	 */
 	ProductVariation findVariationById(UUID id);
-
-	/**
-	 * Ottiene tutti i modelli di prodotto dal database.
-	 *
-	 * @return una lista di oggetti ProductModel
-	 */
-	List<ProductModel> findAllModels();
-
-	/**
-	 * Ottiene tutte le varianti di prodotto dal database.
-	 *
-	 * @return una lista di oggetti ProductVariation
-	 */
-	List<ProductVariation> findAllVariations();
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite il nome.
@@ -107,48 +80,55 @@ public interface ProductService {
 	 */
 	List<ProductVariation> findVariationsByState(String state);
 
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	List<ProductModel> findAllModels();
+
+	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductVariation
+	 */
+	List<ProductVariation> findAllVariations();
+
 
 
 // =============== UPDATE ===============
 
-
-
 	/**
 	 * Aggiorna le informazioni di un modello di prodotto nel database.
 	 *
-	 * @param id          l'ID del modello di prodotto da aggiornare
 	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
 	 * @return l'oggetto ProductModel aggiornato
 	 */
-	ProductModel updateModel(UUID id, ProductModel productModel);
+	ProductModel updateModel(ProductModel productModel);
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.
 	 *
-	 * @param variationId                l'ID della variante di prodotto da aggiornare
 	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
-	ProductVariation updateVariation(UUID variationId, ProductVariation productVariation);
+	ProductVariation updateVariation(ProductVariation productVariation);
 
 
 
 // =============== DELETE ===============
 
-
-
 	/**
-	 * Elimina un modello di prodotto dal database tramite l'ID.
+	 * Elimina un modello di prodotto dal database.
 	 *
-	 * @param id l'ID del modello di prodotto da eliminare
+	 * @param model l'oggetto ProductModel da eliminare
 	 */
-	void deleteModel(UUID id);
+	void deleteModel(ProductModel model);
 
 	/**
 	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
 	 *
-	 * @param modelId     l'ID del modello di prodotto da cui rimuovere la variante
-	 * @param variationId l'ID della variante di prodotto da rimuovere
+	 * @param variation l'oggetto ProductVariation da rimuovere
 	 */
-	void deleteVariation(UUID modelId, UUID variationId);
+	void deleteVariation(ProductVariation variation);
 }

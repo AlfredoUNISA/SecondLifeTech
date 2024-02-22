@@ -15,8 +15,6 @@ import java.util.UUID;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-	// Metodo personalizzato per l'eliminazione con UUID
-	void deleteById(@Nullable UUID id);
 	Optional<User> findByEmail(String email);
 	List<User> findByRole(String role);
 	Optional<User> findByCartId(UUID cartId);

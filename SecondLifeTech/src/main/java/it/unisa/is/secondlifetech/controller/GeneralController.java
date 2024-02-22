@@ -36,15 +36,9 @@ public class GeneralController {
 	@GetMapping
 	public String index(Model model) {
 		List<User> users = userService.findUsersByRole(UserRole.CLIENTE);
-		UUID userId = null;
-		for (User user : users) {
-			if (user.getFirstName().equals("Luigi")) {
-				userId = user.getId();
-				break;
-			}
-		}
-		userService.deleteUser(userId);
-		//model.addAttribute("users", users);
+		List<ProductModel> productModels = productService.findAllModels();
+		model.addAttribute("users", users);
+		model.addAttribute("productModels", productModels);
 		return "index";
 	}
 
@@ -91,9 +85,7 @@ public class GeneralController {
 
 	@PostMapping("/create-product-variation-test")
 	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
-		ProductModel productModel = productService.findModelById(productVariation.getModel().getId());
-		productVariation.setModel(productModel);
-		productService.createNewVariation(productVariation);
+		productService.createNewVariation(productVariation.getModel(), productVariation);
 		return "redirect:/";
 	}
 
@@ -121,23 +113,27 @@ public class GeneralController {
 	@GetMapping("/view-cart-test")
 	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
 		User user = userService.findUserById(userId);
-		model.addAttribute("userId", userId);
-		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
-		model.addAttribute("cart", user.getCart());
+		model.addAttribute("user", user);
 		return "view-cart-test";
 	}
 
 	@GetMapping("/view-product-variations")
-	public String viewProductVariations(Model model) {
+	public String viewProductVariations(@RequestParam("productModelId") UUID productModelId, Model model) {
+		ProductModel productModel = productService.findModelById(productModelId);
+
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
-		model.addAttribute("variations", productService.findAllVariations());
+		model.addAttribute("model", productModel);
+		model.addAttribute("variations", productModel.getVariations());
 		return "view-product-variations-test";
 	}
 
 	@PostMapping("/finalize-order-test")
-	public String createOrder(@RequestParam("cartId") UUID cartId) {
+	public String createOrder(@RequestParam("cartId") UUID cartId, @RequestParam("shippingAddressId") UUID shippingAddressId) {
 		Cart cart = cartService.findCartById(cartId);
-		cartService.finalizeOrder(cart);
+		ShippingAddress shippingAddress = userService.findShippingAddressById(shippingAddressId);
+
+		cartService.finalizeOrder(cart, shippingAddress);
+
 		return "redirect:/view-orders-test?userId=" + cart.getUser().getId();
 	}
 
@@ -169,7 +165,7 @@ public class GeneralController {
 	@PostMapping("/add-shipping-address-test")
 	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) {
 		User user = userService.findUserById(userId);
-		userService.addShippingAddress(user, newShippingAddress);
+		userService.createNewShippingAddress(user, newShippingAddress);
 		return "redirect:/view-user-test?userId=" + userId;
 	}
 
@@ -177,20 +173,24 @@ public class GeneralController {
 	public String deleteShippingAddress(@RequestParam("userId") UUID userId, @RequestParam("shippingAddressId") UUID shippingAddressId) {
 		User user = userService.findUserById(userId);
 		ShippingAddress target = null;
+
 		for (ShippingAddress shippingAddress : user.getShippingAddresses()) {
 			if (shippingAddress.getId().equals(shippingAddressId)) {
 				target = shippingAddress;
 				break;
 			}
 		}
-		userService.removeShippingAddress(user, target);
+
+		if(target != null)
+			userService.deleteShippingAddress(target);
+
 		return "redirect:/view-user-test?userId=" + userId;
 	}
 
 	@PostMapping("/add-payment-method-test")
 	public String addPaymentMethod(@RequestParam("userId") UUID userId, @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) {
 		User user = userService.findUserById(userId);
-		userService.addPaymentMethod(user, newPaymentMethod);
+		userService.createNewPaymentMethod(user, newPaymentMethod);
 		return "redirect:/view-user-test?userId=" + userId;
 	}
 
@@ -198,13 +198,14 @@ public class GeneralController {
 	public String deletePaymentMethod(@RequestParam("userId") UUID userId, @RequestParam("paymentMethodId") UUID paymentMethodId) {
 		User user = userService.findUserById(userId);
 		PaymentMethod target = null;
+
 		for (PaymentMethod paymentMethod : user.getPaymentMethods()) {
 			if (paymentMethod.getId().equals(paymentMethodId)) {
 				target = paymentMethod;
 				break;
 			}
 		}
-		userService.removePaymentMethod(user, target);
+		userService.deletePaymentMethod(target);
 		return "redirect:/view-user-test?userId=" + userId;
 	}
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="color-scheme" content="light dark">
-    <title>Index</title>
+    <title>Product Variations</title>
     <style>
         table, th, td {
             border: 1px solid wheat;
@@ -18,6 +18,15 @@
     </style>
 </head>
 <body>
+<a href="/">← Back to index</a>
+<h1>Product Model</h1>
+<h6 th:text="'Name: ' + ${model.name}"></h6>
+<h6 th:text="'Brand: ' + ${model.brand}"></h6>
+<h6 th:text="'Category: ' + ${model.category}"></h6>
+<th:block th:if="${model.imageFile != null}">
+    <img th:src="${model.imageFile.generateBase64Image()}" alt="Image of the product model" width="200" height="200">
+</th:block>
+
 <h1>Product Variations</h1>
 <table>
     <tr>

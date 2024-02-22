@@ -26,7 +26,15 @@
         <a href="/create-product-variation-test">Create Product Variation</a><br/>
     </li>
     <li>
-        <a href="/view-product-variations">View products</a><br/>
+        View product variations of
+        <form method="get" role="form" th:action="@{/view-product-variations}">
+            <select id="productModelSelect" name="productModelId">
+                <th:block th:each="productModel : ${productModels}">
+                    <option th:text="${productModel.name}" th:value="${productModel.id}"></option>
+                </th:block>
+            </select>
+            <button type="submit">View Product Variations</button>
+        </form>
     </li>
     <li>
         View the cart of

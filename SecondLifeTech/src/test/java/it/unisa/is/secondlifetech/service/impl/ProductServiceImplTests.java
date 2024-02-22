@@ -123,7 +123,7 @@ class ProductServiceImplTests {
 		when(productVariationRepository.findById(variationId)).thenReturn(Optional.of(productVariation));
 
 		// Act
-		productModelService.deleteVariation(modelId, variationId);
+		productModelService.deleteVariation(productVariation);
 
 		// Assert
 		verify(productModelRepository).save(productModel);
@@ -140,7 +140,7 @@ class ProductServiceImplTests {
 		when(orderItemRepository.findAll()).thenReturn(List.of(orderItem));
 
 		// Act
-		productModelService.deleteVariation(modelId, variationId);
+		productModelService.deleteVariation(productVariation);
 
 		// Assert
 		assertThat(orderItem.getBrand()).isEqualTo(productModel.getBrand());

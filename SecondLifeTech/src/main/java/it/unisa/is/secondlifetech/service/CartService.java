@@ -1,6 +1,7 @@
 package it.unisa.is.secondlifetech.service;
 
 import it.unisa.is.secondlifetech.entity.Cart;
+import it.unisa.is.secondlifetech.entity.ShippingAddress;
 
 import java.util.UUID;
 
@@ -42,8 +43,9 @@ public interface CartService {
 	 * Finalizza un ordine.
 	 *
 	 * @param cart il carrello con gli oggetti da inserire nell'ordine
+	 * @param shippingAddress l'indirizzo di spedizione dell'ordine
 	 */
-	void finalizeOrder(Cart cart);
+	void finalizeOrder(Cart cart, ShippingAddress shippingAddress);
 
 	/**
 	 * Salva un carrello nel database.
