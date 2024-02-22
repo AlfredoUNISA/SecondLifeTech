@@ -59,8 +59,9 @@ class OrderItemRepositoryTests {
 			UserRole.CLIENTE,
 			null
 		);
-		cartRepository.save(user.getCart());
+		user.setCart(new Cart());
 		userRepository.save(user);
+		cartRepository.save(user.getCart());
 
 		OrderPlaced order1 = new OrderPlaced(
 			"Via Roma 1",
@@ -97,12 +98,12 @@ class OrderItemRepositoryTests {
 		orderItemRepository.save(orderItem2);
 
 		// Act
-		List<OrderItem> foundOrderItems = orderItemRepository.findByOrderId(order1.getId());
+		List<OrderItem> foundOrderItems = orderItemRepository.findByOrderPlacedId(order1.getId());
 
 		// Assert
 		assertThat(foundOrderItems).isNotNull();
 		assertThat(foundOrderItems.size()).isEqualTo(1);
 		assertThat(foundOrderItems).containsOnly(orderItem1);
-		assertThat(foundOrderItems.get(0).getOrder()).isEqualTo(order1);
+		assertThat(foundOrderItems.get(0).getOrderPlaced()).isEqualTo(order1);
 	}
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class PaymentMethod {
 
@@ -35,7 +35,17 @@ public class PaymentMethod {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	// Salvato come UUID nel database, ma è necessario passare un oggetto User per la creazione
 	private User user;
 
+	@Override
+	public String toString() {
+		return "PaymentMethod{" +
+			"id=" + id +
+			", userId=" + user.getId() +
+			", cardNumber='" + cardNumber + '\'' +
+			", cardHolderName='" + cardHolderName + '\'' +
+			", expirationDate='" + expirationDate + '\'' +
+			", cvv='" + cvv + '\'' +
+			'}';
+	}
 }

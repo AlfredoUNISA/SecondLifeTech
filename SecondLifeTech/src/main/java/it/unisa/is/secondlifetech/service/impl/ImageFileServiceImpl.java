@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,11 +27,19 @@ public class ImageFileServiceImpl implements ImageFileService {
 	 */
 	@Override
 	public ImageFile createNewImage(MultipartFile file) throws IOException {
+		if (file.isEmpty())
+			return null;
+
 		ImageFile imageFile = new ImageFile();
 		imageFile.setName(file.getOriginalFilename());
 		imageFile.setContentType(file.getContentType());
 		imageFile.setData(file.getBytes());
 		return imageFileRepository.save(imageFile);
+	}
+
+	@Override
+	public ImageFile createNewImage(ImageFile file) {
+		return imageFileRepository.save(file);
 	}
 
 	/**

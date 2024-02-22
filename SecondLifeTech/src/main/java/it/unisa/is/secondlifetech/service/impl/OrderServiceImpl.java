@@ -1,8 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
+import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
-import it.unisa.is.secondlifetech.service.OrderPlacedService;
+import it.unisa.is.secondlifetech.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +13,33 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class OrderPlacedServiceImpl implements OrderPlacedService {
-	private OrderPlacedRepository orderPlacedRepository;
+public class OrderServiceImpl implements OrderService {
+	private final OrderPlacedRepository orderPlacedRepository;
+	private final OrderItemRepository orderItemRepository;
 
 	@Autowired
-	public OrderPlacedServiceImpl(OrderPlacedRepository orderPlacedRepository) {
+	public OrderServiceImpl(OrderPlacedRepository orderPlacedRepository, OrderItemRepository orderItemRepository) {
 		this.orderPlacedRepository = orderPlacedRepository;
+		this.orderItemRepository = orderItemRepository;
 	}
 
 	/**
 	 * Crea un nuovo ordine nel database.
+	 * Salva anche tutti gli OrderItems all'interno della lista.
 	 *
 	 * @param order l'oggetto OrderPlaced da creare
 	 * @return l'oggetto OrderPlaced creato
+	 * @throws RuntimeException se l'ordine è vuoto
 	 */
 	@Override
-	public OrderPlaced createNewOrder(OrderPlaced order) {
-		return orderPlacedRepository.save(order);
+	public OrderPlaced createNewOrder(OrderPlaced order) throws RuntimeException {
+		if (order.getItems().isEmpty()) {
+			throw new RuntimeException("Un ordine non deve essere vuoto");
+		}
+
+		OrderPlaced result = orderPlacedRepository.save(order);
+		orderItemRepository.saveAll(order.getItems());
+		return result;
 	}
 
 	/**
@@ -71,7 +83,7 @@ public class OrderPlacedServiceImpl implements OrderPlacedService {
 	 */
 	@Override
 	public List<OrderPlaced> findOrderByDate(Date orderDate) {
-		return orderPlacedRepository.findByOrderDate(orderDate);
+		return orderPlacedRepository.findByDate(orderDate);
 	}
 
 	/**

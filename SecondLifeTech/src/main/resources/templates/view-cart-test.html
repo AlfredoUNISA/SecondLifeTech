@@ -17,18 +17,37 @@
         <th>Product</th>
         <th>Quantity</th>
         <th>Total</th>
+        <th></th>
     </tr>
-    <th:block th:each="cartItem : ${cart.products}">
+    <th:block th:each="cartItem : ${cart.getItems}">
         <tr>
-            <td th:text="${cartItem.productVariation.productModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
+            <td th:text="${cartItem.productVariation.getModel.name + ' ' + cartItem.productVariation.color + ' ' + cartItem.productVariation.storageSize + 'GB ' + cartItem.productVariation.ram + 'GB RAM ' + cartItem.productVariation.displaySize + 'inch'}"></td>
             <td th:text="${cartItem.quantity}"></td>
             <td th:text="${cartItem.productVariation.price * cartItem.quantity}"></td>
+            <td>
+                <form action="/remove-from-cart-test" method="post">
+                    <input type="hidden" name="productVariationId" th:value="${cartItem.productVariation.id}">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="submit" value="Remove">
+                </form>
+                <form action="/update-cart-test" method="post">
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="productVariationId" th:value="${cartItem.productVariation.id}">
+                    <input type="number" name="quantity" min="1" th:value="${cartItem.quantity}">
+                    <input type="submit" value="Update">
+                </form>
+            </td>
         </tr>
     </th:block>
     <tr>
-        <td colspan="2" style="text-align: end">Total</td>
+        <td colspan="3" style="text-align: end">Total</td>
         <td th:text="${cart.total}"></td>
     </tr>
 </table>
+
+<form action="/finalize-order-test" method="post">
+    <input type="hidden" name="cartId" th:value="${cart.id}">
+    <input type="submit" value="Checkout">
+</form>
 </body>
 </html>

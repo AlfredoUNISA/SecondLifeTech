@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface OrderPlacedRepository extends JpaRepository<OrderPlaced, UUID> {
 	List<OrderPlaced> findByEmail(String email);
-	List<OrderPlaced> findByShipped(boolean isShipped);
-	List<OrderPlaced> findByOrderDate(Date orderDate);
+	List<OrderPlaced> findByShipped(boolean shipped);
+	List<OrderPlaced> findByDate(Date date);
 
 }

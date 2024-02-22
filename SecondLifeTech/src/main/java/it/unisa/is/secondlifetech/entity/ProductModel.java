@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @ToString
 @Entity
 public class ProductModel {
@@ -26,11 +28,21 @@ public class ProductModel {
 	@Column(nullable = false)
 	private String category;
 
-	@OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProductVariation> productVariations;
+	@OneToMany(mappedBy = "model", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProductVariation> variations = new ArrayList<>();
 
 	@OneToOne
 	private ImageFile imageFile;
+
+	public void addVariation(ProductVariation variation) {
+		variations.add(variation);
+		variation.setModel(this);
+	}
+
+	public void removeVariation(ProductVariation variation) {
+		variations.remove(variation);
+		variation.setModel(null);
+	}
 
 	public ProductModel(String name, String brand, String category) {
 		this.name = name;

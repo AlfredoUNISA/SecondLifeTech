@@ -8,35 +8,42 @@ public interface CartService {
 	/**
 	 * Aggiunge un nuovo prodotto al carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui aggiungere il prodotto
+	 * @param cart               il carrello dell'utente in cui aggiungere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
 	 * @param quantity           la quantità del prodotto da aggiungere
 	 */
-	void addToCart(UUID cartId, UUID productVariationId, int quantity);
+	void addToCart(Cart cart, UUID productVariationId, int quantity);
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
 	 *
-	 * @param cartId             l'ID del carrello in cui modificare la quantità del prodotto
+	 * @param cart               il carrello dell'utente in cui modificare la quantità del prodotto
 	 * @param productVariationId l'ID della variante di prodotto da modificare
-	 * @param newQuantity           la nuova quantità del prodotto
+	 * @param newQuantity        la nuova quantità del prodotto
 	 */
-	void editProductQuantityInCart(UUID cartId, UUID productVariationId, int newQuantity);
+	boolean editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity);
 
 	/**
 	 * Rimuove un prodotto dal carrello.
 	 *
-	 * @param cartId             l'ID del carrello da cui rimuovere il prodotto
+	 * @param cart               il carrello dell'utente da cui rimuovere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da rimuovere
 	 */
-	void removeProductFromCart(UUID cartId, UUID productVariationId);
+	void removeProductFromCart(Cart cart, UUID productVariationId);
 
 	/**
 	 * Svuota il carrello.
 	 *
-	 * @param cartId l'ID del carrello da svuotare
+	 * @param cart il carrello da svuotare
 	 */
-	void clearCart(UUID cartId);
+	void clearCart(Cart cart);
+
+	/**
+	 * Finalizza un ordine.
+	 *
+	 * @param cart il carrello con gli oggetti da inserire nell'ordine
+	 */
+	void finalizeOrder(Cart cart);
 
 	/**
 	 * Salva un carrello nel database.
@@ -53,14 +60,6 @@ public interface CartService {
 	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
 	 */
 	Cart findCartById(UUID id);
-
-	/**
-	 * Ottiene un carrello dal database tramite l'ID dell'utente.
-	 *
-	 * @param userId l'ID dell'utente di cui cercare il carrello
-	 * @return l'oggetto Cart corrispondente all'ID specificato, o null se non trovato
-	 */
-	Cart findCartByUser(UUID userId);
 
 	/**
 	 * Aggiorna le informazioni di un carrello nel database.

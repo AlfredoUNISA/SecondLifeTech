@@ -6,14 +6,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public interface OrderPlacedService {
+public interface OrderService {
 	/**
 	 * Crea un nuovo ordine nel database.
+	 * Salva anche tutti gli OrderItems all'interno della lista.
 	 *
 	 * @param order l'oggetto OrderPlaced da creare
 	 * @return l'oggetto OrderPlaced creato
+	 * @throws RuntimeException se l'ordine è vuoto
 	 */
-	OrderPlaced createNewOrder(OrderPlaced order);
+	OrderPlaced createNewOrder(OrderPlaced order) throws RuntimeException;
 
 	/**
 	 * Ottiene un ordine dal database tramite l'ID.

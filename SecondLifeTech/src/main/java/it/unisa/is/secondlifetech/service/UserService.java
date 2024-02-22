@@ -1,5 +1,7 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.entity.PaymentMethod;
+import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 
 import java.util.List;
@@ -9,6 +11,15 @@ import java.util.UUID;
  * Interfaccia per il servizio di gestione degli utenti.
  */
 public interface UserService {
+
+	void addShippingAddress(User user, ShippingAddress shippingAddress);
+	void removeShippingAddress(User user, ShippingAddress shippingAddress);
+	void updateShippingAddress(User user, ShippingAddress shippingAddress);
+
+	void addPaymentMethod(User user, PaymentMethod paymentMethod);
+	void removePaymentMethod(User user, PaymentMethod paymentMethod);
+	void updatePaymentMethod(User user, PaymentMethod paymentMethod);
+
 	/**
 	 * Crea un nuovo utente nel database.
 	 *
@@ -39,6 +50,14 @@ public interface UserService {
 	 * @return una lista di tutti gli utenti con il ruolo specificato
 	 */
 	List<User> findUsersByRole(String role);
+
+	/**
+	 * Ottiene l'utente a cui è associato un carrello.
+	 *
+	 * @param cartId l'ID del carrello di cui cercare l'utente
+	 * @return l'oggetto User corrispondente al carrello specificato, o null se non trovato
+	 */
+	User findUserByCartId(UUID cartId);
 
 	/**
 	 * Ottiene tutti gli utenti presenti nel database.

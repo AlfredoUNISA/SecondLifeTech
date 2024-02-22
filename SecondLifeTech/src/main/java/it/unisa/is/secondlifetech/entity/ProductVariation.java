@@ -9,7 +9,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class ProductVariation{
 	@Id
@@ -42,9 +43,9 @@ public class ProductVariation{
 
 	@ManyToOne
 	@JoinColumn(name = "product_model_id", nullable = false)
-	private ProductModel productModel;
+	private ProductModel model;
 
-	public ProductVariation(int year, int ram, double displaySize, int storageSize, double price, int quantityInStock, String color, String state, ProductModel productModel) {
+	public ProductVariation(int year, int ram, double displaySize, int storageSize, double price, int quantityInStock, String color, String state, ProductModel model) {
 		this.year = year;
 		this.ram = ram;
 		this.displaySize = displaySize;
@@ -53,6 +54,25 @@ public class ProductVariation{
 		this.quantityInStock = quantityInStock;
 		this.color = color;
 		this.state = state;
-		this.productModel = productModel;
+		this.model = model;
 	}
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		return "ProductVariation{" +
+			"id=" + id +
+			", model=" + model.getId() +
+			", year=" + year +
+			", ram=" + ram +
+			", displaySize=" + displaySize +
+			", storageSize=" + storageSize +
+			", price=" + price +
+			", quantityInStock=" + quantityInStock +
+			", color='" + color + '\'' +
+			", state='" + state + '\'' +
+			'}';
+	}
+
+
 }

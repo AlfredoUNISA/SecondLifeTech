@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class CartItem {
 	@Id
@@ -29,10 +29,28 @@ public class CartItem {
 
 	private double subTotal;
 
+	public CartItem(ProductVariation productVariation, int quantity, double subTotal) {
+		this.productVariation = productVariation;
+		this.quantity = quantity;
+		this.subTotal = subTotal;
+	}
+
 	public CartItem(Cart cart, ProductVariation productVariation, int quantity, double subTotal) {
 		this.cart = cart;
 		this.productVariation = productVariation;
 		this.quantity = quantity;
 		this.subTotal = subTotal;
+	}
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		return "CartItem{" +
+			"id=" + id +
+			", cartId=" + cart.getId() +
+			", productVariation=" + productVariation +
+			", quantity=" + quantity +
+			", subTotal=" + subTotal +
+			'}';
 	}
 }

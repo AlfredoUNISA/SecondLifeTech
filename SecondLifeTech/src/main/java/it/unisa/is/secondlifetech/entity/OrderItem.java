@@ -9,7 +9,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@Builder
+// Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class OrderItem {
 	@Id
@@ -23,8 +24,8 @@ public class OrderItem {
 	private double subTotal;
 
 	@ManyToOne
-	@JoinColumn(name = "order_id", nullable = false)
-	private OrderPlaced order;
+	@JoinColumn(name = "order_placed_id", nullable = false)
+	private OrderPlaced orderPlaced;
 
 	@ManyToOne
 	@JoinColumn(name = "product_variation_id")
@@ -41,17 +42,17 @@ public class OrderItem {
 	private String color;
 	private String state;
 
-	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced order, ProductVariation productVariation) {
+	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced orderPlaced, ProductVariation productVariation) {
 		this.quantityOrdered = quantityOrdered;
 		this.subTotal = subTotal;
-		this.order = order;
+		this.orderPlaced = orderPlaced;
 		this.productVariation = productVariation;
 	}
 
-	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced order, String modelName, String brand, String category, String year, String ram, String displaySize, String storageSize, String color, String state) {
+	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced orderPlaced, String modelName, String brand, String category, String year, String ram, String displaySize, String storageSize, String color, String state) {
 		this.quantityOrdered = quantityOrdered;
 		this.subTotal = subTotal;
-		this.order = order;
+		this.orderPlaced = orderPlaced;
 		this.modelName = modelName;
 		this.brand = brand;
 		this.category = category;
@@ -61,5 +62,31 @@ public class OrderItem {
 		this.storageSize = storageSize;
 		this.color = color;
 		this.state = state;
+	}
+
+	// ToString manuale per evitare ricorsione infinita nei log
+	@Override
+	public String toString() {
+		String toReturn = "OrderItem{" +
+			"id=" + id +
+			", orderPlacedId=" + orderPlaced.getId() +
+			", quantityOrdered=" + quantityOrdered +
+			", subTotal=" + subTotal;
+
+		if (productVariation != null) {
+			toReturn += ", productVariation=" + productVariation;
+		} else {
+			toReturn += ", modelName='" + modelName + '\'' +
+				", brand='" + brand + '\'' +
+				", category='" + category + '\'' +
+				", year='" + year + '\'' +
+				", ram='" + ram + '\'' +
+				", displaySize='" + displaySize + '\'' +
+				", storageSize='" + storageSize + '\'' +
+				", color='" + color + '\'' +
+				", state='" + state + '\'';
+		}
+
+		return toReturn + '}';
 	}
 }

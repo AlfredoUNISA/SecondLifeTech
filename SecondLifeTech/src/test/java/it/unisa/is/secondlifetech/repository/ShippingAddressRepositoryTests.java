@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.repository;
 
+import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
@@ -32,8 +33,9 @@ class ShippingAddressRepositoryTests {
 		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirthString);
 
 		User user1 = new User("Mario", "Rossi", "email@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
-
+		user1.setCart(new Cart());
 		User user2 = new User("Giovanni", "Verdi", "email2@email.com", "password", dateOfBirth, UserRole.CLIENTE, null);
+		user2.setCart(new Cart());
 
 		userRepository.save(user1);
 		cartRepository.save(user1.getCart());
