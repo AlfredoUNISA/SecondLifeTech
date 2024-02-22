@@ -11,7 +11,7 @@
 <body data-bs-theme="dark" data-bs-spy="scroll" data-bs-offset="72" class="d-flex flex-column vh-100">
 
 <div class="container-fluid">
-    <div th:replace="header :: header"></div>
+    <div th:replace="~{header :: header}"></div>
     <br/>
         <div class="container mt-5 text-center p-10">
             <h2 class="mb-4">Registrazione Effettuata!</h2>
@@ -19,7 +19,7 @@
         </div>
     <br class="m-10"/>
     <br class="m-10"/>
-    <footer th:replace="footer :: footer" ></footer>
+    <footer th:replace="~{footer :: footer}" ></footer>
 </div>
 </body>
 </html>

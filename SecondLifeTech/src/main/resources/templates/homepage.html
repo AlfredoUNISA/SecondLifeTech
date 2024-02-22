@@ -10,7 +10,7 @@
 </head>
 <body data-bs-theme="dark" data-bs-spy="scroll" data-bs-offset="72">
 <div class="container-fluid">
-    <div th:replace="header :: header"></div>
+    <div th:replace="~{header :: header}"></div>
     <br/>
     <header class="text-center text-white">
         <div class="container">
@@ -102,7 +102,7 @@
 
     <hr/>
 
-    <div th:replace="footer :: footer"></div>
+    <div th:replace="~{footer :: footer}"></div>
 </div>
 </body>
 </html>

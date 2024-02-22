@@ -11,7 +11,7 @@
 <body data-bs-theme="dark" data-bs-spy="scroll" data-bs-offset="72">
 
 <div class="container-fluid">
-    <div th:replace="header :: header"></div>
+    <div th:replace="~{header :: header}"></div>
     <br/>
     <section class="position-relative py-4 py-xl-5">
         <div class="container">
@@ -65,7 +65,7 @@
     </section>
 
 <!--    <br/>-->
-    <footer th:insert="footer :: footer" ></footer>
+    <footer th:insert="~{footer :: footer}" ></footer>
 </div>
 </body>
 </html>
