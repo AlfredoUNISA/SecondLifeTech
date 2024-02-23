@@ -91,6 +91,15 @@
     <input type="submit" value="Add payment method">
 </form>
 <br/>
+
+
+<h2>Edit profile</h2>
+<form action="/update-user-test" method="get" th:object="${user}">
+    <input type="hidden" name="userId" th:value="${user.id}">
+    <input type="submit" value="Update profile">
+</form>
+
+
 <h2>Delete profile</h2>
 <form action="/delete-user-test" method="post">
     <input type="hidden" name="userId" th:value="${user.id}">

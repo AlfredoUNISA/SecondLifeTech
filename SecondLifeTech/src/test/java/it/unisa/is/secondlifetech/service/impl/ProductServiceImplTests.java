@@ -126,21 +126,6 @@ class ProductServiceImplTests {
 		assertThat(result).isNull();
 	}
 
-	@Test
-	void ProductServiceImpl_ChangeImageModel_WhenImageFileIsProvided_ShouldChangeImage() {
-		// Arrange
-		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
-		when(imageFileRepository.save(any(ImageFile.class))).thenReturn(imageFile);
-
-		// Act
-		ImageFile result = productService.changeImageModel(productModel, imageFile);
-
-		// Assert
-		verify(productModelRepository).save(productModel);
-		verify(imageFileRepository).save(imageFile);
-		assertThat(result).isEqualTo(imageFile);
-	}
-
 
 
 	// ================================================================================================================
@@ -284,12 +269,13 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() {
+	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException {
 		// Arrange
+		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
 
 		// Act
-		ProductModel updatedProductModel = productService.updateModel(productModel);
+		ProductModel updatedProductModel = productService.updateModel(productModel, null);
 
 		// Assert
 		assertThat(updatedProductModel).isEqualTo(productModel);

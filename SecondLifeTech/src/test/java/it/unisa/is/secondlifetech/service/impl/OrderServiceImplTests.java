@@ -41,6 +41,7 @@ class OrderServiceImplTests {
 			.build();
 
 		orderItem = new OrderItem();
+		orderItem.setId(UUID.randomUUID());
 		orderItem.setProductVariation(productVariation);
 		orderItem.setQuantityOrdered(2);
 

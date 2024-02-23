@@ -117,6 +117,21 @@ public class GeneralController {
 		return "view-cart-test";
 	}
 
+	@GetMapping("/update-user-test")
+	public String updateUser(@RequestParam("userId") UUID userId, Model model) {
+		User user = userService.findUserById(userId);
+		model.addAttribute("user", user);
+		model.addAttribute("roles", UserRole.ALL_ROLES);
+		return "update-user-test";
+	}
+
+	@PostMapping("/update-user-test")
+	public String updateUserPOST(@ModelAttribute("user") User user) {
+		user.setRole(UserRole.getRole(user.getRole()));
+		userService.updateUser(user);
+		return "redirect:/";
+	}
+
 	@GetMapping("/view-product-variations")
 	public String viewProductVariations(@RequestParam("productModelId") UUID productModelId, Model model) {
 		ProductModel productModel = productService.findModelById(productModelId);

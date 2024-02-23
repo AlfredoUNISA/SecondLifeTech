@@ -225,7 +225,7 @@ public class ProductServiceImpl implements ProductService {
 		model.setImageFile(original.getImageFile());
 
 		// Se è stata specificata una nuova immagine, aggiorna l'immagine
-		if(!image.isEmpty()) {
+		if(image != null && !image.isEmpty()) {
 			changeImageModel(model, image);
 			return model; // Il modello viene salvato in changeImageModel
 		}
