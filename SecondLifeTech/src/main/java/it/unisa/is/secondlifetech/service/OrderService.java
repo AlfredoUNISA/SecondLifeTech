@@ -116,6 +116,13 @@ public interface OrderService {
 	 */
 	OrderItem updateOrderItem(OrderItem orderItem);
 
+	/**
+	 * Aggiorna lo stato di spedizione a "Spedito" di un ordine nel database.
+	 *
+	 * @param order l'oggetto OrderPlaced di cui aggiornare lo stato di spedizione
+	 * @return l'oggetto OrderPlaced aggiornato
+	 */
+	OrderPlaced setOrderAsShipped(OrderPlaced order);
 
 
 	// ================================================================================================================

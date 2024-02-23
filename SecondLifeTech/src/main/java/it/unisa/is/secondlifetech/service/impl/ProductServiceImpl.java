@@ -79,29 +79,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ImageFile changeImageModel(ProductModel model, MultipartFile image) throws IOException {
 		if (image.isEmpty())
-			return changeImageModel(model, (ImageFile) null);
+			return null;
 
 		// Trasforma il file in un oggetto ImageFile
 		ImageFile imageFile = new ImageFile();
 		imageFile.setName(image.getOriginalFilename());
 		imageFile.setContentType(image.getContentType());
 		imageFile.setData(image.getBytes());
-
-		return changeImageModel(model, imageFile);
-	}
-
-	/**
-	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
-	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
-	 *
-	 * @param model     il modello di prodotto a cui aggiungere l'immagine
-	 * @param imageFile l'immagine da aggiungere
-	 * @return l'oggetto ImageFile aggiunto
-	 */
-	@Override
-	public ImageFile changeImageModel(ProductModel model, ImageFile imageFile) {
-		if (imageFile == null)
-			return null;
 
 		// Se il modello ha già un'immagine, elimina l'immagine precedente
 		if (model.getImageFile() != null) {
@@ -242,7 +226,7 @@ public class ProductServiceImpl implements ProductService {
 
 		// Se è stata specificata una nuova immagine, aggiorna l'immagine
 		if(!image.isEmpty()) {
-			model.setImageFile(changeImageModel(model, image));
+			changeImageModel(model, image);
 			return model; // Il modello viene salvato in changeImageModel
 		}
 

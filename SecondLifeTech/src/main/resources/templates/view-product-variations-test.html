@@ -27,6 +27,9 @@
     <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
          alt="Image of the product model" width="200" height="200">
 </th:block>
+<th:block th:unless="${model.imageFile != null}">
+    No image available
+</th:block>
 
 <br/><br/>
 

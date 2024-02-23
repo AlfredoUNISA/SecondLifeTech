@@ -170,6 +170,14 @@ public class OrderServiceImpl implements OrderService {
 		return orderItemRepository.save(orderItem);
 	}
 
+	@Override
+	public OrderPlaced setOrderAsShipped(OrderPlaced order) {
+		if (order.getId() == null)
+			throw new IllegalArgumentException("ID dell'ordine non specificato nella modifica");
+
+		order.setShipped(true);
+		return orderPlacedRepository.save(order);
+	}
 
 
 	// ================================================================================================================

@@ -23,12 +23,14 @@ public class GeneralController {
 	private final UserService userService;
 	private final ProductService productService;
 	private final CartService cartService;
+	private final OrderService orderService;
 
 	@Autowired
-	public GeneralController(UserService userService, ProductService productService, CartService cartService) {
+	public GeneralController(UserService userService, ProductService productService, CartService cartService, OrderService orderService) {
 		this.userService = userService;
 		this.productService = productService;
 		this.cartService = cartService;
+		this.orderService = orderService;
 	}
 
 	@GetMapping
@@ -156,6 +158,13 @@ public class GeneralController {
 		return "view-user-test";
 	}
 
+	@PostMapping("/delete-user-test")
+	public String deleteUser(@RequestParam("userId") UUID userId) {
+		User user = userService.findUserById(userId);
+		userService.deleteUser(user);
+		return "redirect:/";
+	}
+
 	@PostMapping("/add-shipping-address-test")
 	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) {
 		User user = userService.findUserById(userId);
@@ -245,6 +254,13 @@ public class GeneralController {
 	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException {
 		productService.updateModel(model, image);
 		return "redirect:/view-product-variations?productModelId=" + model.getId();
+	}
+
+	@PostMapping("/ship-order-test")
+	public String shipOrder(@RequestParam("orderId") UUID orderId) {
+		OrderPlaced order = orderService.findOrderById(orderId);
+		orderService.setOrderAsShipped(order);
+		return "redirect:/view-orders-test?userId=" + order.getUser().getId();
 	}
 
 
