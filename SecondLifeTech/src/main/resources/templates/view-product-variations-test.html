@@ -24,7 +24,8 @@
 <h4 th:text="'Brand: ' + ${model.brand}"></h4>
 <h4 th:text="'Category: ' + ${model.category}"></h4>
 <th:block th:if="${model.imageFile != null}">
-    <img th:src="${model.imageFile.generateBase64Image()}" alt="Image of the product model" width="200" height="200">
+    <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
+         alt="Image of the product model" width="200" height="200">
 </th:block>
 
 <form method="post" role="form" th:action="@{/delete-model-test}">

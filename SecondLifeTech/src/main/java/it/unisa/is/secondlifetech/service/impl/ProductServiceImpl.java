@@ -104,8 +104,9 @@ public class ProductServiceImpl implements ProductService {
 			return null;
 
 		model.changeImage(imageFile);
+		ImageFile toReturn = imageFileRepository.save(imageFile);
 		productModelRepository.save(model);
-		return imageFileRepository.save(imageFile);
+		return toReturn;
 	}
 
 
@@ -249,6 +250,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public void deleteModel(ProductModel model) {
+		if (model.getImageFile() != null)
+			imageFileRepository.delete(model.getImageFile());
+
 		List<ProductVariation> variations = model.getVariations();
 
 		// Copia della lista per evitare ConcurrentModificationException
