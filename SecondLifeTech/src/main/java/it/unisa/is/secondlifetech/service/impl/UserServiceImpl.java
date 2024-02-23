@@ -10,6 +10,7 @@ import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +28,16 @@ public class UserServiceImpl implements UserService {
 	private final ShippingAddressRepository shippingAddressRepository;
 	private final PaymentMethodRepository paymentMethodRepository;
 	private final OrderService orderService;
+	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, CartService cartService, ShippingAddressRepository shippingAddressRepository, PaymentMethodRepository paymentMethodRepository, OrderService orderService) {
+	public UserServiceImpl(UserRepository userRepository, CartService cartService, ShippingAddressRepository shippingAddressRepository, PaymentMethodRepository paymentMethodRepository, OrderService orderService, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.cartService = cartService;
 		this.shippingAddressRepository = shippingAddressRepository;
 		this.paymentMethodRepository = paymentMethodRepository;
 		this.orderService = orderService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 
@@ -51,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User createNewUser(User user) {
-		// TODO: implementare la logica di encoding della password
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 		if (user.getId() != null)
 			throw new RuntimeException("Usare la funzione di aggiornamento per modificare un utente esistente");
@@ -186,6 +189,9 @@ public class UserServiceImpl implements UserService {
 	public User updateUser(User user) {
 		if (user.getId() == null)
 			throw new IllegalArgumentException("ID dell'utente non specificato nella modifica");
+
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 		return userRepository.save(user);
 	}
 

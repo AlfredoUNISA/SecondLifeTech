@@ -5,6 +5,7 @@ import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,11 +36,22 @@ public class GeneralController {
 	}
 
 	@GetMapping
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
+		Principal principal = request.getUserPrincipal();
 		List<User> users = userService.findUsersByRole(UserRole.CLIENTE);
 		List<ProductModel> productModels = productService.findAllModels();
+
 		model.addAttribute("users", users);
 		model.addAttribute("productModels", productModels);
+
+		if (principal != null) {
+			User user = userService.findUserByEmail(principal.getName());
+			model.addAttribute("principal", user.getFirstName() + " " + user.getLastName() +
+				" (" + UserRole.getRoleName(user.getRole()) + ")");
+		}
+		else
+			model.addAttribute("principal", "anonymous");
+
 		return "index";
 	}
 
@@ -276,6 +289,16 @@ public class GeneralController {
 		OrderPlaced order = orderService.findOrderById(orderId);
 		orderService.setOrderAsShipped(order);
 		return "redirect:/view-orders-test?userId=" + order.getUser().getId();
+	}
+
+	@GetMapping("/cliente")
+	public String cliente() {
+		return "cliente-test";
+	}
+
+	@GetMapping("/gestore")
+	public String gestore() {
+		return "gestore-test";
 	}
 
 

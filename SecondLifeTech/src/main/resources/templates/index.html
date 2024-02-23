@@ -14,7 +14,8 @@
     </style>
 </head>
 <body>
-<h1>Index</h1>
+<h1>Index testing</h1>
+<h2>Basic testing</h2>
 <ul>
     <li>
         <a href="/create-user-test">Create User</a><br/>
@@ -65,6 +66,20 @@
             </select>
             <button type="submit">View Profile</button>
         </form>
+    </li>
+</ul>
+
+<h2>Auth testing</h2>
+<h3 th:text="'Principal: ' + ${principal}"></h3>
+<ul>
+    <li>
+        <a href="/cliente">Cliente</a><br/>
+    </li>
+    <li>
+        <a href="/gestore">Gestore</a><br/>
+    </li>
+    <li>
+        <a href="/logout">Logout</a><br/>
     </li>
 </ul>
 </body>
