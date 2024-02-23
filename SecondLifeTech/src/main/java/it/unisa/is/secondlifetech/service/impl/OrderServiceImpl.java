@@ -150,6 +150,9 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public OrderPlaced updateOrder(OrderPlaced order) {
+		if (order.getId() == null)
+			throw new IllegalArgumentException("ID dell'ordine non specificato nella modifica");
+
 		return orderPlacedRepository.save(order);
 	}
 
@@ -161,6 +164,9 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public OrderItem updateOrderItem(OrderItem orderItem) {
+		if (orderItem.getId() == null)
+			throw new IllegalArgumentException("ID dell'oggetto dell'ordine non specificato nella modifica");
+
 		return orderItemRepository.save(orderItem);
 	}
 

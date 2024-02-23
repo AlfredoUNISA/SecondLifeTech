@@ -191,6 +191,8 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public Cart updateCart(Cart cart) {
+		if (cart.getId() == null)
+			throw new IllegalArgumentException("ID del carrello non specificato nella modifica");
 		return cartRepository.save(cart);
 	}
 

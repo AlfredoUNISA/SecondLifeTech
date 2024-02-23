@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Update Variation</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<a href="/">← Back to index</a>
+<h1>Update Variation</h1>
+<h4 th:text="'Name: ' + ${variation.model.name}"></h4>
+<h4 th:text="'Brand: ' + ${variation.model.brand}"></h4>
+<h4 th:text="'Category: ' + ${variation.model.category}"></h4>
+
+<hr>
+
+<form th:action="@{/update-variation-test}" method="post" role="form" th:object="${variation}">
+    <input type="hidden" name="productVariationId" th:field="*{id}">
+    <input type="hidden" name="productModel" th:field="*{model}">
+
+    <label for="quantity">Quantity in stock: </label>
+    <input type="number" id="quantity" name="quantity"
+           th:value="${variation.quantityInStock}" th:field="*{quantityInStock}">
+    <br/><br/>
+
+    <label for="price">Price: </label>
+    <input type="number" id="price" name="price"
+           th:value="${variation.price}" th:field="*{price}">
+    <br/><br/>
+
+    <label for="storageSize">Storage Size: </label>
+    <input type="number" id="storageSize" name="storageSize"
+           th:value="${variation.storageSize}" th:field="*{storageSize}">
+    <br/><br/>
+
+    <label for="ram">RAM: </label>
+    <input type="number" id="ram" name="ram"
+           th:value="${variation.ram}" th:field="*{ram}">
+    <br/><br/>
+
+    <label for="displaySize">Display Size: </label>
+    <input type="number" id="displaySize" name="displaySize"
+           th:value="${variation.displaySize}" th:field="*{displaySize}">
+    <br/><br/>
+
+    <label for="color">Color: </label>
+    <input type="text" id="color" name="color"
+           th:value="${variation.color}" th:field="*{color}">
+    <br/><br/>
+
+    <label for="year">Year: </label>
+    <input type="number" id="year" name="year"
+           th:value="${variation.year}" th:field="*{year}">
+    <br/><br/>
+
+    <label for="state">State:</label>
+    <select id="state" name="state" th:field="*{state}">
+        <th:block th:each="state : ${states}">
+            <option th:value="${state}" th:text="${state}"></option>
+        </th:block>
+    </select>
+    <br/><br/>
+
+    <button type="submit">Update Variation</button>
+</form>
+
+</body>
+</html>

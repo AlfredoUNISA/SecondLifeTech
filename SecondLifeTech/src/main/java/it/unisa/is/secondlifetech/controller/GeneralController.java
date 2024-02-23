@@ -219,6 +219,20 @@ public class GeneralController {
 		return "redirect:/";
 	}
 
+	@GetMapping("/update-variation-test")
+	public String updateVariation(@RequestParam("productVariationId") UUID productVariationId, Model model) {
+		ProductVariation variation = productService.findVariationById(productVariationId);
+		model.addAttribute("states", ProductState.ALL_STATES);
+		model.addAttribute("variation", variation);
+		return "update-variation-test";
+	}
+
+	@PostMapping("/update-variation-test")
+	public String updateVariationPOST(@ModelAttribute("variation") ProductVariation variation) {
+		productService.updateVariation(variation);
+		return "redirect:/view-product-variations?productModelId=" + variation.getModel().getId();
+	}
+
 
 	// TODO: aggiungere la pagina di errore
 }

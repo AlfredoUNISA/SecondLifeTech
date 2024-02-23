@@ -184,6 +184,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User updateUser(User user) {
+		if (user.getId() == null)
+			throw new IllegalArgumentException("ID dell'utente non specificato nella modifica");
 		return userRepository.save(user);
 	}
 
@@ -194,6 +196,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) {
+		if (shippingAddress.getId() == null)
+			throw new IllegalArgumentException("ID dell'indirizzo non specificato nella modifica");
 		return shippingAddressRepository.save(shippingAddress);
 	}
 
@@ -204,6 +208,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public PaymentMethod updatePaymentMethod(PaymentMethod paymentMethod) {
+		if (paymentMethod.getId() == null)
+			throw new IllegalArgumentException("ID del metodo di pagamento non specificato nella modifica");
 		return paymentMethodRepository.save(paymentMethod);
 	}
 

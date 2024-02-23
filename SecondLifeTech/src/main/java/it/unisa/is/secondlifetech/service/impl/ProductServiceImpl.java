@@ -224,6 +224,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductModel updateModel(ProductModel productModel) {
+		if (productModel.getId() == null)
+			throw new IllegalArgumentException("ID del modello non specificato nella modifica");
+
 		return productModelRepository.save(productModel);
 	}
 
@@ -235,6 +238,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductVariation updateVariation(ProductVariation productVariation) {
+		if (productVariation.getId() == null)
+			throw new IllegalArgumentException("ID della variazione non specificato nella modifica");
+
 		return productVariationRepository.save(productVariation);
 	}
 
