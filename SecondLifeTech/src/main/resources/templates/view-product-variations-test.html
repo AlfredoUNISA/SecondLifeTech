@@ -28,6 +28,14 @@
          alt="Image of the product model" width="200" height="200">
 </th:block>
 
+<br/><br/>
+
+<form method="get" role="form" th:action="@{/update-model-test}">
+    <input type="hidden" name="productModelId" th:value="${model.id}">
+    <button type="submit">Edit Model</button>
+</form>
+
+<br/><br/>
 
 <form method="post" role="form" th:action="@{/delete-model-test}">
     <input type="hidden" name="productModelId" th:value="${model.id}">
@@ -59,7 +67,7 @@
             <td th:text="${variation.year}"></td>
             <td th:text="${variation.color}"></td>
             <td th:text="${variation.storageSize} + 'GB'"></td>
-            <td th:text="${variation.ram} + 'GB RAM'"></td>
+            <td th:text="${variation.ram} + 'GB'"></td>
             <td th:text="${variation.displaySize} + '&#34;'"></td>
             <td th:text="${variation.state}"></td>
 

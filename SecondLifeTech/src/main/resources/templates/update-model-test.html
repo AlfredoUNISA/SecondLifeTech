@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Update Variation</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<a href="/">← Back to index</a>
+<h1>Update Model</h1>
+
+<th:block th:if="${model.imageFile != null}">
+    <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
+         alt="Image of the product model" width="200" height="200">
+</th:block>
+<th:block th:unless="${model.imageFile != null}">
+    No image available
+</th:block>
+
+<br/><hr><br/>
+
+<form th:action="@{/update-model-test}" enctype="multipart/form-data" method="post" role="form" th:object="${model}">
+    <input type="hidden" name="productModelId" th:field="*{id}">
+    <input type="hidden" name="variations" th:field="*{variations}">
+
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name"
+           th:value="${model.name}" th:field="*{name}">
+    <br/><br/>
+
+    <label for="brand">Brand: </label>
+    <input type="text" id="brand" name="brand"
+           th:value="${model.brand}" th:field="*{brand}">
+    <br/><br/>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category" th:field="*{category}">
+        <th:block th:each="category : ${categories}">
+            <option th:value="${category}" th:text="${category}"></option>
+        </th:block>
+    </select>
+    <br/><br/>
+
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image">
+    <br/><br/>
+
+    <button type="submit">Update Model</button>
+</form>
+
+</body>
+</html>

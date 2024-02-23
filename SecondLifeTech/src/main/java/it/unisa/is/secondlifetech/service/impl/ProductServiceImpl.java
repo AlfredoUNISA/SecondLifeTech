@@ -86,7 +86,6 @@ public class ProductServiceImpl implements ProductService {
 		imageFile.setContentType(image.getContentType());
 		imageFile.setData(image.getBytes());
 
-
 		return changeImageModel(model, imageFile);
 	}
 
@@ -103,7 +102,15 @@ public class ProductServiceImpl implements ProductService {
 		if (imageFile == null)
 			return null;
 
+		if (model.getImageFile() != null) {
+			UUID oldImageId = model.getImageFile().getId();
+			model.removeImage();
+			productModelRepository.save(model);
+			imageFileRepository.deleteById(oldImageId);
+		}
+
 		model.changeImage(imageFile);
+
 		ImageFile toReturn = imageFileRepository.save(imageFile);
 		productModelRepository.save(model);
 		return toReturn;

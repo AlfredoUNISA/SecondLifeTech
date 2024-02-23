@@ -28,7 +28,7 @@ public class ImageFile {
 	@Column(columnDefinition = "LONGBLOB")
 	private byte[] data;
 
-	@OneToOne(mappedBy = "imageFile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(mappedBy = "imageFile", fetch = FetchType.LAZY)
 	private ProductModel model;
 
 	public ImageFile(String name, String contentType, byte[] data, ProductModel model) {

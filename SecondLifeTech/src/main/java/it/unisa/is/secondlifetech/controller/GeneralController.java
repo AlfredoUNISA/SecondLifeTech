@@ -233,6 +233,26 @@ public class GeneralController {
 		return "redirect:/view-product-variations?productModelId=" + variation.getModel().getId();
 	}
 
+	@GetMapping("/update-model-test")
+	public String updateModel(@RequestParam("productModelId") UUID productModelId, Model model) {
+		ProductModel modelToUpdate = productService.findModelById(productModelId);
+		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
+		model.addAttribute("model", modelToUpdate);
+		return "update-model-test";
+	}
+
+	@PostMapping("/update-model-test")
+	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException {
+		ProductModel original = productService.findModelById(model.getId());
+		model.setImageFile(original.getImageFile());
+
+		if(!image.isEmpty())
+			model.setImageFile(productService.changeImageModel(model, image));
+
+		productService.updateModel(model);
+		return "redirect:/view-product-variations?productModelId=" + model.getId();
+	}
+
 
 	// TODO: aggiungere la pagina di errore
 }
