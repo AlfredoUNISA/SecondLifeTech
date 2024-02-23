@@ -81,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
 		if (image.isEmpty())
 			return changeImageModel(model, (ImageFile) null);
 
+		// Trasforma il file in un oggetto ImageFile
 		ImageFile imageFile = new ImageFile();
 		imageFile.setName(image.getOriginalFilename());
 		imageFile.setContentType(image.getContentType());
@@ -102,15 +103,15 @@ public class ProductServiceImpl implements ProductService {
 		if (imageFile == null)
 			return null;
 
+		// Se il modello ha già un'immagine, elimina l'immagine precedente
 		if (model.getImageFile() != null) {
-			UUID oldImageId = model.getImageFile().getId();
-			model.removeImage();
-			productModelRepository.save(model);
-			imageFileRepository.deleteById(oldImageId);
+			deleteImage(model.getImageFile());
 		}
 
+		// Aggiorna l'immagine del modello
 		model.changeImage(imageFile);
 
+		// Salva l'immagine e il modello
 		ImageFile toReturn = imageFileRepository.save(imageFile);
 		productModelRepository.save(model);
 		return toReturn;
@@ -226,15 +227,26 @@ public class ProductServiceImpl implements ProductService {
 	/**
 	 * Aggiorna le informazioni di un modello di prodotto nel database.
 	 *
-	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param model l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param image        il file da aggiungere come immagine del modello
 	 * @return l'oggetto ProductModel aggiornato
 	 */
 	@Override
-	public ProductModel updateModel(ProductModel productModel) {
-		if (productModel.getId() == null)
+	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException {
+		if (model.getId() == null)
 			throw new IllegalArgumentException("ID del modello non specificato nella modifica");
 
-		return productModelRepository.save(productModel);
+		// Copia dell'immagine originale in caso non sia stata modificata
+		ProductModel original = findModelById(model.getId());
+		model.setImageFile(original.getImageFile());
+
+		// Se è stata specificata una nuova immagine, aggiorna l'immagine
+		if(!image.isEmpty()) {
+			model.setImageFile(changeImageModel(model, image));
+			return model; // Il modello viene salvato in changeImageModel
+		}
+
+		return productModelRepository.save(model);
 	}
 
 	/**
@@ -264,7 +276,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void deleteModel(ProductModel model) {
 		if (model.getImageFile() != null)
-			imageFileRepository.delete(model.getImageFile());
+			deleteImage(model.getImageFile());
 
 		List<ProductVariation> variations = model.getVariations();
 

@@ -135,10 +135,11 @@ public interface ProductService {
 	/**
 	 * Aggiorna le informazioni di un modello di prodotto nel database.
 	 *
-	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param model l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param image        il file da aggiungere come immagine del modello
 	 * @return l'oggetto ProductModel aggiornato
 	 */
-	ProductModel updateModel(ProductModel productModel);
+	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException;
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.

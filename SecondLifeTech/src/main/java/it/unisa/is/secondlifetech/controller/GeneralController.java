@@ -243,13 +243,7 @@ public class GeneralController {
 
 	@PostMapping("/update-model-test")
 	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException {
-		ProductModel original = productService.findModelById(model.getId());
-		model.setImageFile(original.getImageFile());
-
-		if(!image.isEmpty())
-			model.setImageFile(productService.changeImageModel(model, image));
-
-		productService.updateModel(model);
+		productService.updateModel(model, image);
 		return "redirect:/view-product-variations?productModelId=" + model.getId();
 	}
 
