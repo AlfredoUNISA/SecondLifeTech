@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.controller;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
@@ -143,6 +144,76 @@ public class GeneralController {
 		user.setRole(UserRole.getRole(user.getRole()));
 		userService.updateUser(user);
 		return "redirect:/";
+	}
+
+	@GetMapping("/view-product-models")
+	public String viewProductModels(Model model,
+                                    @RequestParam(value = "name", required = false) String name,
+									@RequestParam(value = "brand", required = false) String brand,
+                                    @RequestParam(value = "category", required = false) String category,
+									@RequestParam(value = "minYear", required = false) Integer minYear,
+									@RequestParam(value = "maxYear", required = false) Integer maxYear,
+									@RequestParam(value = "minRam", required = false) Integer minRam,
+									@RequestParam(value = "maxRam", required = false) Integer maxRam,
+									@RequestParam(value = "minDisplaySize", required = false) Double minDisplaySize,
+									@RequestParam(value = "maxDisplaySize", required = false) Double maxDisplaySize,
+									@RequestParam(value = "minStorageSize", required = false) Integer minStorageSize,
+									@RequestParam(value = "maxStorageSize", required = false) Integer maxStorageSize,
+                                    @RequestParam(value = "minPrice", required = false) Double minPrice,
+                                    @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+                                    @RequestParam(value = "color", required = false) String color,
+                                    @RequestParam(value = "state", required = false) String state
+									) {
+		ProductFilters filters = new ProductFilters();
+		if (name != null)
+			filters.setName(name);
+		if (brand != null)
+			filters.setBrand(brand);
+		if (category != null)
+			filters.setCategory(category);
+
+		if (minYear != null)
+			filters.setMinYear(minYear);
+		if (maxYear != null)
+			filters.setMaxYear(maxYear);
+		if (minRam != null)
+			filters.setMinRam(minRam);
+		if (maxRam != null)
+			filters.setMaxRam(maxRam);
+		if (minDisplaySize != null)
+			filters.setMinDisplaySize(minDisplaySize);
+		if (maxDisplaySize != null)
+			filters.setMaxDisplaySize(maxDisplaySize);
+		if (minStorageSize != null)
+			filters.setMinStorageSize(minStorageSize);
+		if (maxStorageSize != null)
+			filters.setMaxStorageSize(maxStorageSize);
+		if (minPrice != null)
+			filters.setMinPrice(minPrice);
+		if (maxPrice != null)
+			filters.setMaxPrice(maxPrice);
+		if (color != null)
+			filters.setColor(color);
+		if (state != null)
+			filters.setState(state);
+
+		if (filters.isEmpty()) {
+			List<ProductModel> productModels = productService.findAllModels();
+			model.addAttribute("productModels", productModels);
+		} else {
+			List<ProductModel> productModels = productService.findAllModelsWithFilters(filters);
+			model.addAttribute("productModels", productModels);
+		}
+
+		model.addAttribute("filters", filters);
+		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
+		return "view-product-models-test";
+	}
+
+	@PostMapping("/view-product-models")
+	public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
+		String queryString = filters.toQueryString();
+		return "redirect:/view-product-models?" + queryString;
 	}
 
 	@GetMapping("/view-product-variations")
@@ -300,6 +371,8 @@ public class GeneralController {
 	public String gestore() {
 		return "gestore-test";
 	}
+
+
 
 
 	// TODO: aggiungere la pagina di errore

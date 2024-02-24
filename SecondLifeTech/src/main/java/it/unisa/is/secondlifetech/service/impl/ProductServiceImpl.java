@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
@@ -191,6 +192,54 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductModel> findAllModels() {
 		return productModelRepository.findAll();
+	}
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database con i filtri specificati.
+	 *
+	 * @param filters i filtri da applicare
+	 * @return una lista di oggetti ProductModel
+	 */
+	@Override
+	public List<ProductModel> findAllModelsWithFilters(ProductFilters filters) {
+		List<ProductModel> allModels = productModelRepository.findAll();
+		List<ProductModel> filteredModels = new ArrayList<>();
+
+		for (ProductModel model : allModels) {
+			// If the model does not match the filters, skip it
+			if (filters.getName() != null && !model.getName().toLowerCase().contains(filters.getName().toLowerCase()))
+				continue;
+			if (filters.getBrand() != null && !model.getBrand().toLowerCase().contains(filters.getBrand().toLowerCase()))
+				continue;
+			if (filters.getCategory() != null && !model.getCategory().toLowerCase().contains(filters.getCategory().toLowerCase()))
+				continue;
+
+			boolean hasVariation = false;
+			for (ProductVariation variation : model.getVariations()) {
+				if (filters.getMinYear() > variation.getYear() || filters.getMaxYear() < variation.getYear())
+					continue;
+				if (filters.getMinRam() > variation.getRam() || filters.getMaxRam() < variation.getRam())
+					continue;
+				if (filters.getMinDisplaySize() > variation.getDisplaySize() || filters.getMaxDisplaySize() < variation.getDisplaySize())
+					continue;
+				if (filters.getMinStorageSize() > variation.getStorageSize() || filters.getMaxStorageSize() < variation.getStorageSize())
+					continue;
+				if (filters.getMinPrice() > variation.getPrice() || filters.getMaxPrice() < variation.getPrice())
+					continue;
+				if (filters.getColor() != null && !variation.getColor().toLowerCase().contains(filters.getColor().toLowerCase()))
+					continue;
+				if (filters.getState() != null && !variation.getState().toLowerCase().contains(filters.getState().toLowerCase()))
+					continue;
+
+				hasVariation = true;
+				break;
+			}
+
+			if (hasVariation)
+				filteredModels.add(model);
+		}
+
+		return filteredModels;
 	}
 
 	/**

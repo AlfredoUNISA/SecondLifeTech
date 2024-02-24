@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="color-scheme" content="light dark">
+    <title>Product Models</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<a href="/">← Back to index</a>
+
+<h2>Filters</h2>
+<form th:action="@{/view-product-models}" role="form" method="post">
+    <label for="name">Name</label>
+    <input id="name" type="text" th:field="*{filters.name}" placeholder="Name">
+    <br>
+
+    <label for="brand">Brand</label>
+    <input id="brand" type="text" th:field="*{filters.brand}" placeholder="Brand">
+    <br>
+
+    <label for="category">Category</label>
+    <select id="category" th:field="*{filters.category}">
+        <option value="">All Categories</option>
+        <th:block th:each="category : ${categories}">
+            <option th:value="${category}" th:text="${category}"></option>
+        </th:block>
+    </select>
+    <br>
+
+    <label for="minPrice">Min Price</label>
+    <input id="minPrice" min="0" type="number" th:field="*{filters.minPrice}" placeholder="Min Price">
+
+    <label for="maxPrice">Max Price</label>
+    <input id="maxPrice" max="10000" type="number" th:field="*{filters.maxPrice}" placeholder="Max Price">
+    <br>
+
+    <button type="submit">Apply Filters</button>
+</form>
+<button onclick="window.location.href='/view-product-models'">Clear Filters</button>
+
+<br/>
+<hr>
+<br/>
+
+<h2>Product Models</h2>
+<table>
+    <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Link</th>
+    </tr>
+    <th:block th:each="model : ${productModels}">
+        <tr>
+            <td>
+                <th:block th:if="${model.imageFile != null}">
+                    <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
+                         alt="Image" width="100" height="100">
+                </th:block>
+                <th:block th:unless="${model.imageFile != null}">
+                    No image available
+                </th:block>
+            </td>
+            <td th:text="${model.name}"></td>
+            <td th:text="${model.category}"></td>
+            <td th:text="${model.brand}"></td>
+            <td>
+                <a th:href="@{'/view-product-variations?productModelId=' + ${model.id}}">View</a>
+            </td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>

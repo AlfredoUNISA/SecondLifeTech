@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 // Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
-public class ProductVariation{
+public class ProductVariation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;

@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
@@ -107,6 +108,14 @@ public interface ProductService {
 	 * @return una lista di oggetti ProductModel
 	 */
 	List<ProductModel> findAllModels();
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database con i filtri specificati.
+	 *
+	 * @param filters i filtri da applicare
+	 * @return una lista di oggetti ProductModel
+	 */
+	List<ProductModel> findAllModelsWithFilters(ProductFilters filters);
 
 	/**
 	 * Ottiene tutte le varianti di prodotto dal database.
