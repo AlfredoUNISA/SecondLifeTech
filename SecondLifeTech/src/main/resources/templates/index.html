@@ -15,7 +15,9 @@
 </head>
 <body>
 <h1>Index testing</h1>
+<hr>
 <h2>Basic testing</h2>
+<h3>Create</h3>
 <ul>
     <li>
         <a href="/create-user-test">Create User</a><br/>
@@ -24,19 +26,11 @@
         <a href="/create-product-model-test">Create Product Model</a><br/>
     </li>
     <li>
-        <a href="/view-product-models">View product models</a><br/>
+        <a href="/view-product-models">View <span style="color: #69a8ff">Product Models</span></a><br/>
     </li>
-    <li>
-        View <span style="color: #69a8ff">product variations</span> of
-        <form method="get" role="form" th:action="@{/view-product-variations}">
-            <select id="productModelSelect" name="productModelId">
-                <th:block th:each="productModel : ${productModels}">
-                    <option th:text="${productModel.name}" th:value="${productModel.id}"></option>
-                </th:block>
-            </select>
-            <button type="submit">View Product Variations</button>
-        </form>
-    </li>
+</ul>
+<h3>View, Delete and Update</h3>
+<ul>
     <li>
         View the <span style="color: #30ff30">cart</span> of
         <form method="get" role="form" th:action="@{/view-cart-test}">
@@ -72,6 +66,7 @@
     </li>
 </ul>
 
+<hr>
 <h2>Auth testing</h2>
 <h3 th:text="'Principal: ' + ${principal}"></h3>
 <ul>

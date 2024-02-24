@@ -19,13 +19,14 @@
 </head>
 <body>
 <a href="/">← Back to index</a>
+<a href="/view-product-models">← Back to models</a>
 <h1>Product Model</h1>
 <h4 th:text="'Name: ' + ${model.name}"></h4>
 <h4 th:text="'Brand: ' + ${model.brand}"></h4>
 <h4 th:text="'Category: ' + ${model.category}"></h4>
 <th:block th:if="${model.imageFile != null}">
-    <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
-         alt="Image of the product model" width="200" height="200">
+    <img th:src="@{'/images/' + ${model.imageFile.id}}"
+         alt="Image" width="200" height="200">
 </th:block>
 <th:block th:unless="${model.imageFile != null}">
     No image available
@@ -48,7 +49,7 @@
 <hr>
 
 <h1>Product Variations</h1>
-<a href="/create-product-variation-test">Create Product Variation</a><br/><br/>
+<a th:href="@{/create-product-variation-test}">Create Product Variation</a><br/><br/>
 
 <table>
     <tr>

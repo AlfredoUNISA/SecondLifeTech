@@ -17,11 +17,11 @@
 <form th:action="@{/view-product-models}" role="form" method="post">
     <label for="name">Name</label>
     <input id="name" type="text" th:field="*{filters.name}" placeholder="Name">
-    <br>
+    <br/>
 
     <label for="brand">Brand</label>
     <input id="brand" type="text" th:field="*{filters.brand}" placeholder="Brand">
-    <br>
+    <br/>
 
     <label for="category">Category</label>
     <select id="category" th:field="*{filters.category}">
@@ -30,17 +30,54 @@
             <option th:value="${category}" th:text="${category}"></option>
         </th:block>
     </select>
-    <br>
+    <br/>
 
     <label for="minPrice">Min Price</label>
-    <input id="minPrice" min="0" type="number" th:field="*{filters.minPrice}" placeholder="Min Price">
+    <input id="minPrice" th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_PRICE}" type="number" step="0.1" th:field="*{filters.minPrice}" placeholder="Min Price">
 
     <label for="maxPrice">Max Price</label>
-    <input id="maxPrice" max="10000" type="number" th:field="*{filters.maxPrice}" placeholder="Max Price">
-    <br>
+    <input id="maxPrice" th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_PRICE}" type="number" step="0.1" th:field="*{filters.maxPrice}" placeholder="Max Price">
+    <br/>
+
+    <label for="minYear">Min Year</label>
+    <input id="minYear" th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_YEAR}" type="number" th:field="*{filters.minYear}" placeholder="Min Year">
+
+    <label for="maxYear">Max Year</label>
+    <input id="maxYear" th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_YEAR}" type="number" th:field="*{filters.maxYear}" placeholder="Max Year">
+    <br/>
+
+    <label for="minStorageSize">Min Storage Size</label>
+    <input id="minStorageSize" th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_STORAGE_SIZE}" type="number" th:field="*{filters.minStorageSize}" placeholder="Min Storage Size">
+
+    <label for="maxStorageSize">Max Storage Size</label>
+    <input id="maxStorageSize" th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}" type="number" th:field="*{filters.maxStorageSize}" placeholder="Max Storage Size">
+    <br/>
+
+    <label for="minRAM">Min RAM</label>
+    <input id="minRAM" th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_RAM}" type="number" th:field="*{filters.minRam}" placeholder="Min RAM">
+
+    <label for="maxRAM">Max RAM</label>
+    <input id="maxRAM" th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_RAM}" type="number" th:field="*{filters.maxRam}" placeholder="Max RAM">
+    <br/>
+
+    <label for="minDisplaySize">Min Display Size</label>
+    <input id="minDisplaySize" th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_DISPLAY_SIZE}" type="number" step="0.1" th:field="*{filters.minDisplaySize}" placeholder="Min Display Size">
+
+    <label for="maxDisplaySize">Max Display Size</label>
+    <input id="maxDisplaySize" th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}" type="number" step="0.1" th:field="*{filters.maxDisplaySize}" placeholder="Max Display Size">
+    <br/>
+
+    <label for="state">State</label>
+    <select id="state" th:field="*{filters.state}">
+        <th:block th:each="state : ${states}">
+            <option th:value="${state}" th:text="${state}"></option>
+        </th:block>
+    </select>
+    <br/>
 
     <button type="submit">Apply Filters</button>
 </form>
+<br/>
 <button onclick="window.location.href='/view-product-models'">Clear Filters</button>
 
 <br/>
@@ -60,7 +97,7 @@
         <tr>
             <td>
                 <th:block th:if="${model.imageFile != null}">
-                    <img th:src="@{'data:' + ${model.imageFile.contentType} + ';base64,' + ${model.imageFile.generateBase64Image()}}"
+                    <img th:src="@{'/images/' + ${model.imageFile.id}}"
                          alt="Image" width="100" height="100">
                 </th:block>
                 <th:block th:unless="${model.imageFile != null}">

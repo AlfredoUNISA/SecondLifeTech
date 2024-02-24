@@ -207,6 +207,7 @@ public class GeneralController {
 
 		model.addAttribute("filters", filters);
 		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
+		model.addAttribute("states", ProductState.ALL_STATES);
 		return "view-product-models-test";
 	}
 

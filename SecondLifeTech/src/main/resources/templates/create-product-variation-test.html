@@ -47,7 +47,9 @@
         <label for="productModelId">Product Model</label>
         <select id="productModelId" name="productModelId" th:field="*{model.id}">
             <th:block th:each="productModel : ${productModels}">
-                <option th:value="${productModel.id}" th:text="${productModel.name}"></option>
+                <option th:value="${productModel.id}"
+                        th:text="${productModel.name}">
+                </option>
             </th:block>
         </select>
     </div>

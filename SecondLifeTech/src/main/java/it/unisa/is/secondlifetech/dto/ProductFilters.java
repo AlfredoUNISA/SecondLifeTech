@@ -13,12 +13,11 @@ public class ProductFilters {
 	public static int MIN_RAM = 1;
 	public static int MAX_RAM = 64;
 	public static double MIN_DISPLAY_SIZE = 0.1;
-	public static double MAX_DISPLAY_SIZE = 10.0;
+	public static double MAX_DISPLAY_SIZE = 15.0;
 	public static int MIN_STORAGE_SIZE = 1;
 	public static int MAX_STORAGE_SIZE = 1000;
 	public static double MIN_PRICE = 0.0;
 	public static double MAX_PRICE = 10000.0;
-
 
 	// Model
 	private String name;
