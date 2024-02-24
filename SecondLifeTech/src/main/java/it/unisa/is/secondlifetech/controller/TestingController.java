@@ -22,14 +22,14 @@ import java.util.UUID;
 @Controller
 @Slf4j
 @RequestMapping("/")
-public class GeneralController {
+public class TestingController {
 	private final UserService userService;
 	private final ProductService productService;
 	private final CartService cartService;
 	private final OrderService orderService;
 
 	@Autowired
-	public GeneralController(UserService userService, ProductService productService, CartService cartService, OrderService orderService) {
+	public TestingController(UserService userService, ProductService productService, CartService cartService, OrderService orderService) {
 		this.userService = userService;
 		this.productService = productService;
 		this.cartService = cartService;
