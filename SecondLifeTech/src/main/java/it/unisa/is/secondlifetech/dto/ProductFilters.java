@@ -88,30 +88,35 @@ public class ProductFilters {
 			queryString.append("brand=").append(brand).append("&");
 		if (category != null && !category.isEmpty())
 			queryString.append("category=").append(category).append("&");
-		if (minYear != MIN_YEAR)
-			queryString.append("minYear=").append(minYear).append("&");
-		if (maxYear != MAX_YEAR)
-			queryString.append("maxYear=").append(maxYear).append("&");
-		if (minRam != MIN_RAM)
-			queryString.append("minRam=").append(minRam).append("&");
-		if (maxRam != MAX_RAM)
-			queryString.append("maxRam=").append(maxRam).append("&");
-		if (minDisplaySize != MIN_DISPLAY_SIZE)
-			queryString.append("minDisplaySize=").append(minDisplaySize).append("&");
-		if (maxDisplaySize != MAX_DISPLAY_SIZE)
-			queryString.append("maxDisplaySize=").append(maxDisplaySize).append("&");
-		if (minStorageSize != MIN_STORAGE_SIZE)
-			queryString.append("minStorageSize=").append(minStorageSize).append("&");
-		if (maxStorageSize != MAX_STORAGE_SIZE)
-			queryString.append("maxStorageSize=").append(maxStorageSize).append("&");
-		if (minPrice != MIN_PRICE)
-			queryString.append("minPrice=").append(minPrice).append("&");
-		if (maxPrice != MAX_PRICE)
-			queryString.append("maxPrice=").append(maxPrice).append("&");
 		if (color != null && !color.isEmpty())
 			queryString.append("color=").append(color).append("&");
 		if (state != null && !state.isEmpty())
 			queryString.append("state=").append(state).append("&");
+
+		if (minYear != MIN_YEAR)
+			queryString.append("minYear=").append(minYear).append("&");
+		if (maxYear != MAX_YEAR)
+			queryString.append("maxYear=").append(maxYear).append("&");
+
+		if (minRam != MIN_RAM)
+			queryString.append("minRam=").append(minRam).append("&");
+		if (maxRam != MAX_RAM)
+			queryString.append("maxRam=").append(maxRam).append("&");
+
+		if (minDisplaySize != MIN_DISPLAY_SIZE)
+			queryString.append("minDisplaySize=").append(minDisplaySize).append("&");
+		if (maxDisplaySize != MAX_DISPLAY_SIZE)
+			queryString.append("maxDisplaySize=").append(maxDisplaySize).append("&");
+
+		if (minStorageSize != MIN_STORAGE_SIZE)
+			queryString.append("minStorageSize=").append(minStorageSize).append("&");
+		if (maxStorageSize != MAX_STORAGE_SIZE)
+			queryString.append("maxStorageSize=").append(maxStorageSize).append("&");
+
+		if (minPrice != MIN_PRICE)
+			queryString.append("minPrice=").append(minPrice).append("&");
+		if (maxPrice != MAX_PRICE)
+			queryString.append("maxPrice=").append(maxPrice).append("&");
 
 		// Remove the last "&"
 		if (!queryString.isEmpty()) {
@@ -125,6 +130,8 @@ public class ProductFilters {
 		return name == null
 			&& brand == null
 			&& category == null
+			&& color == null
+			&& state == null
 			&& minYear == MIN_YEAR
 			&& maxYear == MAX_YEAR
 			&& minRam == MIN_RAM
@@ -134,8 +141,6 @@ public class ProductFilters {
 			&& minStorageSize == MIN_STORAGE_SIZE
 			&& maxStorageSize == MAX_STORAGE_SIZE
 			&& minPrice == MIN_PRICE
-			&& maxPrice == MAX_PRICE
-			&& color == null
-			&& state == null;
+			&& maxPrice == MAX_PRICE;
 	}
 }

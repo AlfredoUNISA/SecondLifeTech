@@ -81,10 +81,8 @@
 <br/>
 <button onclick="window.location.href='/view-product-models'">Clear Filters</button>
 
-<br/>
+<br/><br/>
 <hr>
-<br/>
-
 <h2>Product Models</h2>
 <table>
     <tr>
@@ -94,7 +92,8 @@
         <th>Brand</th>
         <th>Link</th>
     </tr>
-    <th:block th:each="model : ${productModels}">
+    <th:block th:each="model : ${productPage.content}">
+        <!--/*@thymesVar id="model" type="it.unisa.is.secondlifetech.entity.ProductModel"*/-->
         <tr>
             <td>
                 <th:block th:if="${model.imageFile != null}">
@@ -114,5 +113,14 @@
         </tr>
     </th:block>
 </table>
+<div th:if="${productPage.totalPages > 0}">
+    <ul>
+        <li th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{'/view-product-models?size=' + ${productPage.size} +'&page=' + ${pageNumber}
+                        + ${filters != null ? '&' + filters.toQueryString() : ''}}"
+               th:text="${pageNumber}"></a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

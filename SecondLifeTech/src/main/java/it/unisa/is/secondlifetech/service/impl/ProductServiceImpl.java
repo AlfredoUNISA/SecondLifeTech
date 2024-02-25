@@ -12,11 +12,16 @@ import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -195,14 +200,56 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
+	 * Ottiene tutti i modelli di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	@Override
+	public Page<ProductModel> findAllModels(Pageable pageable) {
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+		List<ProductModel> products = productModelRepository.findAll();
+
+		return getPaginatedResults(pageSize, currentPage, startItem, products);
+	}
+
+	/**
 	 * Ottiene tutti i modelli di prodotto dal database con i filtri specificati.
 	 *
 	 * @param filters i filtri da applicare
 	 * @return una lista di oggetti ProductModel
 	 */
 	@Override
-	public List<ProductModel> findAllModelsWithFilters(ProductFilters filters) {
+	public Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable) {
 		List<ProductModel> allModels = productModelRepository.findAll();
+		List<ProductModel> filteredModels = doFilter(filters, allModels);
+
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+
+		return getPaginatedResults(pageSize, currentPage, startItem, filteredModels);
+	}
+
+	private Page<ProductModel> getPaginatedResults(int pageSize, int currentPage, int startItem, List<ProductModel> products) {
+		List<ProductModel> paginatedList;
+
+		if (products.size() < startItem) {
+			paginatedList = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, products.size());
+			paginatedList = products.subList(startItem, toIndex);
+		}
+
+		return new PageImpl<>(
+			paginatedList,
+			PageRequest.of(currentPage, pageSize),
+			products.size()
+		);
+	}
+
+	private static List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) {
 		List<ProductModel> filteredModels = new ArrayList<>();
 
 		for (ProductModel model : allModels) {
@@ -238,7 +285,6 @@ public class ProductServiceImpl implements ProductService {
 			if (hasVariation)
 				filteredModels.add(model);
 		}
-
 		return filteredModels;
 	}
 

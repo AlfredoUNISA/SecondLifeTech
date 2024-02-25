@@ -4,6 +4,8 @@ import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -110,12 +112,18 @@ public interface ProductService {
 	List<ProductModel> findAllModels();
 
 	/**
-	 * Ottiene tutti i modelli di prodotto dal database con i filtri specificati.
+	 * Ottiene tutti i modelli di prodotto dal database con un sistema a Paginazione.
 	 *
-	 * @param filters i filtri da applicare
 	 * @return una lista di oggetti ProductModel
 	 */
-	List<ProductModel> findAllModelsWithFilters(ProductFilters filters);
+	Page<ProductModel> findAllModels(Pageable pageable);
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database con un sistema a Paginazione e con filtri.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable);
 
 	/**
 	 * Ottiene tutte le varianti di prodotto dal database.

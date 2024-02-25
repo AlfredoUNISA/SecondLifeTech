@@ -9,6 +9,8 @@ import it.unisa.is.secondlifetech.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -162,19 +166,42 @@ public class TestingController {
                                     @RequestParam(value = "minPrice", required = false) Double minPrice,
                                     @RequestParam(value = "maxPrice", required = false) Double maxPrice,
                                     @RequestParam(value = "color", required = false) String color,
-                                    @RequestParam(value = "state", required = false) String state
+                                    @RequestParam(value = "state", required = false) String state,
+                                    @RequestParam("page") Optional<Integer> page,
+                                    @RequestParam("size") Optional<Integer> size
 									) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(1);
+
 		ProductFilters filters = new ProductFilters(
 			name, brand, category, minYear, maxYear, minRam, maxRam, minDisplaySize, maxDisplaySize,
 			minStorageSize, maxStorageSize, minPrice, maxPrice, color, state
 		);
 
+		Page<ProductModel> productPage;
+
 		if (filters.isDefault()) {
-			List<ProductModel> productModels = productService.findAllModels();
-			model.addAttribute("productModels", productModels);
+			// Nessun filtro
+			productPage = productService.findAllModels(
+				PageRequest.of(currentPage - 1, pageSize)
+			);
+			model.addAttribute("productPage", productPage);
 		} else {
-			List<ProductModel> productModels = productService.findAllModelsWithFilters(filters);
-			model.addAttribute("productModels", productModels);
+			// Applicare i filtri
+			productPage = productService.findAllModelsWithFilters(
+				filters,
+				PageRequest.of(currentPage - 1, pageSize)
+			);
+			model.addAttribute("productPage", productPage);
+		}
+
+		int totalPages = productPage.getTotalPages();
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = new ArrayList<>();
+			for (int i = 1; i <= totalPages; i++) {
+				pageNumbers.add(i);
+			}
+			model.addAttribute("pageNumbers", pageNumbers);
 		}
 
 		model.addAttribute("filters", filters);
