@@ -69,6 +69,7 @@
 
     <label for="state">State</label>
     <select id="state" th:field="*{filters.state}">
+        <option selected value="">All States</option>
         <th:block th:each="state : ${states}">
             <option th:value="${state}" th:text="${state}"></option>
         </th:block>

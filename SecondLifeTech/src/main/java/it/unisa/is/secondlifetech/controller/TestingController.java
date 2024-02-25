@@ -164,40 +164,12 @@ public class TestingController {
                                     @RequestParam(value = "color", required = false) String color,
                                     @RequestParam(value = "state", required = false) String state
 									) {
-		ProductFilters filters = new ProductFilters();
-		if (name != null)
-			filters.setName(name);
-		if (brand != null)
-			filters.setBrand(brand);
-		if (category != null)
-			filters.setCategory(category);
+		ProductFilters filters = new ProductFilters(
+			name, brand, category, minYear, maxYear, minRam, maxRam, minDisplaySize, maxDisplaySize,
+			minStorageSize, maxStorageSize, minPrice, maxPrice, color, state
+		);
 
-		if (minYear != null)
-			filters.setMinYear(minYear);
-		if (maxYear != null)
-			filters.setMaxYear(maxYear);
-		if (minRam != null)
-			filters.setMinRam(minRam);
-		if (maxRam != null)
-			filters.setMaxRam(maxRam);
-		if (minDisplaySize != null)
-			filters.setMinDisplaySize(minDisplaySize);
-		if (maxDisplaySize != null)
-			filters.setMaxDisplaySize(maxDisplaySize);
-		if (minStorageSize != null)
-			filters.setMinStorageSize(minStorageSize);
-		if (maxStorageSize != null)
-			filters.setMaxStorageSize(maxStorageSize);
-		if (minPrice != null)
-			filters.setMinPrice(minPrice);
-		if (maxPrice != null)
-			filters.setMaxPrice(maxPrice);
-		if (color != null)
-			filters.setColor(color);
-		if (state != null)
-			filters.setState(state);
-
-		if (filters.isEmpty()) {
+		if (filters.isDefault()) {
 			List<ProductModel> productModels = productService.findAllModels();
 			model.addAttribute("productModels", productModels);
 		} else {

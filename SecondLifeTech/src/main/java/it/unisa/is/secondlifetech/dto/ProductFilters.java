@@ -25,18 +25,59 @@ public class ProductFilters {
 	private String category;
 
 	// Variation
-	private int minYear = MIN_YEAR;
-	private int maxYear = MAX_YEAR;
-	private int minRam = MIN_RAM;
-	private int maxRam = MAX_RAM;
-	private double minDisplaySize = MIN_DISPLAY_SIZE;
-	private double maxDisplaySize = MAX_DISPLAY_SIZE;
-	private int minStorageSize = MIN_STORAGE_SIZE;
-	private int maxStorageSize = MAX_STORAGE_SIZE;
-	private double minPrice = MIN_PRICE;
-	private double maxPrice = MAX_PRICE;
+	private Integer minYear = MIN_YEAR;
+	private Integer maxYear = MAX_YEAR;
+	private Integer minRam = MIN_RAM;
+	private Integer maxRam = MAX_RAM;
+	private Double minDisplaySize = MIN_DISPLAY_SIZE;
+	private Double maxDisplaySize = MAX_DISPLAY_SIZE;
+	private Integer minStorageSize = MIN_STORAGE_SIZE;
+	private Integer maxStorageSize = MAX_STORAGE_SIZE;
+	private Double minPrice = MIN_PRICE;
+	private Double maxPrice = MAX_PRICE;
 	private String color;
 	private String state;
+
+	public ProductFilters(String name, String brand, String category, Integer minYear, Integer maxYear,
+	                      Integer minRam, Integer maxRam, Double minDisplaySize, Double maxDisplaySize,
+	                      Integer minStorageSize, Integer maxStorageSize, Double minPrice, Double maxPrice,
+	                      String color, String state) {
+		if (name != null && !name.isEmpty())
+			this.name = name;
+		if (brand != null && !brand.isEmpty())
+			this.brand = brand;
+		if (category != null && !category.isEmpty())
+			this.category = category;
+		if (color != null && !color.isEmpty())
+			this.color = color;
+		if (state != null && !state.isEmpty())
+			this.state = state;
+
+		if (minYear != null)
+			this.minYear = minYear;
+		if (maxYear != null)
+			this.maxYear = maxYear;
+
+		if (minRam != null)
+			this.minRam = minRam;
+		if (maxRam != null)
+			this.maxRam = maxRam;
+
+		if (minDisplaySize != null)
+			this.minDisplaySize = minDisplaySize;
+		if (maxDisplaySize != null)
+			this.maxDisplaySize = maxDisplaySize;
+
+		if (minStorageSize != null)
+			this.minStorageSize = minStorageSize;
+		if (maxStorageSize != null)
+			this.maxStorageSize = maxStorageSize;
+
+		if (minPrice != null)
+			this.minPrice = minPrice;
+		if (maxPrice != null)
+			this.maxPrice = maxPrice;
+	}
 
 	public String toQueryString() {
 		StringBuilder queryString = new StringBuilder();
@@ -80,11 +121,21 @@ public class ProductFilters {
 		return queryString.toString();
 	}
 
-	public boolean isEmpty() {
-		return name == null && brand == null && category == null && minYear == MIN_YEAR && maxYear == MAX_YEAR
-				&& minRam == MIN_RAM && maxRam == MAX_RAM && minDisplaySize == MIN_DISPLAY_SIZE
-				&& maxDisplaySize == MAX_DISPLAY_SIZE && minStorageSize == MIN_STORAGE_SIZE
-				&& maxStorageSize == MAX_STORAGE_SIZE && minPrice == MIN_PRICE && maxPrice == MAX_PRICE && color == null
-				&& state == null;
+	public boolean isDefault() {
+		return name == null
+			&& brand == null
+			&& category == null
+			&& minYear == MIN_YEAR
+			&& maxYear == MAX_YEAR
+			&& minRam == MIN_RAM
+			&& maxRam == MAX_RAM
+			&& minDisplaySize == MIN_DISPLAY_SIZE
+			&& maxDisplaySize == MAX_DISPLAY_SIZE
+			&& minStorageSize == MIN_STORAGE_SIZE
+			&& maxStorageSize == MAX_STORAGE_SIZE
+			&& minPrice == MIN_PRICE
+			&& maxPrice == MAX_PRICE
+			&& color == null
+			&& state == null;
 	}
 }
