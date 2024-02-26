@@ -2,28 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="color-scheme" content="light dark">
-    <title>Create User</title>
+    <title>Update Variation</title>
+    <style>
+        table, th, td {
+            border: 1px solid wheat;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
 <a href="/">← Back to index</a>
-<h1>Create User</h1>
-<form method="post" role="form" th:action="@{/create-user-test}" th:object="${user}">
+<h1>Update User</h1>
+<form th:action="@{/update-user-test}" method="post" role="form" th:object="${user}">
+    <input type="hidden" name="userId" th:field="*{id}">
+
     <div>
         <label for="firstName">First Name</label>
-        <input type="text" id="firstName" th:field="*{firstName}">
+        <input type="text" id="firstName" th:field="*{firstName}" th:value="${user.firstName}">
     </div>
+
     <div>
         <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" th:field="*{lastName}">
+        <input type="text" id="lastName" th:field="*{lastName}" th:value="${user.lastName}">
     </div>
+
     <div>
         <label for="email">Email</label>
-        <input type="email" id="email" th:field="*{email}">
+        <input type="text" id="email" th:field="*{email}" th:value="${user.email}">
     </div>
+
     <div>
         <label for="password">Password</label>
         <input type="password" id="password" th:field="*{password}">
     </div>
+
     <div>
         <label for="role">Role</label>
         <select id="role" th:field="*{role}">
@@ -33,7 +45,8 @@
         </select>
     </div>
 
-    <button type="submit">Create User</button>
+    <button type="submit">Update User</button>
 </form>
+
 </body>
 </html>

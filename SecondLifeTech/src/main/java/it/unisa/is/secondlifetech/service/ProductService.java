@@ -1,12 +1,23 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
+import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
+
+	// ================================================================================================================
+	// =============== CREATE ==========================================================================================
+	// ================================================================================================================
+
 	/**
 	 * Crea un nuovo modello di prodotto nel database.
 	 *
@@ -14,6 +25,28 @@ public interface ProductService {
 	 * @return l'oggetto ProductModel creato
 	 */
 	ProductModel createNewModel(ProductModel productModel);
+
+	/**
+	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
+	 *
+	 * @param model     il modello di prodotto a cui aggiungere la variante
+	 * @param variation l'oggetto ProductVariation da aggiungere
+	 */
+	ProductVariation createNewVariation(ProductModel model, ProductVariation variation);
+
+	/**
+	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
+	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
+	 *
+	 * @param model  il modello di prodotto a cui aggiungere l'immagine
+	 * @param image   il file da aggiungere
+	 * @return l'oggetto ImageFile aggiunto
+	 */
+	ImageFile changeImageModel(ProductModel model, MultipartFile image) throws IOException;
+
+	// ================================================================================================================
+	// =============== READ ============================================================================================
+	// ================================================================================================================
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite l'ID.
@@ -24,11 +57,20 @@ public interface ProductService {
 	ProductModel findModelById(UUID id);
 
 	/**
-	 * Ottiene tutti i modelli di prodotto dal database.
+	 * Ottiene una variante di prodotto dal database tramite l'ID.
 	 *
-	 * @return una lista di oggetti ProductModel
+	 * @param id l'ID della variante di prodotto da cercare
+	 * @return l'oggetto ProductVariation corrispondente all'ID specificato, o null se non trovato
 	 */
-	List<ProductModel> findAllModels();
+	ProductVariation findVariationById(UUID id);
+
+	/**
+	 * Ottiene un'immagine dal database tramite l'ID.
+	 *
+	 * @param id l'ID dell'immagine da cercare
+	 * @return l'oggetto ImageFile corrispondente all'ID specificato, o null se non trovato
+	 */
+	ImageFile findImageById(UUID id);
 
 	/**
 	 * Ottiene un modello di prodotto dal database tramite il nome.
@@ -55,53 +97,6 @@ public interface ProductService {
 	List<ProductModel> findModelsByCategory(String category);
 
 	/**
-	 * Aggiorna le informazioni di un modello di prodotto nel database.
-	 *
-	 * @param id          l'ID del modello di prodotto da aggiornare
-	 * @param productModel l'oggetto ProductModel con le nuove informazioni da salvare
-	 * @return l'oggetto ProductModel aggiornato
-	 */
-	ProductModel updateModel(UUID id, ProductModel productModel);
-
-	/**
-	 * Elimina un modello di prodotto dal database tramite l'ID.
-	 *
-	 * @param id l'ID del modello di prodotto da eliminare
-	 */
-	void deleteModel(UUID id);
-
-	/**
-	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
-	 *
-	 * @param modelId   l'ID del modello di prodotto a cui aggiungere la variante
-	 * @param variation l'oggetto ProductVariation da aggiungere
-	 */
-	void createAndAddVariationToModel(UUID modelId, ProductVariation variation);
-
-	/**
-	 * Crea solamente una nuova variante di prodotto nel database.
-	 *
-	 * @return l'oggetto ProductVariation creato
-	 */
-	ProductVariation createNewVariation(ProductVariation productVariation);
-
-	/**
-	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
-	 *
-	 * @param modelId     l'ID del modello di prodotto da cui rimuovere la variante
-	 * @param variationId l'ID della variante di prodotto da rimuovere
-	 */
-	void deleteVariation(UUID modelId, UUID variationId);
-
-	/**
-	 * Ottiene una variante di prodotto dal database tramite l'ID.
-	 *
-	 * @param id l'ID della variante di prodotto da cercare
-	 * @return l'oggetto ProductVariation corrispondente all'ID specificato, o null se non trovato
-	 */
-	ProductVariation findVariationById(UUID id);
-
-	/**
 	 * Ottiene tutte le varianti di prodotto dal database.
 	 *
 	 * @param state lo stato delle varianti di prodotto da cercare
@@ -110,18 +105,80 @@ public interface ProductService {
 	List<ProductVariation> findVariationsByState(String state);
 
 	/**
+	 * Ottiene tutti i modelli di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	List<ProductModel> findAllModels();
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database con un sistema a Paginazione.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	Page<ProductModel> findAllModels(Pageable pageable);
+
+	/**
+	 * Ottiene tutti i modelli di prodotto dal database con un sistema a Paginazione e con filtri.
+	 *
+	 * @return una lista di oggetti ProductModel
+	 */
+	Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable);
+
+	/**
 	 * Ottiene tutte le varianti di prodotto dal database.
 	 *
 	 * @return una lista di oggetti ProductVariation
 	 */
 	List<ProductVariation> findAllVariations();
 
+
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Aggiorna le informazioni di un modello di prodotto nel database.
+	 *
+	 * @param model l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param image        il file da aggiungere come immagine del modello
+	 * @return l'oggetto ProductModel aggiornato
+	 */
+	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException;
+
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.
 	 *
-	 * @param variationId                l'ID della variante di prodotto da aggiornare
 	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
-	ProductVariation updateVariation(UUID variationId, ProductVariation productVariation);
+	ProductVariation updateVariation(ProductVariation productVariation);
+
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Elimina un modello di prodotto e le sue variazioni dal database.
+	 *
+	 * @param model l'oggetto ProductModel da eliminare
+	 */
+	void deleteModel(ProductModel model);
+
+	/**
+	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
+	 *
+	 * @param variation l'oggetto ProductVariation da rimuovere
+	 */
+	void deleteVariation(ProductVariation variation);
+
+	/**
+	 * Elimina un'immagine dal database.
+	 *
+	 * @param image l'oggetto ImageFile da eliminare
+	 */
+	void deleteImage(ImageFile image);
 }

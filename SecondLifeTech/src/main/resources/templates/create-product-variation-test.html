@@ -5,6 +5,7 @@
     <title>Create Product Model</title>
 </head>
 <body>
+<a href="/">← Back to index</a>
 <form method="post" role="form" th:action="@{/create-product-variation-test}" th:object="${productVariation}">
     <div>
         <label for="year">year</label>
@@ -46,7 +47,9 @@
         <label for="productModelId">Product Model</label>
         <select id="productModelId" name="productModelId" th:field="*{model.id}">
             <th:block th:each="productModel : ${productModels}">
-                <option th:value="${productModel.id}" th:text="${productModel.name}"></option>
+                <option th:value="${productModel.id}"
+                        th:text="${productModel.name}">
+                </option>
             </th:block>
         </select>
     </div>

@@ -39,6 +39,21 @@ public class ShippingAddress {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	public ShippingAddress(String street, String city, String state, String zipCode, String country) {
+		this.street = street;
+		this.city = city;
+		this.state = state;
+		this.zipCode = zipCode;
+		this.country = country;
+	}
+
+	/**
+	 * Restituisce l'indirizzo completo.
+	 */
+	public String fullAddress() {
+		return street + ", " + city + ", " + state + ", " + zipCode + ", " + country;
+	}
+
 	// ToString manuale per evitare ricorsione infinita nei log
 	@Override
 	public String toString() {

@@ -35,10 +35,10 @@ public class OrderItem {
 	private String modelName;
 	private String brand;
 	private String category;
-	private String year;
-	private String ram;
-	private String displaySize;
-	private String storageSize;
+	private int year;
+	private int ram;
+	private double displaySize;
+	private int storageSize;
 	private String color;
 	private String state;
 
@@ -49,7 +49,7 @@ public class OrderItem {
 		this.productVariation = productVariation;
 	}
 
-	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced orderPlaced, String modelName, String brand, String category, String year, String ram, String displaySize, String storageSize, String color, String state) {
+	public OrderItem(int quantityOrdered, double subTotal, OrderPlaced orderPlaced, String modelName, String brand, String category, int year, int ram, double displaySize, int storageSize, String color, String state) {
 		this.quantityOrdered = quantityOrdered;
 		this.subTotal = subTotal;
 		this.orderPlaced = orderPlaced;

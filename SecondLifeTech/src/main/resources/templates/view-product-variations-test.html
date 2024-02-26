@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="color-scheme" content="light dark">
-    <title>Index</title>
+    <title>Product Variations</title>
     <style>
         table, th, td {
             border: 1px solid wheat;
@@ -18,26 +18,72 @@
     </style>
 </head>
 <body>
+<a href="/">← Back to index</a>
+<a href="/view-product-models">← Back to models</a>
+<h1>Product Model</h1>
+<h4 th:text="'Name: ' + ${model.name}"></h4>
+<h4 th:text="'Brand: ' + ${model.brand}"></h4>
+<h4 th:text="'Category: ' + ${model.category}"></h4>
+<th:block th:if="${model.imageFile != null}">
+    <img th:src="@{'/images/' + ${model.imageFile.id}}"
+         alt="Image" width="200" height="200">
+</th:block>
+<th:block th:unless="${model.imageFile != null}">
+    No image available
+</th:block>
+
+<br/><br/>
+
+<form method="get" role="form" th:action="@{/update-model-test}">
+    <input type="hidden" name="productModelId" th:value="${model.id}">
+    <button type="submit">Edit Model</button>
+</form>
+
+<br/><br/>
+
+<form method="post" role="form" th:action="@{/delete-model-test}">
+    <input type="hidden" name="productModelId" th:value="${model.id}">
+    <button type="submit">Delete Model</button>
+</form>
+
+<hr>
+
 <h1>Product Variations</h1>
+<a th:href="@{/create-product-variation-test}">Create Product Variation</a><br/><br/>
+
 <table>
     <tr>
         <th>Model</th>
-        <th>Variation</th>
+        <th>Year</th>
+        <th>Color</th>
+        <th>Storage Size</th>
+        <th>RAM</th>
+        <th>Display Size</th>
+        <th>State</th>
         <th>Quantity in stock</th>
         <th>Price</th>
         <th>Insert in cart</th>
+        <th>Delete Variation</th>
+        <th>Edit Variation</th>
     </tr>
     <th:block th:each="variation : ${variations}">
         <tr>
             <td th:text="${variation.getModel.brand + ' ' + variation.getModel.name + ' (' + variation.getModel.category + ') '}"></td>
-            <td th:text="${variation.color + ' ' + variation.storageSize + 'GB ' + variation.ram + 'GB RAM ' + variation.displaySize + 'inch'}"></td>
+
+            <td th:text="${variation.year}"></td>
+            <td th:text="${variation.color}"></td>
+            <td th:text="${variation.storageSize} + 'GB'"></td>
+            <td th:text="${variation.ram} + 'GB'"></td>
+            <td th:text="${variation.displaySize} + '&#34;'"></td>
+            <td th:text="${variation.state}"></td>
+
             <td th:text="${variation.quantityInStock}"></td>
             <td th:text="${variation.price}"></td>
             <td>
                 <form method="post" role="form" action="/add-to-cart-test">
                     <input type="hidden" th:value="${variation.id}" name="productVariationId">
                     <label for="quantity">Quantity: </label>
-                    <input type="number" id="quantity" name="quantity">
+                    <input type="number" id="quantity" min="1" value="1" name="quantity">
                     <label for="user"> User: </label>
                     <select id="user" name="userId">
                         <th:block th:each="user : ${users}">
@@ -45,6 +91,18 @@
                         </th:block>
                     </select>
                     <button type="submit">Add to cart</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" role="form" action="/delete-variation-test">
+                    <input type="hidden" th:value="${variation.id}" name="productVariationId">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+            <td>
+                <form method="get" role="form" th:action="@{/update-variation-test}">
+                    <input type="hidden" name="productVariationId" th:value="${variation.id}">
+                    <button type="submit">Edit</button>
                 </form>
             </td>
         </tr>

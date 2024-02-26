@@ -51,7 +51,8 @@ public class OrderPlaced {
 	 * Aggiunge un oggetto OrderItem alla lista di oggetti.
 	 */
 	public void addItem(OrderItem item) {
-		items.add(item);
+		this.items.add(item);
+		item.setOrderPlaced(this);
 	}
 
 	@Override

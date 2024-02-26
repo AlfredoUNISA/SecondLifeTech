@@ -106,4 +106,88 @@ class OrderItemRepositoryTests {
 		assertThat(foundOrderItems).containsOnly(orderItem1);
 		assertThat(foundOrderItems.get(0).getOrderPlaced()).isEqualTo(order1);
 	}
+
+
+	@Test
+	void OrderItemRepository_FindByProductVariationId_ReturnCorrectList() {
+		// Arrange
+		ProductModel productModel = new ProductModel(
+			"iPhone 112232332",
+			"Apple",
+			"Smartphone"
+		);
+		productModelRepository.save(productModel);
+
+		ProductVariation productVariation = new ProductVariation(
+			2020,
+			4,
+			6.0,
+			128,
+			250.0,
+			3,
+			"Green",
+			"Accettabile",
+			productModel
+		);
+		productVariationService.save(productVariation);
+
+		User user = new User(
+			"Mario",
+			"Rossi",
+			"emaiwwewewewewewel@email.com",
+			"password",
+			null,
+			UserRole.CLIENTE,
+			null
+		);
+		user.setCart(new Cart());
+		userRepository.save(user);
+		cartRepository.save(user.getCart());
+
+		OrderPlaced order1 = new OrderPlaced(
+			"Via Roma 1",
+			user.getEmail(),
+			new Date(),
+			250.0,
+			false,
+			user
+		);
+
+		OrderItem orderItem1 = new OrderItem(
+			1,
+			productVariation.getPrice() * 1,
+			order1,
+			productVariation
+		);
+		orderRepository.save(order1);
+		orderItemRepository.save(orderItem1);
+
+		OrderPlaced order2 = new OrderPlaced(
+			"Via Roma 1",
+			user.getEmail(),
+			new Date(),
+			500.0,
+			false,
+			user
+		);
+		OrderItem orderItem2 = new OrderItem(
+			2,
+			productVariation.getPrice() * 2,
+			order2,
+			productVariation
+		);
+		orderRepository.save(order2);
+		orderItemRepository.save(orderItem2);
+
+		// Act
+		List<OrderItem> foundOrderItems = orderItemRepository.findByProductVariationId(productVariation.getId());
+
+		// Assert
+		assertThat(foundOrderItems).isNotNull();
+		assertThat(foundOrderItems.size()).isEqualTo(2);
+		assertThat(foundOrderItems).containsOnly(orderItem1, orderItem2);
+		assertThat(foundOrderItems.get(0).getProductVariation()).isEqualTo(productVariation);
+		assertThat(foundOrderItems.get(1).getProductVariation()).isEqualTo(productVariation);
+
+	}
 }

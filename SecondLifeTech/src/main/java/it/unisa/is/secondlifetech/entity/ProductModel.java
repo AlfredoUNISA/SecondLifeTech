@@ -34,14 +34,33 @@ public class ProductModel {
 	@OneToOne
 	private ImageFile imageFile;
 
+	/**
+	 * Aggiunge una nuova variante di prodotto a questo modello.
+	 *
+	 * @param variation la variante da aggiungere
+	 */
 	public void addVariation(ProductVariation variation) {
-		variations.add(variation);
+		this.variations.add(variation);
 		variation.setModel(this);
 	}
 
+	/**
+	 * Rimuove una variante di prodotto da questo modello.
+	 *
+	 * @param variation la variante da rimuovere
+	 */
 	public void removeVariation(ProductVariation variation) {
-		variations.remove(variation);
+		this.variations.remove(variation);
 		variation.setModel(null);
+	}
+
+	public void changeImage(ImageFile imageFile) {
+		this.imageFile = imageFile;
+		imageFile.setModel(this);
+	}
+
+	public void removeImage() {
+		this.imageFile = null;
 	}
 
 	public ProductModel(String name, String brand, String category) {
