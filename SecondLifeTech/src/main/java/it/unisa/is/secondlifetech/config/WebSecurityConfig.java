@@ -48,8 +48,8 @@ public class WebSecurityConfig {
 				.defaultSuccessUrl("/")
 				.permitAll()
 			).logout((logout) -> logout
-				//.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				//.logoutSuccessUrl("/logout-success")
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/logout-success")
 				.permitAll()
 			);
 		return http.build();

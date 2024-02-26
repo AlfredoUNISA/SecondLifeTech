@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.List;
@@ -32,6 +34,32 @@ public class LoginLogoutController {
         if (request.getUserPrincipal() != null)
             return "redirect:/";
         return "login";
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(HttpServletRequest request, Model model) {
+        if (request.getUserPrincipal() != null)
+            return "redirect:/";
+
+        User user = new User();
+        model.addAttribute("newUser", user);
+        model.addAttribute("user", null);
+        return "register";
+    }
+
+    @PostMapping("/register/save")
+    public String registration(@ModelAttribute("newUser") User user, Model model) {
+        User existing = userService.findUserByEmail(user.getEmail());
+
+        if (existing != null) {
+            model.addAttribute("error", "Email already exists");
+            model.addAttribute("user", user);
+            return "register";
+        }
+
+        user.setRole(UserRole.CLIENTE);
+        userService.createNewUser(user);
+        return "register-success";
     }
 
 }
