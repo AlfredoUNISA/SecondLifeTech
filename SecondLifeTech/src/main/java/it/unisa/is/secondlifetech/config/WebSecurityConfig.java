@@ -43,8 +43,8 @@ public class WebSecurityConfig {
 			).rememberMe((remember) -> remember
 				.rememberMeServices(rememberMeServices(userDetailsService))
 			).formLogin((form) -> form
-				//.loginPage("/login")
-				//.loginProcessingUrl("/login")
+				.loginPage("/login")
+				.loginProcessingUrl("/login")
 				.defaultSuccessUrl("/")
 				.permitAll()
 			).logout((logout) -> logout

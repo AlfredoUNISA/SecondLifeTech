@@ -40,25 +40,7 @@ public class TestingController {
 		this.orderService = orderService;
 	}
 
-	@GetMapping
-	public String index(Model model, HttpServletRequest request) {
-		Principal principal = request.getUserPrincipal();
-		List<User> users = userService.findUsersByRole(UserRole.CLIENTE);
-		List<ProductModel> productModels = productService.findAllModels();
 
-		model.addAttribute("users", users);
-		model.addAttribute("productModels", productModels);
-
-		if (principal != null) {
-			User user = userService.findUserByEmail(principal.getName());
-			model.addAttribute("principal", user.getFirstName() + " " + user.getLastName() +
-				" (" + UserRole.getRoleName(user.getRole()) + ")");
-		}
-		else
-			model.addAttribute("principal", "anonymous");
-
-		return "index";
-	}
 
 	@GetMapping("/create-user-test")
 	public String createUser(Model model) {

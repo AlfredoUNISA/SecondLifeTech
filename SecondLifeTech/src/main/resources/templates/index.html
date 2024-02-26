@@ -14,7 +14,10 @@
     </style>
 </head>
 <body>
-<h1>Index</h1>
+<h1>Index testing</h1>
+<hr>
+<h2>Basic testing</h2>
+<h3>Create</h3>
 <ul>
     <li>
         <a href="/create-user-test">Create User</a><br/>
@@ -23,13 +26,13 @@
         <a href="/create-product-model-test">Create Product Model</a><br/>
     </li>
     <li>
-        <a href="/create-product-variation-test">Create Product Variation</a><br/>
+        <a href="/view-product-models">View <span style="color: #69a8ff">Product Models</span></a><br/>
     </li>
+</ul>
+<h3>View, Delete and Update</h3>
+<ul>
     <li>
-        <a href="/view-product-variations">View products</a><br/>
-    </li>
-    <li>
-        View the cart of
+        View the <span style="color: #30ff30">cart</span> of
         <form method="get" role="form" th:action="@{/view-cart-test}">
             <select id="usersCartSelect" name="userId">
                 <th:block th:each="user : ${users}">
@@ -40,7 +43,7 @@
         </form>
     </li>
     <li>
-        View the orders of
+        View the <span style="color: yellow">orders</span> of
         <form method="get" role="form" th:action="@{/view-orders-test}">
             <select id="usersOrderSelect" name="userId">
                 <th:block th:each="user : ${users}">
@@ -51,7 +54,7 @@
         </form>
     </li>
     <li>
-        View the profile of
+        View the <span style="color: #ff3c3c">profile</span> of
         <form method="get" role="form" th:action="@{/view-user-test}">
             <select id="usersProfileSelect" name="userId">
                 <th:block th:each="user : ${users}">
@@ -60,6 +63,21 @@
             </select>
             <button type="submit">View Profile</button>
         </form>
+    </li>
+</ul>
+
+<hr>
+<h2>Auth testing</h2>
+<h3 th:text="'Principal: ' + ${principal}"></h3>
+<ul>
+    <li>
+        <a href="/cliente">Cliente</a><br/>
+    </li>
+    <li>
+        <a href="/gestore">Gestore</a><br/>
+    </li>
+    <li>
+        <a href="/logout">Logout</a><br/>
     </li>
 </ul>
 </body>
