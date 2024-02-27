@@ -6,7 +6,6 @@ import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -331,9 +330,9 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductModel aggiornato
 	 */
 	@Override
-	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, NoIdForModificationException {
+	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException {
 		if (model.getId() == null)
-			throw new NoIdForModificationException(ProductModel.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductModel");
 
 		// Copia dell'immagine originale in caso non sia stata modificata
 		ProductModel original = findModelById(model.getId());
@@ -355,9 +354,9 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
 	@Override
-	public ProductVariation updateVariation(ProductVariation productVariation) throws NoIdForModificationException {
+	public ProductVariation updateVariation(ProductVariation productVariation) {
 		if (productVariation.getId() == null)
-			throw new NoIdForModificationException(ProductVariation.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductVariation");
 
 		return productVariationRepository.save(productVariation);
 	}

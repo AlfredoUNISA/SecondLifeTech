@@ -4,7 +4,6 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -270,7 +269,7 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException, NoIdForModificationException {
+	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException {
 		// Arrange
 		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);

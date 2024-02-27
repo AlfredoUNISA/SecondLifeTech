@@ -3,8 +3,6 @@ package it.unisa.is.secondlifetech.service;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -107,7 +105,7 @@ public interface OrderService {
 	 * @param order l'oggetto OrderPlaced con le nuove informazioni da salvare
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
-	OrderPlaced updateOrder(OrderPlaced order) throws NoIdForModificationException;
+	OrderPlaced updateOrder(OrderPlaced order);
 
 	/**
 	 * Aggiorna le informazioni di un oggetto all'interno di un ordine nel database.
@@ -115,7 +113,7 @@ public interface OrderService {
 	 * @param orderItem l'oggetto OrderItem con le nuove informazioni da salvare
 	 * @return l'oggetto OrderItem aggiornato
 	 */
-	OrderItem updateOrderItem(OrderItem orderItem) throws NoIdForModificationException;
+	OrderItem updateOrderItem(OrderItem orderItem);
 
 	/**
 	 * Aggiorna lo stato di spedizione a "Spedito" di un ordine nel database.
@@ -123,7 +121,7 @@ public interface OrderService {
 	 * @param order l'oggetto OrderPlaced di cui aggiornare lo stato di spedizione
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
-	OrderPlaced setOrderAsShipped(OrderPlaced order) throws NoIdForModificationException;
+	OrderPlaced setOrderAsShipped(OrderPlaced order);
 
 
 	// ================================================================================================================

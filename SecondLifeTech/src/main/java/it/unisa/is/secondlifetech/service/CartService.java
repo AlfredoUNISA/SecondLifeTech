@@ -88,7 +88,7 @@ public interface CartService {
 	 * @param cart l'oggetto Cart con le nuove informazioni da salvare
 	 * @return l'oggetto Cart aggiornato
 	 */
-	Cart updateCart(Cart cart) throws NoIdForModificationException;
+	Cart updateCart(Cart cart);
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.

@@ -5,7 +5,6 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -147,7 +146,7 @@ public interface ProductService {
 	 * @param image        il file da aggiungere come immagine del modello
 	 * @return l'oggetto ProductModel aggiornato
 	 */
-	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, NoIdForModificationException;
+	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException;
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.
@@ -155,7 +154,7 @@ public interface ProductService {
 	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
-	ProductVariation updateVariation(ProductVariation productVariation) throws NoIdForModificationException;
+	ProductVariation updateVariation(ProductVariation productVariation);
 
 
 

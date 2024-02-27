@@ -3,7 +3,6 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
@@ -153,9 +152,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
 	@Override
-	public OrderPlaced updateOrder(OrderPlaced order) throws NoIdForModificationException {
+	public OrderPlaced updateOrder(OrderPlaced order) {
 		if (order.getId() == null)
-			throw new NoIdForModificationException(OrderPlaced.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe OrderPlaced");
 
 		return orderPlacedRepository.save(order);
 	}
@@ -167,17 +166,17 @@ public class OrderServiceImpl implements OrderService {
 	 * @return l'oggetto OrderItem aggiornato
 	 */
 	@Override
-	public OrderItem updateOrderItem(OrderItem orderItem) throws NoIdForModificationException {
+	public OrderItem updateOrderItem(OrderItem orderItem) {
 		if (orderItem.getId() == null)
-			throw new NoIdForModificationException(OrderItem.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe OrderItem");
 
 		return orderItemRepository.save(orderItem);
 	}
 
 	@Override
-	public OrderPlaced setOrderAsShipped(OrderPlaced order) throws NoIdForModificationException {
+	public OrderPlaced setOrderAsShipped(OrderPlaced order) {
 		if (order.getId() == null)
-			throw new NoIdForModificationException(OrderPlaced.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe OrderPlaced");
 
 		order.setShipped(true);
 		return orderPlacedRepository.save(order);

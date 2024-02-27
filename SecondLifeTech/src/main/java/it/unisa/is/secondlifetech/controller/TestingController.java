@@ -5,10 +5,7 @@ import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.exception.NoDevicesAvailableException;
-import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
-import it.unisa.is.secondlifetech.exception.NoPaymentMethodException;
-import it.unisa.is.secondlifetech.exception.NoShippingAddressException;
+import it.unisa.is.secondlifetech.exception.*;
 import it.unisa.is.secondlifetech.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +152,7 @@ public class TestingController {
                                     @RequestParam(value = "state", required = false) String state,
                                     @RequestParam("page") Optional<Integer> page,
                                     @RequestParam("size") Optional<Integer> size
-									) {
+									) throws ErrorInField {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(1);
 
@@ -216,12 +213,12 @@ public class TestingController {
 	public String createOrder(@RequestParam("cartId") UUID cartId,
 	                          @RequestParam("shippingAddressId") UUID shippingAddressId,
 	                          @RequestParam("paymentMethodId") UUID paymentMethodId
-							 ) throws NoShippingAddressException, NoPaymentMethodException, NoDevicesAvailableException, NoItemsForFinalizationException {
+							 ) throws NoShippingAddressException, NoPaymentMethodException, NoDevicesAvailableException, NoItemsForFinalizationException, PaymentFailedException {
 		Cart cart = cartService.findCartById(cartId);
 		ShippingAddress shippingAddress = userService.findShippingAddressById(shippingAddressId);
 		PaymentMethod paymentMethod = userService.findPaymentMethodById(paymentMethodId);
 
-		cartService.finalizeOrder(cart, shippingAddress, paymentMethod);
+		cartService.finalizeOrder(cart, shippingAddress, paymentMethod, true);
 
 		return "redirect:/view-orders-test?userId=" + cart.getUser().getId();
 	}

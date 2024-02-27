@@ -1,7 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
-import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -189,7 +188,7 @@ class OrderServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void OrderServiceImpl_UpdateOrder_WhenOrderIsGiven_ShouldUpdateOrder() throws NoIdForModificationException {
+	void OrderServiceImpl_UpdateOrder_WhenOrderIsGiven_ShouldUpdateOrder() {
 		// Arrange
 		when(orderPlacedRepository.save(any(OrderPlaced.class))).thenReturn(order);
 
@@ -202,7 +201,7 @@ class OrderServiceImplTests {
 	}
 
 	@Test
-	void OrderServiceImpl_UpdateOrderItem_WhenOrderItemIsGiven_ShouldUpdateOrderItem() throws NoIdForModificationException {
+	void OrderServiceImpl_UpdateOrderItem_WhenOrderItemIsGiven_ShouldUpdateOrderItem() {
 		// Arrange
 		when(orderItemRepository.save(any(OrderItem.class))).thenReturn(orderItem);
 

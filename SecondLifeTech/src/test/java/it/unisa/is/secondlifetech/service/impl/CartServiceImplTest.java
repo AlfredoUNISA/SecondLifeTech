@@ -119,14 +119,14 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void CartServiceImpl_finalizeOrder_WhenCartAndShippingAddressAreProvided_ShouldFinalizeOrder() throws NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, NoItemsForFinalizationException {
+	public void CartServiceImpl_finalizeOrder_WhenCartAndShippingAddressAreProvided_ShouldFinalizeOrder() throws NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, NoItemsForFinalizationException, PaymentFailedException {
 		// Arrange
 		when(productService.findVariationById(any(UUID.class))).thenReturn(productVariation);
 		when(orderService.createAndPlaceNewOrder(any(OrderPlaced.class))).thenReturn(new OrderPlaced());
 
 		// Act
 		cartService.addToCart(cart, productVariation.getId(), 5);
-		cartService.finalizeOrder(cart, shippingAddress, paymentMethod);
+		cartService.finalizeOrder(cart, shippingAddress, paymentMethod, true);
 
 		// Assert
 		verify(orderService, times(1)).createAndPlaceNewOrder(any(OrderPlaced.class));
@@ -192,7 +192,7 @@ public class CartServiceImplTest {
 	// ================================================================================================================
 
 	@Test
-	public void CartServiceImpl_updateCart_WhenCartIsProvided_ShouldReturnUpdatedCart() throws NoIdForModificationException {
+	public void CartServiceImpl_updateCart_WhenCartIsProvided_ShouldReturnUpdatedCart() {
 		// Arrange
 		Cart updatedCart = new Cart();
 		updatedCart.setId(cart.getId());

@@ -221,9 +221,9 @@ public class CartServiceImpl implements CartService {
 	 * @throws IllegalArgumentException se l'ID del carrello non è specificato
 	 */
 	@Override
-	public Cart updateCart(Cart cart) throws NoIdForModificationException {
+	public Cart updateCart(Cart cart) {
 		if (cart.getId() == null)
-			throw new NoIdForModificationException(Cart.class);
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe Cart");
 		return cartRepository.save(cart);
 	}
 
