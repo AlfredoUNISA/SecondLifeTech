@@ -1,7 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
 import it.unisa.is.secondlifetech.repository.UserRepository;
@@ -13,11 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +44,8 @@ class UserServiceImplTests {
 
 	@Mock
 	private OrderService orderService;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
 	@InjectMocks
 	private UserServiceImpl userService;
@@ -49,13 +55,18 @@ class UserServiceImplTests {
 	private PaymentMethod paymentMethod;
 	private ShippingAddress shippingAddress;
 	private OrderPlaced order;
-
+	private UserFilters filters;
+	private Pageable pageable;
 
 	@BeforeEach
 	void setup() {
 		user = new User();
 		user.setId(UUID.randomUUID());
 		user.setRole(UserRole.CLIENTE);
+		user.setEmail("email@email.com");
+		user.setPassword("password");
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
 
 		shippingAddress = new ShippingAddress();
 		shippingAddress.setId(UUID.randomUUID());
@@ -72,6 +83,9 @@ class UserServiceImplTests {
 		user.addShippingAddress(shippingAddress);
 		user.getOrders().add(order);
 		order.setUser(user);
+
+		filters = new UserFilters();
+		pageable = PageRequest.of(0, 10);
 	}
 
 	// ================================================================================================================
@@ -79,9 +93,10 @@ class UserServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void UserServiceImpl_createNewUser_ShouldCreateNewUser() {
+	void UserServiceImpl_createNewUser_ShouldCreateNewUser() throws MissingRequiredField, EmailAlreadyInUseException {
 		// Arrange
 		user.setId(null);
+		when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
 		// Act
@@ -95,6 +110,7 @@ class UserServiceImplTests {
 	@Test
 	void UserServiceImpl_createNewShippingAddress_ShouldCreateNewShippingAddress() {
 		// Arrange
+		shippingAddress.setId(null);
 		when(shippingAddressRepository.save(any(ShippingAddress.class))).thenReturn(shippingAddress);
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
@@ -243,6 +259,78 @@ class UserServiceImplTests {
 		// Assert
 		verify(paymentMethodRepository).delete(paymentMethod);
 		verify(userRepository).save(user);
+	}
+
+	@Test
+	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnEmptyPage_WhenNoUsersMatchFilters() {
+		// Arrange
+		when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
+		// Act
+		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+
+		// Assert
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnPageOfUsers_WhenUsersMatchFilters() {
+		// Arrange
+		User user1 = new User();
+		user1.setEmail("test1@example.com");
+		user1.setRole(UserRole.CLIENTE);
+
+		User user2 = new User();
+		user2.setEmail("test2@example.com");
+		user2.setRole(UserRole.GESTORE_PRODOTTI);
+
+		filters.setEmail("test1@example.com");
+		filters.setRole(UserRole.CLIENTE);
+
+		when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
+
+		// Act
+		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+
+		// Assert
+		assertThat(result.getContent()).containsOnly(user1);
+	}
+
+	@Test
+	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnFirstPage_WhenMoreUsersThanPageSize() {
+		// Arrange
+		List<User> users = new ArrayList<>();
+		for (int i = 0; i < 15; i++) {
+			User user = new User();
+			user.setEmail("test" + i + "@example.com");
+			users.add(user);
+		}
+		when(userRepository.findAll()).thenReturn(users);
+
+		// Act
+		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+
+		// Assert
+		assertThat(result.getContent()).hasSize(10); // 10 è la dimensione della pagina
+	}
+
+	@Test
+	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnSubsequentPage_WhenPageNumberIsGreaterThanZero() {
+		// Arrange
+		List<User> users = new ArrayList<>();
+		for (int i = 0; i < 15; i++) {
+			User user = new User();
+			user.setEmail("test" + i + "@example.com");
+			users.add(user);
+		}
+		when(userRepository.findAll()).thenReturn(users);
+		pageable = PageRequest.of(1, 10);
+
+		// Act
+		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+
+		// Assert
+		assertThat(result.getContent()).hasSize(5);
 	}
 
 }

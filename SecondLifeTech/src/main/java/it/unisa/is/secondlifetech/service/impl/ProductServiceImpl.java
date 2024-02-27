@@ -257,7 +257,7 @@ public class ProductServiceImpl implements ProductService {
 	/**
 	 * Esegue il filtraggio dei modelli di prodotto.
 	 */
-	private static List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
+	private List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
 		if (filters.hasError())
 			throw new ErrorInField("I filtri specificati non sono validi");
 

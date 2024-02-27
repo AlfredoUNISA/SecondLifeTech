@@ -1,9 +1,11 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,13 +99,20 @@ public interface UserService {
 	 */
 	List<User> findAllUsers();
 
+	/**
+	 * Ottiene tutti gli utenti dal database con un sistema a Paginazione.
+	 *
+	 * @return una pagina di oggetti User
+	 */
+	Page<User> findAllUsers(Pageable pageable);
 
 
 	// ================================================================================================================
 	// =============== UPDATE ==========================================================================================
+
 	// ================================================================================================================
 
-	Page<User> findAllUsers(Pageable pageable);
+	Page<User> findAllUsersWithFilters(UserFilters filters, Pageable pageable) throws ErrorInField;
 
 	/**
 	 * Aggiorna le informazioni di un utente nel database.

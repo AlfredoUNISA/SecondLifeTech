@@ -1,8 +1,10 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
@@ -13,11 +15,15 @@ import it.unisa.is.secondlifetech.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -198,11 +204,85 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
+	/**
+	 * Ottiene tutti gli utenti dal database con un sistema a Paginazione.
+	 *
+	 * @return una pagina di oggetti User
+	 */
 	@Override
 	public Page<User> findAllUsers(Pageable pageable) {
 		return userRepository.findAll(pageable);
 	}
 
+
+	/**
+	 * Ottiene tutti gli utenti dal database con un sistema a Paginazione e con filtri.
+	 *
+	 * @return una pagina di oggetti User
+	 */
+	@Override
+	public Page<User> findAllUsersWithFilters(UserFilters filters, Pageable pageable) {
+		List<User> allUsers = userRepository.findAll();
+		List<User> filteredUsers = doFilter(filters, allUsers);
+
+		// Paginazione
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+
+		List<User> paginatedList;
+
+		if (filteredUsers.size() < startItem) {
+			paginatedList = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, filteredUsers.size());
+			paginatedList = filteredUsers.subList(startItem, toIndex);
+		}
+
+		return new PageImpl<>(
+			paginatedList,
+			PageRequest.of(currentPage, pageSize),
+			filteredUsers.size()
+		);
+	}
+
+	/**
+	 * Esegue il filtraggio dei modelli di prodotto.
+	 */
+	private List<User> doFilter(UserFilters filters, List<User> allUsers) {
+		List<User> filteredUsers = new ArrayList<>();
+
+		if (filters.getEmail() != null && !filters.getEmail().isEmpty()) {
+			// Filtra per email
+			User foundUser = allUsers.stream()
+				.filter(user -> user.getEmail().equalsIgnoreCase(filters.getEmail()))
+				.findFirst()
+				.orElse(null);
+
+			if (filters.getRole() != null
+				&& !filters.getRole().isEmpty()
+				&& foundUser != null
+				&& foundUser.getRole().equalsIgnoreCase(filters.getRole())
+			   )
+				filteredUsers.add(foundUser);
+
+			else
+				filteredUsers.add(foundUser);
+		}
+		else if (filters.getRole() != null && !filters.getRole().isEmpty()) {
+			// Filtra per ruolo
+			filteredUsers.addAll(allUsers.stream()
+				.filter(user -> user.getRole().equalsIgnoreCase(filters.getRole()))
+				.toList()
+			);
+		}
+		else {
+			// Nessun filtro
+			return allUsers;
+		}
+
+		return filteredUsers;
+	}
 
 
 	// ================================================================================================================

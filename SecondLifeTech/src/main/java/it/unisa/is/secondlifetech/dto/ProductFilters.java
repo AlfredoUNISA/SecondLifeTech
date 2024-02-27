@@ -118,10 +118,9 @@ public class ProductFilters {
 		if (maxPrice != MAX_PRICE)
 			queryString.append("maxPrice=").append(maxPrice).append("&");
 
-		// Remove the last "&"
-		if (!queryString.isEmpty()) {
+		// Rimuovi l'ultimo "&"
+		if (!queryString.isEmpty())
 			queryString.setLength(queryString.length() - 1);
-		}
 
 		return queryString.toString();
 	}
