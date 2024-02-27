@@ -7,6 +7,8 @@ import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -85,8 +87,19 @@ public class OrderServiceImpl implements OrderService {
 	 * @return una lista di oggetti OrderPlaced corrispondenti all'email specificata
 	 */
 	@Override
-	public List<OrderPlaced> findOrderByEmail(String email) {
+	public List<OrderPlaced> findOrdersByEmail(String email) {
 		return orderPlacedRepository.findByEmail(email);
+	}
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite l'email dell'utente con un sistema a paginazione.
+	 *
+	 * @param email l'email dell'utente di cui cercare gli ordini
+	 * @return una pagina di oggetti OrderPlaced corrispondenti all'email specificata
+	 */
+	@Override
+	public Page<OrderPlaced> findOrdersByEmailPaginated(String email, Pageable pageable) {
+		return orderPlacedRepository.findByEmail(email, pageable);
 	}
 
 	/**
@@ -96,8 +109,21 @@ public class OrderServiceImpl implements OrderService {
 	 * @return una lista di oggetti OrderPlaced corrispondenti allo stato di spedizione specificato
 	 */
 	@Override
-	public List<OrderPlaced> findOrderByShipped(boolean shipped) {
+	public List<OrderPlaced> findOrdersByShipped(boolean shipped) {
 		return orderPlacedRepository.findByShipped(shipped);
+	}
+
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite lo stato della spedizione dell'ordine con un sistema a paginazione.
+	 *
+	 * @param shipped la data dell'ordine di cui cercare gli ordini
+	 * @param pageable il sistema di paginazione
+	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
+	 */
+	@Override
+	public Page<OrderPlaced> findOrdersByShippedPaginated(boolean shipped, Pageable pageable) {
+		return orderPlacedRepository.findByShipped(shipped, pageable);
 	}
 
 	/**
@@ -107,8 +133,20 @@ public class OrderServiceImpl implements OrderService {
 	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
 	 */
 	@Override
-	public List<OrderPlaced> findOrderByDate(Date orderDate) {
+	public List<OrderPlaced> findOrdersByDate(Date orderDate) {
 		return orderPlacedRepository.findByDate(orderDate);
+	}
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite la data dell'ordine con un sistema a paginazione.
+	 *
+	 * @param orderDate la data dell'ordine di cui cercare gli ordini
+	 * @param pageable il sistema di paginazione
+	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
+	 */
+	@Override
+	public Page<OrderPlaced> findOrdersByDatePaginated(Date orderDate, Pageable pageable) {
+		return orderPlacedRepository.findByDate(orderDate, pageable);
 	}
 
 	/**
@@ -142,6 +180,19 @@ public class OrderServiceImpl implements OrderService {
 		return orderItemRepository.findAll();
 	}
 
+	/**
+	 * Ottiene tutti gli ordini dal database con un sistema a Paginazione.
+	 *
+	 * @return una pagina di oggetti OrderPlaced
+	 */
+	@Override
+	public Page<OrderPlaced> findAllOrdersPaginated(Pageable pageable) {
+		return orderPlacedRepository.findAll(pageable);
+	}
+
+	public Page<OrderPlaced> findAllOrdersPaginatedWithFilters(String email, Date date, Boolean shipped, Pageable pageable) {
+		return null;
+	}
 
 
 	// ================================================================================================================

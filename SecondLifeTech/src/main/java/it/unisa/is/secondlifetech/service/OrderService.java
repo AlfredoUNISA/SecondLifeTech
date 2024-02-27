@@ -3,6 +3,9 @@ package it.unisa.is.secondlifetech.service;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +56,15 @@ public interface OrderService {
 	 * @param email l'email dell'utente di cui cercare gli ordini
 	 * @return una lista di oggetti OrderPlaced corrispondenti all'email specificata
 	 */
-	List<OrderPlaced> findOrderByEmail(String email);
+	List<OrderPlaced> findOrdersByEmail(String email);
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite l'email dell'utente con un sistema a Paginazione.
+	 *
+	 * @param email l'email dell'utente di cui cercare gli ordini
+	 * @return una pagina di oggetti OrderPlaced corrispondenti all'email specificata
+	 */
+	Page<OrderPlaced> findOrdersByEmailPaginated(String email, Pageable pageable);
 
 	/**
 	 * Ottiene tutti gli ordini dal database tramite lo stato di spedizione.
@@ -61,7 +72,17 @@ public interface OrderService {
 	 * @param shipped lo stato di spedizione di cui cercare gli ordini
 	 * @return una lista di oggetti OrderPlaced corrispondenti allo stato di spedizione specificato
 	 */
-	List<OrderPlaced> findOrderByShipped(boolean shipped);
+	List<OrderPlaced> findOrdersByShipped(boolean shipped);
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite lo stato della spedizione dell'ordine con un sistema a paginazione.
+	 *
+	 * @param shipped la data dell'ordine di cui cercare gli ordini
+	 * @param pageable il sistema di paginazione
+	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
+	 */
+	Page<OrderPlaced> findOrdersByShippedPaginated(boolean shipped, Pageable pageable);
+
 
 	/**
 	 * Ottiene tutti gli ordini dal database tramite la data dell'ordine.
@@ -69,7 +90,16 @@ public interface OrderService {
 	 * @param orderDate la data dell'ordine di cui cercare gli ordini
 	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
 	 */
-	List<OrderPlaced> findOrderByDate(Date orderDate);
+	List<OrderPlaced> findOrdersByDate(Date orderDate);
+
+	/**
+	 * Ottiene tutti gli ordini dal database tramite la data dell'ordine con un sistema a paginazione.
+	 *
+	 * @param orderDate la data dell'ordine di cui cercare gli ordini
+	 * @param pageable il sistema di paginazione
+	 * @return una lista di oggetti OrderPlaced corrispondenti alla data specificata
+	 */
+	Page<OrderPlaced> findOrdersByDatePaginated(Date orderDate, Pageable pageable);
 
 	/**
 	 * Ottiene tutti gli oggetti all'interno di un ordine dal database tramite il prodotto.
@@ -87,6 +117,13 @@ public interface OrderService {
 	List<OrderPlaced> findAllOrders();
 
 	/**
+	 * Ottiene tutti gli ordini dal database con un sistema a Paginazione.
+	 *
+	 * @return una pagina di oggetti OrderPlaced
+	 */
+	Page<OrderPlaced> findAllOrdersPaginated(Pageable pageable);
+
+	/**
 	 * Ottiene tutti gli oggetti all'interno di un ordine dal database.
 	 *
 	 * @return una lista di oggetti OrderItem
@@ -94,9 +131,9 @@ public interface OrderService {
 	List<OrderItem> findAllOrderItems();
 
 
-
 	// ================================================================================================================
 	// =============== UPDATE ==========================================================================================
+
 	// ================================================================================================================
 
 	/**

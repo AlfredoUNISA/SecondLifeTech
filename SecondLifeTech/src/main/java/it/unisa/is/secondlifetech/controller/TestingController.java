@@ -7,7 +7,6 @@ import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.*;
 import it.unisa.is.secondlifetech.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -163,13 +161,13 @@ public class TestingController {
 
 		if (filters.isDefault()) {
 			// Nessun filtro
-			productPage = productService.findAllModels(
+			productPage = productService.findAllModelsPaginated(
 				PageRequest.of(currentPage - 1, pageSize)
 			);
 			model.addAttribute("productPage", productPage);
 		} else {
 			// Applicare i filtri
-			productPage = productService.findAllModelsWithFilters(
+			productPage = productService.findAllModelsPaginatedWithFilters(
 				filters,
 				PageRequest.of(currentPage - 1, pageSize)
 			);

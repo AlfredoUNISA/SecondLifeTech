@@ -267,7 +267,7 @@ class UserServiceImplTests {
 		when(userRepository.findAll()).thenReturn(Collections.emptyList());
 
 		// Act
-		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
 
 		// Assert
 		assertThat(result).isEmpty();
@@ -290,7 +290,7 @@ class UserServiceImplTests {
 		when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
 
 		// Act
-		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
 
 		// Assert
 		assertThat(result.getContent()).containsOnly(user1);
@@ -308,7 +308,7 @@ class UserServiceImplTests {
 		when(userRepository.findAll()).thenReturn(users);
 
 		// Act
-		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
 
 		// Assert
 		assertThat(result.getContent()).hasSize(10); // 10 è la dimensione della pagina
@@ -327,7 +327,7 @@ class UserServiceImplTests {
 		pageable = PageRequest.of(1, 10);
 
 		// Act
-		Page<User> result = userService.findAllUsersWithFilters(filters, pageable);
+		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
 
 		// Assert
 		assertThat(result.getContent()).hasSize(5);

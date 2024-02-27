@@ -117,14 +117,14 @@ public interface ProductService {
 	 *
 	 * @return una lista di oggetti ProductModel
 	 */
-	Page<ProductModel> findAllModels(Pageable pageable);
+	Page<ProductModel> findAllModelsPaginated(Pageable pageable);
 
 	/**
 	 * Ottiene tutti i modelli di prodotto dal database con un sistema a Paginazione e con filtri.
 	 *
 	 * @return una lista di oggetti ProductModel
 	 */
-	Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField;
+	Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField;
 
 	/**
 	 * Ottiene tutte le varianti di prodotto dal database.

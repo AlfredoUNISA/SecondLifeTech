@@ -109,7 +109,7 @@ class OrderServiceImplTests {
 		when(orderPlacedRepository.findByEmail(email)).thenReturn(Collections.singletonList(order));
 
 		// Act
-		List<OrderPlaced> result = orderService.findOrderByEmail(email);
+		List<OrderPlaced> result = orderService.findOrdersByEmail(email);
 
 		// Assert
 		assertThat(result).contains(order);
@@ -123,7 +123,7 @@ class OrderServiceImplTests {
 		when(orderPlacedRepository.findByShipped(shipped)).thenReturn(Collections.singletonList(order));
 
 		// Act
-		List<OrderPlaced> result = orderService.findOrderByShipped(shipped);
+		List<OrderPlaced> result = orderService.findOrdersByShipped(shipped);
 
 		// Assert
 		assertThat(result).contains(order);
@@ -137,7 +137,7 @@ class OrderServiceImplTests {
 		when(orderPlacedRepository.findByDate(date)).thenReturn(Collections.singletonList(order));
 
 		// Act
-		List<OrderPlaced> result = orderService.findOrderByDate(date);
+		List<OrderPlaced> result = orderService.findOrdersByDate(date);
 
 		// Assert
 		assertThat(result).contains(order);

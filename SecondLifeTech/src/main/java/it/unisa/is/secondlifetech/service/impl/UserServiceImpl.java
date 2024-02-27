@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
 	 * @return una pagina di oggetti User
 	 */
 	@Override
-	public Page<User> findAllUsers(Pageable pageable) {
+	public Page<User> findAllUsersPaginated(Pageable pageable) {
 		return userRepository.findAll(pageable);
 	}
 
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
 	 * @return una pagina di oggetti User
 	 */
 	@Override
-	public Page<User> findAllUsersWithFilters(UserFilters filters, Pageable pageable) {
+	public Page<User> findAllUsersPaginatedWithFilters(UserFilters filters, Pageable pageable) {
 		List<User> allUsers = userRepository.findAll();
 		List<User> filteredUsers = doFilter(filters, allUsers);
 

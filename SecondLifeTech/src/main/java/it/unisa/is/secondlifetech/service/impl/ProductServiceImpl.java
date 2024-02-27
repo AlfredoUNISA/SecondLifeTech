@@ -218,7 +218,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return una lista di oggetti ProductModel
 	 */
 	@Override
-	public Page<ProductModel> findAllModels(Pageable pageable) {
+	public Page<ProductModel> findAllModelsPaginated(Pageable pageable) {
 		return productModelRepository.findAll(pageable);
 	}
 
@@ -229,7 +229,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return una lista di oggetti ProductModel
 	 */
 	@Override
-	public Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField {
+	public Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField {
 		List<ProductModel> allModels = productModelRepository.findAll();
 		List<ProductModel> filteredModels = doFilter(filters, allModels);
 
