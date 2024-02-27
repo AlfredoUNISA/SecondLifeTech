@@ -219,12 +219,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public Page<ProductModel> findAllModels(Pageable pageable) {
-		int pageSize = pageable.getPageSize();
-		int currentPage = pageable.getPageNumber();
-		int startItem = currentPage * pageSize;
-		List<ProductModel> products = productModelRepository.findAll();
-
-		return getPaginatedResults(pageSize, currentPage, startItem, products);
+		return productModelRepository.findAll(pageable);
 	}
 
 	/**
@@ -238,39 +233,30 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductModel> allModels = productModelRepository.findAll();
 		List<ProductModel> filteredModels = doFilter(filters, allModels);
 
+		// Paginazione
 		int pageSize = pageable.getPageSize();
 		int currentPage = pageable.getPageNumber();
 		int startItem = currentPage * pageSize;
 
-		return getPaginatedResults(pageSize, currentPage, startItem, filteredModels);
-	}
-
-	/**
-	 * Ottiene tutte le varianti di prodotto dal database.
-	 *
-	 * @param pageSize    la dimensione della pagina
-	 * @param currentPage l'indice della pagina da ottenere
-	 * @param startItem   l'indice del primo elemento da includere nella pagina
-	 * @param products    la lista di modelli di prodotto da paginare
-	 * @return una lista di oggetti ProductModel
-	 */
-	private Page<ProductModel> getPaginatedResults(int pageSize, int currentPage, int startItem, List<ProductModel> products) {
 		List<ProductModel> paginatedList;
 
-		if (products.size() < startItem) {
+		if (filteredModels.size() < startItem) {
 			paginatedList = Collections.emptyList();
 		} else {
-			int toIndex = Math.min(startItem + pageSize, products.size());
-			paginatedList = products.subList(startItem, toIndex);
+			int toIndex = Math.min(startItem + pageSize, filteredModels.size());
+			paginatedList = filteredModels.subList(startItem, toIndex);
 		}
 
 		return new PageImpl<>(
 			paginatedList,
 			PageRequest.of(currentPage, pageSize),
-			products.size()
+			filteredModels.size()
 		);
 	}
 
+	/**
+	 * Esegue il filtraggio dei modelli di prodotto.
+	 */
 	private static List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
 		if (filters.hasError())
 			throw new ErrorInField("I filtri specificati non sono validi");

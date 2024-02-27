@@ -41,8 +41,6 @@ public class TestingController {
 		this.orderService = orderService;
 	}
 
-
-
 	@GetMapping("/create-user-test")
 	public String createUser(Model model) {
 		User user = new User();
@@ -52,7 +50,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/create-user-test")
-	public String createUserPOST(@ModelAttribute("user") User user) {
+	public String createUserPOST(@ModelAttribute("user") User user) throws MissingRequiredField, EmailAlreadyInUseException {
 		user.setRole(UserRole.getRole(user.getRole()));
 		userService.createNewUser(user);
 		return "redirect:/";

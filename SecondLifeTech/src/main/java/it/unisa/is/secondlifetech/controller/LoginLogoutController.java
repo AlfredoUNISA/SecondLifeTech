@@ -2,6 +2,8 @@ package it.unisa.is.secondlifetech.controller;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
@@ -48,7 +50,7 @@ public class LoginLogoutController {
     }
 
     @PostMapping("/register/save")
-    public String registration(@ModelAttribute("newUser") User user, Model model) {
+    public String registration(@ModelAttribute("newUser") User user, Model model) throws MissingRequiredField, EmailAlreadyInUseException {
         User existing = userService.findUserByEmail(user.getEmail());
 
         if (existing != null) {
@@ -58,6 +60,7 @@ public class LoginLogoutController {
         }
 
         user.setRole(UserRole.CLIENTE);
+        // TODO: gestire eccezioni
         userService.createNewUser(user);
         return "register-success";
     }

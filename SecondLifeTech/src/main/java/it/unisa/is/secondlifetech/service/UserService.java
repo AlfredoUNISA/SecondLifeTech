@@ -5,6 +5,8 @@ import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -100,6 +102,8 @@ public interface UserService {
 	// ================================================================================================================
 	// =============== UPDATE ==========================================================================================
 	// ================================================================================================================
+
+	Page<User> findAllUsers(Pageable pageable);
 
 	/**
 	 * Aggiorna le informazioni di un utente nel database.

@@ -12,6 +12,8 @@ import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -194,6 +196,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAllUsers() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public Page<User> findAllUsers(Pageable pageable) {
+		return userRepository.findAll(pageable);
 	}
 
 
