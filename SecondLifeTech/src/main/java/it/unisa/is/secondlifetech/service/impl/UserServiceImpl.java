@@ -2,6 +2,8 @@ package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
 import it.unisa.is.secondlifetech.repository.UserRepository;
@@ -53,11 +55,16 @@ public class UserServiceImpl implements UserService {
 	 * @return l'oggetto User salvato
 	 */
 	@Override
-	public User createNewUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+	public User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField {
 		if (user.getId() != null)
-			throw new RuntimeException("Usare la funzione di aggiornamento per modificare un utente esistente");
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un utente esistente");
+
+		checkForUserMissingFields(user);
+
+		if (userRepository.existsByEmail(user.getEmail()))
+			throw new EmailAlreadyInUseException(user.getEmail());
+
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 		if (user.getRole().equals(UserRole.CLIENTE)) {
 			Cart cart = new Cart();
@@ -70,6 +77,16 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+	private static void checkForUserMissingFields(User user) throws MissingRequiredField {
+		if (user.getFirstName().isEmpty()
+				||user.getLastName().isEmpty()
+				||user.getEmail().isEmpty()
+				||user.getPassword().isEmpty()
+				||user.getRole().isEmpty()) {
+			throw new MissingRequiredField();
+		}
+	}
+
 	/**
 	 * Aggiunge un indirizzo di spedizione a un utente.
 	 *
@@ -78,6 +95,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) {
+		if (shippingAddress.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un indirizzo esistente");
+
 		user.addShippingAddress(shippingAddress);
 
 		ShippingAddress toReturn = shippingAddressRepository.save(shippingAddress);
@@ -94,6 +114,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) {
+		if (paymentMethod.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un metodo di pagamento esistente");
+
 		user.addPaymentMethod(paymentMethod);
 
 		PaymentMethod toReturn = paymentMethodRepository.save(paymentMethod);

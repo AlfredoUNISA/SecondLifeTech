@@ -42,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
 		if (order == null)
 			return null;
 
+		if (order.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un ordine esistente");
+
 		OrderPlaced toReturn = orderPlacedRepository.save(order);
 		orderItemRepository.saveAll(order.getItems());
 		return toReturn;

@@ -45,9 +45,13 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public Cart createNewCart(Cart cart) {
-		if (cart != null)
-			return cartRepository.save(cart);
-		return null;
+		if (cart == null)
+			return null;
+
+		if (cart.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un carrello esistente");
+
+		return cartRepository.save(cart);
 	}
 
 	/**

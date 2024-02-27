@@ -59,6 +59,9 @@ public class ProductServiceImpl implements ProductService {
 		if (productModel == null)
 			return null;
 
+		if (productModel.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un modello esistente");
+
 		return productModelRepository.save(productModel);
 	}
 
@@ -72,6 +75,9 @@ public class ProductServiceImpl implements ProductService {
 	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) {
 		if (variation == null)
 			return null;
+
+		if (variation.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare una variante esistente");
 
 		model.addVariation(variation);
 
