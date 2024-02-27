@@ -1,6 +1,8 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
+import it.unisa.is.secondlifetech.exception.NoItemsInStockException;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.service.CartService;
@@ -57,7 +59,7 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	@Transactional
-	public void addToCart(Cart cart, UUID productVariationId, int quantity) {
+	public void addToCart(Cart cart, UUID productVariationId, int quantity) throws NoItemsInStockException {
 		// Se il prodotto è già presente nel carrello, aggiorna la quantità
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
@@ -88,9 +90,9 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	@Transactional
-	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress) {
+	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress) throws NoItemsForFinalizationException, NoItemsInStockException {
 		if (cart.getItems().isEmpty()) {
-			throw new RuntimeException("Un ordine non deve essere vuoto");
+			throw new NoItemsForFinalizationException();
 		}
 
 		User user = cart.getUser();
@@ -204,7 +206,7 @@ public class CartServiceImpl implements CartService {
 	 * @param newQuantity        la nuova quantità del prodotto
 	 */
 	@Override
-	public void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) {
+	public void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) throws NoItemsInStockException {
 		// Cerca il prodotto nel carrello
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
@@ -280,18 +282,16 @@ public class CartServiceImpl implements CartService {
 	/**
 	 * Verifica che la quantità richiesta sia disponibile nell'inventario.
 	 */
-	private static void verifyQuantityInStock(int requestedQuantity, ProductVariation productVariation) {
+	private static void verifyQuantityInStock(int requestedQuantity, ProductVariation productVariation) throws NoItemsInStockException {
 		if (productVariation.getQuantityInStock() < requestedQuantity) {
-			throw new RuntimeException("Quantità non disponibile nell'inventario " +
-				"(disponibili: " + productVariation.getQuantityInStock() +
-				", richiesti: " + requestedQuantity + ")");
+			throw new NoItemsInStockException(requestedQuantity, productVariation);
 		}
 	}
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
 	 */
-	private void editQuantity(CartItem cartItem, int newQuantity) {
+	private void editQuantity(CartItem cartItem, int newQuantity) throws NoItemsInStockException {
 		ProductVariation productVariation = cartItem.getProductVariation();
 
 		verifyQuantityInStock(newQuantity, productVariation);
