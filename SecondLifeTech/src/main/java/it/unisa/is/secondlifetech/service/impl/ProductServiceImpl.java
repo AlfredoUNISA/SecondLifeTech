@@ -5,6 +5,8 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -55,6 +57,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductModel createNewModel(ProductModel productModel) {
+		if (productModel == null)
+			return null;
+
 		return productModelRepository.save(productModel);
 	}
 
@@ -66,6 +71,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) {
+		if (variation == null)
+			return null;
+
 		model.addVariation(variation);
 
 		ProductVariation toReturn = productVariationRepository.save(variation);
@@ -221,7 +229,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return una lista di oggetti ProductModel
 	 */
 	@Override
-	public Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable) {
+	public Page<ProductModel> findAllModelsWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField {
 		List<ProductModel> allModels = productModelRepository.findAll();
 		List<ProductModel> filteredModels = doFilter(filters, allModels);
 
@@ -232,6 +240,15 @@ public class ProductServiceImpl implements ProductService {
 		return getPaginatedResults(pageSize, currentPage, startItem, filteredModels);
 	}
 
+	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @param pageSize    la dimensione della pagina
+	 * @param currentPage l'indice della pagina da ottenere
+	 * @param startItem   l'indice del primo elemento da includere nella pagina
+	 * @param products    la lista di modelli di prodotto da paginare
+	 * @return una lista di oggetti ProductModel
+	 */
 	private Page<ProductModel> getPaginatedResults(int pageSize, int currentPage, int startItem, List<ProductModel> products) {
 		List<ProductModel> paginatedList;
 
@@ -249,7 +266,10 @@ public class ProductServiceImpl implements ProductService {
 		);
 	}
 
-	private static List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) {
+	private static List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
+		if (filters.hasError())
+			throw new ErrorInField("I filtri specificati non sono validi");
+
 		List<ProductModel> filteredModels = new ArrayList<>();
 
 		for (ProductModel model : allModels) {
@@ -311,9 +331,9 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductModel aggiornato
 	 */
 	@Override
-	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException {
+	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, NoIdForModificationException {
 		if (model.getId() == null)
-			throw new IllegalArgumentException("ID del modello non specificato nella modifica");
+			throw new NoIdForModificationException(ProductModel.class);
 
 		// Copia dell'immagine originale in caso non sia stata modificata
 		ProductModel original = findModelById(model.getId());
@@ -335,9 +355,9 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductVariation aggiornato
 	 */
 	@Override
-	public ProductVariation updateVariation(ProductVariation productVariation) {
+	public ProductVariation updateVariation(ProductVariation productVariation) throws NoIdForModificationException {
 		if (productVariation.getId() == null)
-			throw new IllegalArgumentException("ID della variazione non specificato nella modifica");
+			throw new NoIdForModificationException(ProductVariation.class);
 
 		return productVariationRepository.save(productVariation);
 	}

@@ -143,4 +143,12 @@ public class ProductFilters {
 			&& minPrice == MIN_PRICE
 			&& maxPrice == MAX_PRICE;
 	}
+
+	public boolean hasError() {
+		return minYear > maxYear
+			|| minRam > maxRam
+			|| minDisplaySize > maxDisplaySize
+			|| minStorageSize > maxStorageSize
+			|| minPrice > maxPrice;
+	}
 }
