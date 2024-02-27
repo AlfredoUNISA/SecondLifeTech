@@ -5,6 +5,10 @@ import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.exception.NoDevicesAvailableException;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
+import it.unisa.is.secondlifetech.exception.NoPaymentMethodException;
+import it.unisa.is.secondlifetech.exception.NoShippingAddressException;
 import it.unisa.is.secondlifetech.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +94,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/add-to-cart-test")
-	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
+	public String addToCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) throws NoDevicesAvailableException {
 		User user = userService.findUserById(userId);
 		cartService.addToCart(user.getCart(), productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;
@@ -104,7 +108,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/update-cart-test")
-	public String updateCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) {
+	public String updateCartPOST(@RequestParam("userId") UUID userId, @RequestParam("productVariationId") UUID productVariationId, @RequestParam("quantity") int quantity) throws NoDevicesAvailableException {
 		User user = userService.findUserById(userId);
 		cartService.editProductQuantityInCart(user.getCart(), productVariationId, quantity);
 		return "redirect:/view-cart-test?userId=" + userId;
@@ -209,11 +213,15 @@ public class TestingController {
 	}
 
 	@PostMapping("/finalize-order-test")
-	public String createOrder(@RequestParam("cartId") UUID cartId, @RequestParam("shippingAddressId") UUID shippingAddressId) {
+	public String createOrder(@RequestParam("cartId") UUID cartId,
+	                          @RequestParam("shippingAddressId") UUID shippingAddressId,
+	                          @RequestParam("paymentMethodId") UUID paymentMethodId
+							 ) throws NoShippingAddressException, NoPaymentMethodException, NoDevicesAvailableException, NoItemsForFinalizationException {
 		Cart cart = cartService.findCartById(cartId);
 		ShippingAddress shippingAddress = userService.findShippingAddressById(shippingAddressId);
+		PaymentMethod paymentMethod = userService.findPaymentMethodById(paymentMethodId);
 
-		cartService.finalizeOrder(cart, shippingAddress);
+		cartService.finalizeOrder(cart, shippingAddress, paymentMethod);
 
 		return "redirect:/view-orders-test?userId=" + cart.getUser().getId();
 	}

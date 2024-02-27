@@ -1,6 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.exception.*;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
@@ -44,6 +45,7 @@ public class CartServiceImplTest {
 	private CartItem cartItem;
 	private ProductVariation productVariation;
 	private ShippingAddress shippingAddress;
+	private PaymentMethod paymentMethod;
 
 	@BeforeEach
 	public void setUp() {
@@ -70,6 +72,14 @@ public class CartServiceImplTest {
 		shippingAddress.setStreet("Street");
 		shippingAddress.setZipCode("12345");
 		shippingAddress.setUser(user);
+
+		paymentMethod = new PaymentMethod();
+		paymentMethod.setId(UUID.randomUUID());
+		paymentMethod.setCardNumber("1234567890123456");
+		paymentMethod.setCardHolderName("Card Holder");
+		paymentMethod.setExpirationDate("12/23");
+		paymentMethod.setCvv("123");
+		paymentMethod.setUser(user);
 	}
 
 
@@ -92,7 +102,7 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void CartServiceImpl_addToCart_WhenProductVariationIdAndQuantityAreProvided_ShouldAddProductToCart() {
+	public void CartServiceImpl_addToCart_WhenProductVariationIdAndQuantityAreProvided_ShouldAddProductToCart() throws NoDevicesAvailableException {
 		// Arrange
 		UUID productVariationId = productVariation.getId();
 		int quantity = 5;
@@ -109,14 +119,14 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void CartServiceImpl_finalizeOrder_WhenCartAndShippingAddressAreProvided_ShouldFinalizeOrder() {
+	public void CartServiceImpl_finalizeOrder_WhenCartAndShippingAddressAreProvided_ShouldFinalizeOrder() throws NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, NoItemsForFinalizationException {
 		// Arrange
 		when(productService.findVariationById(any(UUID.class))).thenReturn(productVariation);
 		when(orderService.createAndPlaceNewOrder(any(OrderPlaced.class))).thenReturn(new OrderPlaced());
 
 		// Act
 		cartService.addToCart(cart, productVariation.getId(), 5);
-		cartService.finalizeOrder(cart, shippingAddress);
+		cartService.finalizeOrder(cart, shippingAddress, paymentMethod);
 
 		// Assert
 		verify(orderService, times(1)).createAndPlaceNewOrder(any(OrderPlaced.class));
@@ -182,7 +192,7 @@ public class CartServiceImplTest {
 	// ================================================================================================================
 
 	@Test
-	public void CartServiceImpl_updateCart_WhenCartIsProvided_ShouldReturnUpdatedCart() {
+	public void CartServiceImpl_updateCart_WhenCartIsProvided_ShouldReturnUpdatedCart() throws NoIdForModificationException {
 		// Arrange
 		Cart updatedCart = new Cart();
 		updatedCart.setId(cart.getId());
@@ -199,7 +209,7 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void CartServiceImpl_editProductQuantityInCart_WhenProductVariationIdAndNewQuantityAreProvided_ShouldUpdateProductQuantityInCart() {
+	public void CartServiceImpl_editProductQuantityInCart_WhenProductVariationIdAndNewQuantityAreProvided_ShouldUpdateProductQuantityInCart() throws NoDevicesAvailableException {
 		// Arrange
 		UUID productVariationId = productVariation.getId();
 		int newQuantity = 7;

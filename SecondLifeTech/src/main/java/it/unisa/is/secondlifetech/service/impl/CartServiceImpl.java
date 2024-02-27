@@ -1,8 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
-import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
-import it.unisa.is.secondlifetech.exception.NoItemsInStockException;
+import it.unisa.is.secondlifetech.exception.*;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
 import it.unisa.is.secondlifetech.service.CartService;
@@ -46,7 +45,9 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public Cart createNewCart(Cart cart) {
-		return cartRepository.save(cart);
+		if (cart != null)
+			return cartRepository.save(cart);
+		return null;
 	}
 
 	/**
@@ -56,10 +57,15 @@ public class CartServiceImpl implements CartService {
 	 * @param cart               il carrello dell'utente in cui aggiungere il prodotto
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
 	 * @param quantity           la quantità del prodotto da aggiungere
+	 * @throws NoDevicesAvailableException  se la quantità richiesta non è disponibile nell'inventario
+	 * @throws IllegalArgumentException se la variante di prodotto specificata non esiste
 	 */
 	@Override
 	@Transactional
-	public void addToCart(Cart cart, UUID productVariationId, int quantity) throws NoItemsInStockException {
+	public void addToCart(Cart cart, UUID productVariationId, int quantity) throws NoDevicesAvailableException, IllegalArgumentException {
+		if (quantity < 1)
+			throw new IllegalArgumentException("La quantità deve essere maggiore di 1");
+
 		// Se il prodotto è già presente nel carrello, aggiorna la quantità
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
@@ -70,12 +76,17 @@ public class CartServiceImpl implements CartService {
 
 		ProductVariation productVariation = productService.findVariationById(productVariationId);
 
+		if (productVariation == null)
+			throw new IllegalArgumentException("Variante di prodotto " + productVariationId + " non trovata");
+
 		verifyQuantityInStock(quantity, productVariation);
 
+		// Calcola il subtotale
 		double subTotal = productVariation.getPrice() * quantity;
 
+		// Aggiungi il prodotto al carrello e aggiorna il totale
 		CartItem cartItem = new CartItem(productVariation, quantity, subTotal);
-		cart.addItem(cartItem); // Aggiorna anche il totale del carrello
+		cart.addItem(cartItem);
 
 		// Salva le modifiche
 		cartItemRepository.save(cartItem);
@@ -87,16 +98,29 @@ public class CartServiceImpl implements CartService {
 	 *
 	 * @param cart il carrello con gli oggetti da inserire nell'ordine
 	 * @param shippingAddress l'indirizzo di spedizione dell'ordine
+	 * @throws NoItemsForFinalizationException se il carrello è vuoto
+	 * @throws NoDevicesAvailableException se la quantità richiesta non è disponibile nell'inventario
+	 * @throws NoShippingAddressException se l'indirizzo di spedizione non è specificato
 	 */
 	@Override
 	@Transactional
-	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress) throws NoItemsForFinalizationException, NoItemsInStockException {
-		if (cart.getItems().isEmpty()) {
-			throw new NoItemsForFinalizationException();
-		}
+	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress, PaymentMethod paymentMethod) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException {
+		// Verifica che il carrello non sia vuoto
+		if (cart.getItems().isEmpty())
+			throw new NoItemsForFinalizationException(cart.getId());
+
+		// Verifica che l'indirizzo di spedizione sia specificato
+		if (shippingAddress == null)
+			throw new NoShippingAddressException();
+
+		// Verifica che il metodo di pagamento sia specificato
+		// PaymentMethod non viene usato
+		if (paymentMethod == null)
+			throw new NoPaymentMethodException();
 
 		User user = cart.getUser();
 
+		// Crea un nuovo ordine
 		OrderPlaced order = new OrderPlaced(
 			shippingAddress.fullAddress(),
 			user.getEmail(),
@@ -190,11 +214,12 @@ public class CartServiceImpl implements CartService {
 	 *
 	 * @param cart l'oggetto Cart con le nuove informazioni da salvare
 	 * @return l'oggetto Cart aggiornato
+	 * @throws IllegalArgumentException se l'ID del carrello non è specificato
 	 */
 	@Override
-	public Cart updateCart(Cart cart) {
+	public Cart updateCart(Cart cart) throws NoIdForModificationException {
 		if (cart.getId() == null)
-			throw new IllegalArgumentException("ID del carrello non specificato nella modifica");
+			throw new NoIdForModificationException(Cart.class);
 		return cartRepository.save(cart);
 	}
 
@@ -206,7 +231,7 @@ public class CartServiceImpl implements CartService {
 	 * @param newQuantity        la nuova quantità del prodotto
 	 */
 	@Override
-	public void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) throws NoItemsInStockException {
+	public void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) throws NoDevicesAvailableException {
 		// Cerca il prodotto nel carrello
 		for (CartItem cartItem : cart.getItems()) {
 			if (cartItem.getProductVariation().getId().equals(productVariationId)) {
@@ -230,9 +255,10 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public void deleteCart(Cart cart) {
 		List<CartItem> items = cart.getItems();
-		if (!items.isEmpty()) {
+
+		if (!items.isEmpty())
 			cartItemRepository.deleteAll(items);
-		}
+
 		cartRepository.delete(cart);
 	}
 
@@ -253,7 +279,7 @@ public class CartServiceImpl implements CartService {
 				// Salva le modifiche
 				cartItemRepository.delete(cartItem);
 				cartRepository.save(cart);
-				break;
+				return;
 			}
 		}
 	}
@@ -281,17 +307,28 @@ public class CartServiceImpl implements CartService {
 
 	/**
 	 * Verifica che la quantità richiesta sia disponibile nell'inventario.
+	 *
+	 * @param requestedQuantity la quantità richiesta
+	 * @param productVariation  la variante di prodotto da cui prelevare la quantità
+	 * @throws NoDevicesAvailableException se la quantità richiesta non è disponibile nell'inventario
 	 */
-	private static void verifyQuantityInStock(int requestedQuantity, ProductVariation productVariation) throws NoItemsInStockException {
+	private static void verifyQuantityInStock(int requestedQuantity, ProductVariation productVariation) throws NoDevicesAvailableException {
 		if (productVariation.getQuantityInStock() < requestedQuantity) {
-			throw new NoItemsInStockException(requestedQuantity, productVariation);
+			throw new NoDevicesAvailableException(requestedQuantity, productVariation);
 		}
 	}
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
+	 *
+	 * @param cartItem    l'oggetto CartItem da modificare
+	 * @param newQuantity la nuova quantità del prodotto
+	 * @throws NoDevicesAvailableException se la quantità richiesta non è disponibile nell'inventario
 	 */
-	private void editQuantity(CartItem cartItem, int newQuantity) throws NoItemsInStockException {
+	private void editQuantity(CartItem cartItem, int newQuantity) throws NoDevicesAvailableException {
+		if (newQuantity < 1)
+			throw new IllegalArgumentException("La quantità deve essere maggiore di 1");
+
 		ProductVariation productVariation = cartItem.getProductVariation();
 
 		verifyQuantityInStock(newQuantity, productVariation);

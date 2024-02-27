@@ -1,11 +1,7 @@
 package it.unisa.is.secondlifetech.service;
 
-import it.unisa.is.secondlifetech.entity.Cart;
-import it.unisa.is.secondlifetech.entity.CartItem;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.ShippingAddress;
-import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
-import it.unisa.is.secondlifetech.exception.NoItemsInStockException;
+import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.exception.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +28,7 @@ public interface CartService {
 	 * @param productVariationId l'ID della variante di prodotto da aggiungere
 	 * @param quantity           la quantità del prodotto da aggiungere
 	 */
-	void addToCart(Cart cart, UUID productVariationId, int quantity) throws NoItemsInStockException;
+	void addToCart(Cart cart, UUID productVariationId, int quantity) throws NoDevicesAvailableException;
 
 	/**
 	 * Finalizza un ordine.
@@ -40,7 +36,7 @@ public interface CartService {
 	 * @param cart il carrello con gli oggetti da inserire nell'ordine
 	 * @param shippingAddress l'indirizzo di spedizione dell'ordine
 	 */
-	void finalizeOrder(Cart cart, ShippingAddress shippingAddress) throws NoItemsForFinalizationException, NoItemsInStockException;
+	void finalizeOrder(Cart cart, ShippingAddress shippingAddress, PaymentMethod paymentMethod) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException;
 
 
 	// ================================================================================================================
@@ -90,7 +86,7 @@ public interface CartService {
 	 * @param cart l'oggetto Cart con le nuove informazioni da salvare
 	 * @return l'oggetto Cart aggiornato
 	 */
-	Cart updateCart(Cart cart);
+	Cart updateCart(Cart cart) throws NoIdForModificationException;
 
 	/**
 	 * Modifica la quantità di un prodotto nel carrello.
@@ -99,7 +95,7 @@ public interface CartService {
 	 * @param productVariationId l'ID della variante di prodotto da modificare
 	 * @param newQuantity        la nuova quantità del prodotto
 	 */
-	void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) throws NoItemsInStockException;
+	void editProductQuantityInCart(Cart cart, UUID productVariationId, int newQuantity) throws NoDevicesAvailableException;
 
 	// ================================================================================================================
 	// =============== DELETE ==========================================================================================
