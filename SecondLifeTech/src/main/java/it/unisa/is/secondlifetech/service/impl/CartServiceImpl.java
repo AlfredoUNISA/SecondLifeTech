@@ -104,7 +104,8 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	@Transactional
-	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress, PaymentMethod paymentMethod) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException {
+	public void finalizeOrder(Cart cart, ShippingAddress shippingAddress,
+	                          PaymentMethod paymentMethod, boolean paymentSuccessfulMock) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, PaymentFailedException {
 		// Verifica che il carrello non sia vuoto
 		if (cart.getItems().isEmpty())
 			throw new NoItemsForFinalizationException(cart.getId());
@@ -148,6 +149,9 @@ public class CartServiceImpl implements CartService {
 
 			order.addItem(orderItem);
 		}
+
+		if (!paymentSuccessfulMock)
+			throw new PaymentFailedException();
 
 		// Salva l'ordine nel database
 		orderService.createAndPlaceNewOrder(order);

@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.exception.NoIdForModificationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
@@ -39,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public OrderPlaced createAndPlaceNewOrder(OrderPlaced order) throws RuntimeException {
+		if (order == null)
+			return null;
+
 		OrderPlaced toReturn = orderPlacedRepository.save(order);
 		orderItemRepository.saveAll(order.getItems());
 		return toReturn;
@@ -149,9 +153,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return l'oggetto OrderPlaced aggiornato
 	 */
 	@Override
-	public OrderPlaced updateOrder(OrderPlaced order) {
+	public OrderPlaced updateOrder(OrderPlaced order) throws NoIdForModificationException {
 		if (order.getId() == null)
-			throw new IllegalArgumentException("ID dell'ordine non specificato nella modifica");
+			throw new NoIdForModificationException(OrderPlaced.class);
 
 		return orderPlacedRepository.save(order);
 	}
@@ -163,17 +167,17 @@ public class OrderServiceImpl implements OrderService {
 	 * @return l'oggetto OrderItem aggiornato
 	 */
 	@Override
-	public OrderItem updateOrderItem(OrderItem orderItem) {
+	public OrderItem updateOrderItem(OrderItem orderItem) throws NoIdForModificationException {
 		if (orderItem.getId() == null)
-			throw new IllegalArgumentException("ID dell'oggetto dell'ordine non specificato nella modifica");
+			throw new NoIdForModificationException(OrderItem.class);
 
 		return orderItemRepository.save(orderItem);
 	}
 
 	@Override
-	public OrderPlaced setOrderAsShipped(OrderPlaced order) {
+	public OrderPlaced setOrderAsShipped(OrderPlaced order) throws NoIdForModificationException {
 		if (order.getId() == null)
-			throw new IllegalArgumentException("ID dell'ordine non specificato nella modifica");
+			throw new NoIdForModificationException(OrderPlaced.class);
 
 		order.setShipped(true);
 		return orderPlacedRepository.save(order);

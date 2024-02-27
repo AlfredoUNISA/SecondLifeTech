@@ -2,6 +2,7 @@ package it.unisa.is.secondlifetech.service;
 
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.exception.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,8 @@ public interface CartService {
 	 * @param cart il carrello con gli oggetti da inserire nell'ordine
 	 * @param shippingAddress l'indirizzo di spedizione dell'ordine
 	 */
-	void finalizeOrder(Cart cart, ShippingAddress shippingAddress, PaymentMethod paymentMethod) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException;
+	void finalizeOrder(Cart cart, ShippingAddress shippingAddress,
+	                   PaymentMethod paymentMethod, boolean paymentSuccessfulMock) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, PaymentFailedException;
 
 
 	// ================================================================================================================
