@@ -56,7 +56,7 @@ public class Index {
         else
             model.addAttribute("principal", "anonymous");
 
-        return "index";
+        return "/testing/index";
     }
 
 }

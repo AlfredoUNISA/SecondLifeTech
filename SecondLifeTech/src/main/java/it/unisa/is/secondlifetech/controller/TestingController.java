@@ -44,7 +44,7 @@ public class TestingController {
 		User user = new User();
 		model.addAttribute("user", user);
 		model.addAttribute("roles", UserRole.ALL_ROLES);
-		return "create-user-test";
+		return "/testing/create-user-test";
 	}
 
 	@PostMapping("/create-user-test")
@@ -59,7 +59,7 @@ public class TestingController {
 		ProductModel productModel = new ProductModel();
 		model.addAttribute("productModel", productModel);
 		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
-		return "create-product-model-test";
+		return "/testing/create-product-model-test";
 	}
 
 	@PostMapping("/create-product-model-test")
@@ -76,7 +76,7 @@ public class TestingController {
 		model.addAttribute("productVariation", productVariation);
 		model.addAttribute("states", ProductState.ALL_STATES);
 		model.addAttribute("productModels", productService.findAllModels());
-		return "create-product-variation-test";
+		return "/testing/create-product-variation-test";
 	}
 
 	@PostMapping("/create-product-variation-test")
@@ -111,7 +111,7 @@ public class TestingController {
 	public String viewCart(@RequestParam("userId") UUID userId, Model model) {
 		User user = userService.findUserById(userId);
 		model.addAttribute("user", user);
-		return "view-cart-test";
+		return "/testing/view-cart-test";
 	}
 
 	@GetMapping("/update-user-test")
@@ -119,7 +119,7 @@ public class TestingController {
 		User user = userService.findUserById(userId);
 		model.addAttribute("user", user);
 		model.addAttribute("roles", UserRole.ALL_ROLES);
-		return "update-user-test";
+		return "/testing/update-user-test";
 	}
 
 	@PostMapping("/update-user-test")
@@ -186,7 +186,7 @@ public class TestingController {
 		model.addAttribute("filters", filters);
 		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
 		model.addAttribute("states", ProductState.ALL_STATES);
-		return "view-product-models-test";
+		return "/testing/view-product-models-test";
 	}
 
 	@PostMapping("/view-product-models")
@@ -202,7 +202,7 @@ public class TestingController {
 		model.addAttribute("users", userService.findUsersByRole(UserRole.CLIENTE));
 		model.addAttribute("model", productModel);
 		model.addAttribute("variations", productModel.getVariations());
-		return "view-product-variations-test";
+		return "/testing/view-product-variations-test";
 	}
 
 	@PostMapping("/finalize-order-test")
@@ -224,7 +224,7 @@ public class TestingController {
 		User user = userService.findUserById(userId);
 		model.addAttribute("userName", user.getFirstName() + " " + user.getLastName());
 		model.addAttribute("orders", user.getOrders());
-		return "view-orders-test";
+		return "/testing/view-orders-test";
 	}
 
 	@GetMapping("/view-user-test")
@@ -237,7 +237,7 @@ public class TestingController {
 		model.addAttribute("newShippingAddress", new ShippingAddress());
 		model.addAttribute("paymentMethods", user.getPaymentMethods());
 		model.addAttribute("newPaymentMethod", new PaymentMethod());
-		return "view-user-test";
+		return "/testing/view-user-test";
 	}
 
 	@PostMapping("/delete-user-test")
@@ -315,7 +315,7 @@ public class TestingController {
 		ProductVariation variation = productService.findVariationById(productVariationId);
 		model.addAttribute("states", ProductState.ALL_STATES);
 		model.addAttribute("variation", variation);
-		return "update-variation-test";
+		return "/testing/update-variation-test";
 	}
 
 	@PostMapping("/update-variation-test")
@@ -329,7 +329,7 @@ public class TestingController {
 		ProductModel modelToUpdate = productService.findModelById(productModelId);
 		model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
 		model.addAttribute("model", modelToUpdate);
-		return "update-model-test";
+		return "/testing/update-model-test";
 	}
 
 	@PostMapping("/update-model-test")
@@ -347,12 +347,12 @@ public class TestingController {
 
 	@GetMapping("/cliente")
 	public String cliente() {
-		return "cliente-test";
+		return "/testing/cliente-test";
 	}
 
 	@GetMapping("/gestore")
 	public String gestore() {
-		return "gestore-test";
+		return "/testing/gestore-test";
 	}
 
 
