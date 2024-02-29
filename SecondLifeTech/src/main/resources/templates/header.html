@@ -49,14 +49,20 @@
                         La mia Dashboard
                     </a>
                 </li>
+
                 <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null}">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/logout">
                         Logout
                     </a>
                 </li>
+                <li class="nav-item mx-0 mx-lg-1" th:if="${user==null || user.getRole().contains('CLIENTE')}">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/my-cart">
+                        Il mio Carrello
+                    </a>
+                </li>
             </ul>
             <!-- Tasti a destra della navbar -->
-            <form class="d-flex" role="search" action="/products">
+            <form class="d-flex" role="search" action="/products" th:if="${user==null || user.getRole().contains('CLIENTE')}">
                 <input class="form-control me-2" name="name" type="search" placeholder="Cerca il prodotto..."
                        aria-label="Search">
                 <button class="btn bg-success" type="submit">
