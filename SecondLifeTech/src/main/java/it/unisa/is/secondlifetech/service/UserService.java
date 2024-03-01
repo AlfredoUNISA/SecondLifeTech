@@ -5,7 +5,9 @@ import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ public interface UserService {
 	 * @param user l'oggetto User da creare
 	 * @return l'oggetto User creato
 	 */
-	User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField;
+	User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField, ErrorInField;
 
 	/**
 	 * Crea e aggiunge un nuovo indirizzo di spedizione a un utente.

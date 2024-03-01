@@ -5,7 +5,10 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -21,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -55,15 +55,16 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductModel creato
 	 */
 	@Override
-	public ProductModel createNewModel(ProductModel productModel) {
+	public ProductModel createNewModel(ProductModel productModel) throws ErrorInField, MissingRequiredField {
 		if (productModel == null)
 			return null;
 
-		if (productModel.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un modello esistente");
+		checkProductModelValues(productModel);
 
 		return productModelRepository.save(productModel);
 	}
+
+
 
 	/**
 	 * Aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
@@ -72,12 +73,11 @@ public class ProductServiceImpl implements ProductService {
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
 	@Override
-	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) {
+	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField {
 		if (variation == null)
 			return null;
 
-		if (variation.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare una variante esistente");
+		checkProductVariationValues(model, variation);
 
 		model.addVariation(variation);
 
@@ -255,6 +255,207 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	/**
+	 * Ottiene tutte le varianti di prodotto dal database.
+	 *
+	 * @return una lista di oggetti ProductVariation
+	 */
+	@Override
+	public List<ProductVariation> findAllVariations() {
+		return productVariationRepository.findAll();
+	}
+
+
+	// ================================================================================================================
+	// =============== UPDATE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Aggiorna le informazioni di un modello di prodotto nel database.
+	 *
+	 * @param model l'oggetto ProductModel con le nuove informazioni da salvare
+	 * @param image        il file da aggiungere come immagine del modello
+	 * @return l'oggetto ProductModel aggiornato
+	 */
+	@Override
+	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInField, MissingRequiredField {
+		if (model.getId() == null)
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductModel");
+
+		checkProductModelValues(model);
+
+		// Copia dell'immagine originale in caso non sia stata modificata
+		ProductModel original = findModelById(model.getId());
+		model.setImageFile(original.getImageFile());
+
+		// Se è stata specificata una nuova immagine, aggiorna l'immagine
+		if(image != null && !image.isEmpty()) {
+			changeImageModel(model, image);
+			return model; // Il modello viene salvato in changeImageModel
+		}
+
+		return productModelRepository.save(model);
+	}
+
+	/**
+	 * Aggiorna le informazioni di una variante di prodotto nel database.
+	 *
+	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
+	 * @return l'oggetto ProductVariation aggiornato
+	 */
+	@Override
+	public ProductVariation updateVariation(ProductVariation productVariation) {
+		if (productVariation.getId() == null)
+			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductVariation");
+
+		return productVariationRepository.save(productVariation);
+	}
+
+
+	// ================================================================================================================
+	// =============== DELETE ==========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Elimina un modello di prodotto e le sue variazioni dal database.
+	 *
+	 * @param model l'oggetto ProductModel da eliminare
+	 */
+	@Override
+	public void deleteModel(ProductModel model) {
+		checkProductModel(model);
+
+		if (model.getImageFile() != null)
+			deleteImage(model.getImageFile());
+
+		List<ProductVariation> variations = model.getVariations();
+
+		// Copia della lista per evitare ConcurrentModificationException
+		for (ProductVariation variation : new ArrayList<>(variations))
+			deleteVariation(variation);
+
+		productModelRepository.delete(model);
+	}
+
+	/**
+	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
+	 *
+	 * @param variation l'oggetto ProductVariation da rimuovere
+	 */
+	@Override
+	public void deleteVariation(ProductVariation variation) {
+		checkProductVariation(variation);
+
+		ProductModel model = variation.getModel();
+
+		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
+		for (OrderItem item : orderService.findOrderItemsByProductVariation(variation)) {
+			// Informazioni Modello
+			item.setModelName(model.getName());
+			item.setBrand(model.getBrand());
+			item.setCategory(model.getCategory());
+
+			// Informazioni Variante
+			item.setColor(variation.getColor());
+			item.setDisplaySize(variation.getDisplaySize());
+			item.setStorageSize(variation.getStorageSize());
+			item.setRam(variation.getRam());
+			item.setState(variation.getState());
+			item.setYear(variation.getYear());
+
+			// Salva
+			item.setProductVariation(null);
+			orderItemRepository.save(item);
+		}
+
+		model.removeVariation(variation);
+		productVariationRepository.delete(variation);
+		productModelRepository.save(model);
+	}
+
+	/**
+	 * Elimina un'immagine dal database.
+	 *
+	 * @param image l'oggetto ImageFile da eliminare
+	 */
+	@Override
+	public void deleteImage(ImageFile image) {
+		image.getModel().removeImage();
+		productModelRepository.save(image.getModel());
+		imageFileRepository.delete(image);
+	}
+
+	// ================================================================================================================
+	// =============== OTHER ===========================================================================================
+	// ================================================================================================================
+
+	private static void checkProductModel(ProductModel productModel) {
+		if (productModel == null)
+			throw new IllegalArgumentException("Il modello specificato non è valido");
+
+		if (productModel.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un modello esistente");
+	}
+
+	private static void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
+		checkProductModel(productModel);
+
+		if (productModel.getName().isEmpty()
+			|| productModel.getBrand().isEmpty()
+			|| productModel.getCategory().isEmpty()){
+			throw new MissingRequiredField();
+		}
+
+		if (productModel.getName().length() < ProductFilters.MIN_STRING_LENGTH || productModel.getName().length() > ProductFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il nome del modello deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (productModel.getBrand().length() < ProductFilters.MIN_STRING_LENGTH || productModel.getBrand().length() > ProductFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il nome del brand deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (!List.of(ProductCategory.ALL_CATEGORIES).contains(productModel.getCategory()))
+			throw new ErrorInField("La categoria specificata non è valida");
+	}
+
+	private static void checkProductVariation(ProductVariation productVariation) {
+		if (productVariation == null)
+			throw new IllegalArgumentException("La variante specificata non è valida");
+
+		if (productVariation.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare una variante esistente");
+	}
+
+	private static void checkProductVariationValues(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField {
+		checkProductVariation(variation);
+
+		if (variation.getState().isEmpty() || variation.getColor().isEmpty()) {
+			throw new MissingRequiredField();
+		}
+
+		if (variation.getPrice() < ProductFilters.MIN_PRICE || variation.getPrice() > ProductFilters.MAX_PRICE)
+			throw new ErrorInField("Il prezzo deve essere compreso tra " + ProductFilters.MIN_PRICE + " e " + ProductFilters.MAX_PRICE);
+
+		if (variation.getYear() < ProductFilters.MIN_YEAR || variation.getYear() > ProductFilters.MAX_YEAR)
+			throw new ErrorInField("L'anno deve essere compreso tra " + ProductFilters.MIN_YEAR + " e " + ProductFilters.MAX_YEAR);
+
+		if (variation.getRam() < ProductFilters.MIN_RAM || variation.getRam() > ProductFilters.MAX_RAM)
+			throw new ErrorInField("La RAM deve essere compresa tra " + ProductFilters.MIN_RAM + " e " + ProductFilters.MAX_RAM);
+
+		if (variation.getDisplaySize() < ProductFilters.MIN_DISPLAY_SIZE || variation.getDisplaySize() > ProductFilters.MAX_DISPLAY_SIZE)
+			throw new ErrorInField("La dimensione dello schermo deve essere compresa tra " + ProductFilters.MIN_DISPLAY_SIZE + " e " + ProductFilters.MAX_DISPLAY_SIZE);
+
+		if (variation.getStorageSize() < ProductFilters.MIN_STORAGE_SIZE || variation.getStorageSize() > ProductFilters.MAX_STORAGE_SIZE)
+			throw new ErrorInField("La dimensione dello storage deve essere compresa tra " + ProductFilters.MIN_STORAGE_SIZE + " e " + ProductFilters.MAX_STORAGE_SIZE);
+
+		if (variation.getColor().length() < ProductFilters.MIN_STRING_LENGTH || variation.getColor().length() > ProductFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il colore deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (!List.of(ProductState.ALL_STATES).contains(variation.getState()))
+			throw new ErrorInField("Lo stato specificato non è valido");
+
+		if (model == null)
+			throw new ErrorInField("Il modello specificato non è valido");
+	}
+
+	/**
 	 * Esegue il filtraggio dei modelli di prodotto.
 	 */
 	private List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
@@ -297,129 +498,5 @@ public class ProductServiceImpl implements ProductService {
 				filteredModels.add(model);
 		}
 		return filteredModels;
-	}
-
-	/**
-	 * Ottiene tutte le varianti di prodotto dal database.
-	 *
-	 * @return una lista di oggetti ProductVariation
-	 */
-	@Override
-	public List<ProductVariation> findAllVariations() {
-		return productVariationRepository.findAll();
-	}
-
-
-	// ================================================================================================================
-	// =============== UPDATE ==========================================================================================
-	// ================================================================================================================
-
-	/**
-	 * Aggiorna le informazioni di un modello di prodotto nel database.
-	 *
-	 * @param model l'oggetto ProductModel con le nuove informazioni da salvare
-	 * @param image        il file da aggiungere come immagine del modello
-	 * @return l'oggetto ProductModel aggiornato
-	 */
-	@Override
-	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException {
-		if (model.getId() == null)
-			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductModel");
-
-		// Copia dell'immagine originale in caso non sia stata modificata
-		ProductModel original = findModelById(model.getId());
-		model.setImageFile(original.getImageFile());
-
-		// Se è stata specificata una nuova immagine, aggiorna l'immagine
-		if(image != null && !image.isEmpty()) {
-			changeImageModel(model, image);
-			return model; // Il modello viene salvato in changeImageModel
-		}
-
-		return productModelRepository.save(model);
-	}
-
-	/**
-	 * Aggiorna le informazioni di una variante di prodotto nel database.
-	 *
-	 * @param productVariation l'oggetto ProductVariation con le nuove informazioni da salvare
-	 * @return l'oggetto ProductVariation aggiornato
-	 */
-	@Override
-	public ProductVariation updateVariation(ProductVariation productVariation) {
-		if (productVariation.getId() == null)
-			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductVariation");
-
-		return productVariationRepository.save(productVariation);
-	}
-
-
-	// ================================================================================================================
-	// =============== DELETE ==========================================================================================
-	// ================================================================================================================
-
-	/**
-	 * Elimina un modello di prodotto e le sue variazioni dal database.
-	 *
-	 * @param model l'oggetto ProductModel da eliminare
-	 */
-	@Override
-	public void deleteModel(ProductModel model) {
-		if (model.getImageFile() != null)
-			deleteImage(model.getImageFile());
-
-		List<ProductVariation> variations = model.getVariations();
-
-		// Copia della lista per evitare ConcurrentModificationException
-		for (ProductVariation variation : new ArrayList<>(variations))
-			deleteVariation(variation);
-
-		productModelRepository.delete(model);
-	}
-
-	/**
-	 * Rimuove una variante di prodotto da un modello di prodotto nel database.
-	 *
-	 * @param variation l'oggetto ProductVariation da rimuovere
-	 */
-	@Override
-	public void deleteVariation(ProductVariation variation) {
-		ProductModel model = variation.getModel();
-
-		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
-		for (OrderItem item : orderService.findOrderItemsByProductVariation(variation)) {
-			// Informazioni Modello
-			item.setModelName(model.getName());
-			item.setBrand(model.getBrand());
-			item.setCategory(model.getCategory());
-
-			// Informazioni Variante
-			item.setColor(variation.getColor());
-			item.setDisplaySize(variation.getDisplaySize());
-			item.setStorageSize(variation.getStorageSize());
-			item.setRam(variation.getRam());
-			item.setState(variation.getState());
-			item.setYear(variation.getYear());
-
-			// Salva
-			item.setProductVariation(null);
-			orderItemRepository.save(item);
-		}
-
-		model.removeVariation(variation);
-		productVariationRepository.delete(variation);
-		productModelRepository.save(model);
-	}
-
-	/**
-	 * Elimina un'immagine dal database.
-	 *
-	 * @param image l'oggetto ImageFile da eliminare
-	 */
-	@Override
-	public void deleteImage(ImageFile image) {
-		image.getModel().removeImage();
-		productModelRepository.save(image.getModel());
-		imageFileRepository.delete(image);
 	}
 }

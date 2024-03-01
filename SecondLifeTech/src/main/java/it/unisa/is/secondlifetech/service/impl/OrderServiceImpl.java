@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import it.unisa.is.secondlifetech.service.OrderService;
@@ -209,6 +210,7 @@ public class OrderServiceImpl implements OrderService {
 	public OrderPlaced updateOrder(OrderPlaced order) {
 		if (order.getId() == null)
 			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe OrderPlaced");
+
 
 		return orderPlacedRepository.save(order);
 	}

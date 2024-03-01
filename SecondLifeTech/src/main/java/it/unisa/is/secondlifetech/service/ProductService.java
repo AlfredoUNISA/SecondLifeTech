@@ -5,6 +5,7 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public interface ProductService {
 	 * @param productModel l'oggetto ProductModel da creare
 	 * @return l'oggetto ProductModel creato
 	 */
-	ProductModel createNewModel(ProductModel productModel);
+	ProductModel createNewModel(ProductModel productModel) throws ErrorInField, MissingRequiredField;
 
 	/**
 	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
@@ -33,7 +34,7 @@ public interface ProductService {
 	 * @param model     il modello di prodotto a cui aggiungere la variante
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
-	ProductVariation createNewVariation(ProductModel model, ProductVariation variation);
+	ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField;
 
 	/**
 	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
@@ -146,7 +147,7 @@ public interface ProductService {
 	 * @param image        il file da aggiungere come immagine del modello
 	 * @return l'oggetto ProductModel aggiornato
 	 */
-	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException;
+	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInField, MissingRequiredField;
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.

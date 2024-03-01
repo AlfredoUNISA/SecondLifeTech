@@ -4,6 +4,7 @@ import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
@@ -93,7 +94,7 @@ class UserServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void UserServiceImpl_createNewUser_ShouldCreateNewUser() throws MissingRequiredField, EmailAlreadyInUseException {
+	void UserServiceImpl_createNewUser_ShouldCreateNewUser() throws MissingRequiredField, EmailAlreadyInUseException, ErrorInField {
 		// Arrange
 		user.setId(null);
 		when(passwordEncoder.encode(any(String.class))).thenReturn("password");
@@ -126,6 +127,7 @@ class UserServiceImplTests {
 	@Test
 	void UserServiceImpl_createNewPaymentMethod_ShouldCreateNewPaymentMethod() {
 		// Arrange
+		paymentMethod.setId(null);
 		when(paymentMethodRepository.save(any(PaymentMethod.class))).thenReturn(paymentMethod);
 		when(userRepository.save(any(User.class))).thenReturn(user);
 

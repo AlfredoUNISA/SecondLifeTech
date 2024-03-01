@@ -8,14 +8,17 @@ import java.time.Year;
 @Setter
 @Getter
 public class ProductFilters {
+	public static int MIN_STRING_LENGTH = 3;
+	public static int MAX_STRING_LENGTH = 50;
+
 	public static int MIN_YEAR = 2000;
 	public static int MAX_YEAR = Year.now().getValue();
 	public static int MIN_RAM = 1;
-	public static int MAX_RAM = 64;
+	public static int MAX_RAM = 128;
 	public static double MIN_DISPLAY_SIZE = 0.1;
-	public static double MAX_DISPLAY_SIZE = 15.0;
+	public static double MAX_DISPLAY_SIZE = 20.0;
 	public static int MIN_STORAGE_SIZE = 1;
-	public static int MAX_STORAGE_SIZE = 1000;
+	public static int MAX_STORAGE_SIZE = 3000;
 	public static double MIN_PRICE = 0.0;
 	public static double MAX_PRICE = 10000.0;
 

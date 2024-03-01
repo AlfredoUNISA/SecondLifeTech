@@ -8,6 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserFilters {
+	public static int MIN_STRING_LENGTH = 3;
+	public static int MAX_STRING_LENGTH = 50;
+
 	private String email;
 	private String role;
 

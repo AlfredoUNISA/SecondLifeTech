@@ -1,6 +1,7 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,7 @@ class OrderServiceImplTests {
 	@Test
 	void OrderServiceImpl_createAndPlaceNewOrder_WhenOrderIsGiven_ShouldCreateAndPlaceNewOrder() {
 		// Arrange
+		order.setId(null);
 		when(orderPlacedRepository.save(order)).thenReturn(order);
 		when(orderItemRepository.saveAll(order.getItems())).thenReturn(order.getItems());
 

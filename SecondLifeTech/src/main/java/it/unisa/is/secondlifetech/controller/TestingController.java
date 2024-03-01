@@ -53,7 +53,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/create-user-test")
-	public String createUserPOST(@ModelAttribute("user") User user) throws MissingRequiredField, EmailAlreadyInUseException {
+	public String createUserPOST(@ModelAttribute("user") User user) throws MissingRequiredField, EmailAlreadyInUseException, ErrorInField {
 		user.setRole(UserRole.getRole(user.getRole()));
 		userService.createNewUser(user);
 		return "redirect:/";
@@ -69,7 +69,7 @@ public class TestingController {
 
 	@PostMapping("/create-product-model-test")
 	public String createProductModelPOST(@ModelAttribute("productModel") ProductModel productModel,
-	                                 @RequestAttribute("image") MultipartFile image) throws IOException {
+	                                 @RequestAttribute("image") MultipartFile image) throws IOException, ErrorInField, MissingRequiredField {
 		productService.createNewModel(productModel);
 		productService.changeImageModel(productModel, image);
 		return "redirect:/";
@@ -85,7 +85,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/create-product-variation-test")
-	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) {
+	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) throws ErrorInField, MissingRequiredField {
 		ProductModel productModel = productService.findModelById(productVariation.getModel().getId());
 		productService.createNewVariation(productModel, productVariation);
 		return "redirect:/";
@@ -338,7 +338,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/update-model-test")
-	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException {
+	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException, MissingRequiredField, ErrorInField {
 		productService.updateModel(model, image);
 		return "redirect:/view-product-variations?productModelId=" + model.getId();
 	}

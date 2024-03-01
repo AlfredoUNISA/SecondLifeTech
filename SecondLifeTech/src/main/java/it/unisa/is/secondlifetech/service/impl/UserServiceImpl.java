@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
@@ -63,11 +64,8 @@ public class UserServiceImpl implements UserService {
 	 * @return l'oggetto User salvato
 	 */
 	@Override
-	public User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField {
-		if (user.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un utente esistente");
-
-		checkForUserMissingFields(user);
+	public User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField, ErrorInField {
+		checkUserValues(user);
 
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new EmailAlreadyInUseException(user.getEmail());
@@ -85,15 +83,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
-	private static void checkForUserMissingFields(User user) throws MissingRequiredField {
-		if (user.getFirstName().isEmpty()
-				||user.getLastName().isEmpty()
-				||user.getEmail().isEmpty()
-				||user.getPassword().isEmpty()
-				||user.getRole().isEmpty()) {
-			throw new MissingRequiredField();
-		}
-	}
+
 
 	/**
 	 * Aggiunge un indirizzo di spedizione a un utente.
@@ -394,5 +384,49 @@ public class UserServiceImpl implements UserService {
 
 		paymentMethodRepository.delete(paymentMethod);
 		userRepository.save(user);
+	}
+
+
+	// ================================================================================================================
+	// =============== OTHER ===========================================================================================
+	// ================================================================================================================
+
+	private static void checkUser(User user) {
+		if (user == null)
+			throw new IllegalArgumentException("L'utente specificato non è valido");
+
+		if (user.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un utente esistente");
+	}
+
+	private static void checkUserValues(User user) throws MissingRequiredField, ErrorInField {
+		checkUser(user);
+
+		if (user.getFirstName().isEmpty()
+			||user.getLastName().isEmpty()
+			||user.getEmail().isEmpty()
+			||user.getPassword().isEmpty()
+			||user.getRole().isEmpty()) {
+			throw new MissingRequiredField();
+		}
+
+		if (user.getFirstName().length() < UserFilters.MIN_STRING_LENGTH || user.getFirstName().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il nome deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (user.getLastName().length() < UserFilters.MIN_STRING_LENGTH || user.getLastName().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il cognome deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (user.getPhoneNumber().length() < 6 || user.getPhoneNumber().length() > 15)
+			throw new ErrorInField("Il numero di telefono deve essere lungo tra i 6 e i 15 caratteri");
+
+		// regex per l'email
+		if (!user.getEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))
+			throw new ErrorInField("Email non valida");
+
+		if (user.getPassword().length() < UserFilters.MIN_STRING_LENGTH || user.getPassword().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("La password deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (!List.of(UserRole.ALL_ROLES).contains(UserRole.getRoleName(user.getRole())))
+			throw new ErrorInField("Il ruolo specificato non è valido");
 	}
 }

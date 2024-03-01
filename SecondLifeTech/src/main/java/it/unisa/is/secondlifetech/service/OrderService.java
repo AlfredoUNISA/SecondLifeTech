@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.service;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

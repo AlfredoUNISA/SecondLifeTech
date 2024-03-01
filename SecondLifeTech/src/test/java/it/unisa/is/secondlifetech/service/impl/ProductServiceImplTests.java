@@ -4,6 +4,9 @@ import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -52,10 +55,21 @@ class ProductServiceImplTests {
 	void setup() {
 		productModel = new ProductModel();
 		productModel.setId(UUID.randomUUID());
+		productModel.setName("Test Model");
+		productModel.setBrand("Test Brand");
+		productModel.setCategory(ProductCategory.SMARTPHONE);
 
 		productVariation = new ProductVariation();
 		productVariation.setId(UUID.randomUUID());
 		productVariation.setModel(productModel);
+		productVariation.setYear(2021);
+		productVariation.setRam(8);
+		productVariation.setDisplaySize(6.5);
+		productVariation.setStorageSize(128);
+		productVariation.setPrice(500.0);
+		productVariation.setColor("Black");
+		productVariation.setState(ProductState.ACCETTABILE);
+
 
 		imageFile = new ImageFile();
 		imageFile.setModel(productModel);
@@ -68,8 +82,9 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_CreateNewModel_ShouldReturnCreatedModel() {
+	void ProductServiceImpl_CreateNewModel_ShouldReturnCreatedModel() throws ErrorInField {
 		// Arrange
+		productModel.setId(null);
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
 
 		// Act
@@ -81,8 +96,9 @@ class ProductServiceImplTests {
 	}
 
 	@Test
-	void ProductServiceImpl_CreateNewVariation_ShouldReturnCreatedVariation() {
+	void ProductServiceImpl_CreateNewVariation_ShouldReturnCreatedVariation() throws ErrorInField {
 		// Arrange
+		productVariation.setId(null);
 		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
 
@@ -269,7 +285,7 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException {
+	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException, ErrorInField {
 		// Arrange
 		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);

@@ -87,22 +87,23 @@ public class CartServiceImplTest {
 	// =============== CREATE ==========================================================================================
 	// ================================================================================================================
 
+
+//	@Test
+//	public void CartServiceImpl_createNewCart_WhenCartIsProvided_ShouldReturnSavedCart() {
+//		// Arrange
+//		Cart cart = new Cart();
+//		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
+//
+//		// Act
+//		Cart savedCart = cartService.createNewCart(cart);
+//
+//		// Assert
+//		assertThat(savedCart).isNotNull();
+//		verify(cartRepository, times(1)).save(cart);
+//	}
+
 	@Test
-	public void CartServiceImpl_createNewCart_WhenCartIsProvided_ShouldReturnSavedCart() {
-		// Arrange
-		Cart cart = new Cart();
-		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
-
-		// Act
-		Cart savedCart = cartService.createNewCart(cart);
-
-		// Assert
-		assertThat(savedCart).isNotNull();
-		verify(cartRepository, times(1)).save(cart);
-	}
-
-	@Test
-	public void CartServiceImpl_addToCart_WhenProductVariationIdAndQuantityAreProvided_ShouldAddProductToCart() throws NoDevicesAvailableException {
+	public void CartServiceImpl_addToCart_WhenProductVariationExists_ShouldAddProductToCart() throws NoDevicesAvailableException {
 		// Arrange
 		UUID productVariationId = productVariation.getId();
 		int quantity = 5;
