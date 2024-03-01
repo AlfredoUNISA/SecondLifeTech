@@ -1,12 +1,7 @@
 package it.unisa.is.secondlifetech.controller;
-import it.unisa.is.secondlifetech.entity.ProductModel;
+
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
-import it.unisa.is.secondlifetech.service.CartService;
-import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @Slf4j
@@ -65,6 +57,11 @@ public class LoginLogoutController {
 
         model.addAttribute("newUser", user);
         return "register";
+    }
+
+    @GetMapping("/register/save")
+    public String registration() {
+        return "error";
     }
 
     @PostMapping("/register/save")

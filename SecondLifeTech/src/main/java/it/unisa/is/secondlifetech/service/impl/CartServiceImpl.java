@@ -112,7 +112,7 @@ public class CartServiceImpl implements CartService {
 	                          PaymentMethod paymentMethod, boolean paymentSuccessfulMock) throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, PaymentFailedException {
 		// Verifica che il carrello non sia vuoto
 		if (cart.getItems().isEmpty())
-			throw new NoItemsForFinalizationException(cart.getId());
+			throw new NoItemsForFinalizationException();
 
 		// Verifica che l'indirizzo di spedizione sia specificato
 		if (shippingAddress == null)

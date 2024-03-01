@@ -416,7 +416,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getLastName().length() < UserFilters.MIN_STRING_LENGTH || user.getLastName().length() > UserFilters.MAX_STRING_LENGTH)
 			throw new ErrorInField("Il cognome deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
 
-		if (user.getPhoneNumber().length() < 6 || user.getPhoneNumber().length() > 15)
+		if (!user.getPhoneNumber().isEmpty() && user.getPhoneNumber().length() < 6 || user.getPhoneNumber().length() > 15)
 			throw new ErrorInField("Il numero di telefono deve essere lungo tra i 6 e i 15 caratteri");
 
 		// regex per l'email
