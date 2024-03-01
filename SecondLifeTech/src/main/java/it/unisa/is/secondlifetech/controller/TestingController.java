@@ -39,6 +39,11 @@ public class TestingController {
 		this.orderService = orderService;
 	}
 
+	@GetMapping("/t")
+	public String test() {
+		return "templateEsempio";
+	}
+
 	@GetMapping("/create-user-test")
 	public String createUser(Model model) {
 		User user = new User();
