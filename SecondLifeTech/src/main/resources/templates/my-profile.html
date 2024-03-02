@@ -15,118 +15,154 @@
 <div class="my-content" style="min-height: calc(100vh - 17em);">
     <br/>
 
-    <!-- Card che contiene le due parti   -->
-    <div class="card">
-        <div class="row gutters">
-            <!-- Sidebar  -->
-            <div class="col-xl-3 col-lg-3 col-12">
-                <div class="card h-100">
-                    <div class="row mt-5">
-                        <div class="col">
-                        </div>
-                    </div>
-                </div>
+    <div class="container">
+        <div class="row">
+            <!-- Links -->
+            <div class="col-md-3">
+                <ul class="nav flex-column nav-pills mb-3">
+                    <li class="nav-item">
+                        <a href="/my-profile" class="nav-link active">Informazioni personali</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/payment-methods" class="nav-link">Metodi di pagamento</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/shipping-addresses" class="nav-link">Indirizzi di spedizione</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/orders" class="nav-link">Ordini</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                </ul>
             </div>
 
-            <!-- Contenuti -->
-            <div class="col-xl-9 col-lg-9 col-12">
-                <div class="card h-75">
-                    <div class="card-body">
-                        <div class="row gutters">
-                            <!-- Informazioni del profilo -->
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <h2> Il mio profilo</h2>
-                                <table>
-                                    <tr>Il tuo nome:<p th:text="${user.firstName}"></p></tr>
-                                    <tr>Il tuo cognome:<p th:text="${user.lastName}"></p></tr>
-                                    <tr>La tua Email:<p th:text="${user.email}"></p></tr>
-                                    <tr>Il tuo numero di telefono:<p th:text="${user.phoneNumber}"></p></tr>
-                                    <tr>La tua data di nascita:<p th:text="${user.birthDate}"></p></tr>
-                                </table>
+            <!-- Main Content -->
+            <div class="col-md-6">
+                <h2>Informazioni personali</h2>
+                <b>Nome:</b>
+                <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p>
 
-                                <h2> I tuoi indirizzi di spedizione</h2>
-                                <table>
-                                    <th:block th:if="${addresses.isEmpty()}">
-                                        <tr>
-                                            <td colspan="5">Non sono stati trovati indirizzi di spedizione</td>
-                                        </tr>
-                                    </th:block>
+                <b>Email:</b>
+                <p th:text="${user.email}"></p>
 
-                                    <th:block th:each="address : ${addresses}">
-                                        <tr>
-                                            <td th:text="${address.street}"></td>
-                                            <td th:text="${address.city}"></td>
-                                            <td th:text="${address.state}"></td>
-                                            <td th:text="${address.zipCode}"></td>
-                                            <th th:text="${address.country}"></th>
-                                    </th:block>
-                                </table>
+                <b>Telefono:</b>
+                <p th:text="${user.phoneNumber}"></p>
 
-                                <h2> I tuoi metodi di pagamento</h2>
-                                <table>
-                                    <th:block th:if="${payments.isEmpty()}">
-                                        <tr>
-                                            <td colspan="5">Non sono stati trovati metodi di pagamento</td>
-                                        </tr>
-                                    </th:block>
 
-                                    <th:block th:each="payment : ${payments}">
-                                        <tr>
-                                            <td th:text="${payment.cardNumber}"></td>
-                                            <td th:text="${payment.cardHolderName}"></td>
-                                            <td th:text="${payment.expirationDate}"></td>
-                                    </th:block>
-                                </table>
+                <!-- Modal Info -->
+                <div class="modal fade" id="modalEditInfo" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitleInfo">
+                                    Modifica informazioni personali
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
 
-                            <!-- Modifica informazioni profilo -->
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div id="collapseEditInformation" class="accordion-collapse collapse"
-                                     aria-labelledby="headingEditInformation"
-                                     data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <div class="form-group">
-                                            <form action="my-profile" method="post">
-                                                <label for="firstName">First Name</label>
-                                                <input id="firstName"
-                                                       class="form-control"
-                                                       type="text"
-                                                       th:value="${user.firstName}"/>
+                            <form action="/my-profile/edit-info" method="post">
+                                <div class="modal-body">
+                                    <div class="m-3">
+                                        <label for="editName" class="form-label">Nome</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="editName"
+                                                   name="name"
+                                                   th:value="${user.firstName}">
+                                        </div>
 
-                                                <label for="lastName">Last Name</label>
-                                                <input id="lastName"
-                                                       class="form-control"
-                                                       type="text"
-                                                       th:value="${user.lastName}"/>
+                                        <label for="editSurname" class="form-label">Cognome</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="editSurname"
+                                                   name="surname"
+                                                   th:value="${user.lastName}">
 
-                                                <label for="email">Email</label>
-                                                <input id="email"
-                                                       class="form-control"
-                                                       type="email"
-                                                       th:value="${user.email}"/>
-                                            </form>
+                                        </div>
+
+                                        <label for="editEmail" class="form-label">Email</label>
+                                        <div class="input-group mb-3">
+                                            <input type="email" class="form-control" id="editEmail"
+                                                   name="email"
+                                                   th:value="${user.email}">
+                                        </div>
+
+                                        <label for="editPhone" class="form-label">Telefono</label>
+                                        <div class="input-group mb-3">
+                                            <input type="tel" class="form-control" id="editPhone"
+                                                   name="phone"
+                                                   th:value="${user.phoneNumber}">
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Annulla
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Salva
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Password -->
+                <div class="modal fade" id="modalEditPassword" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitleId">
+                                    Modifica password
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
 
+                            <div class="modal-body">
+                                <form action="/my-profile/edit-password" method="post">
 
-                            <div class="row gutters">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div class="text-right">
-                                        <button id="submit" class="btn btn-secondary" type="button" name="submit">
-                                            Cancel
+                                    <label for="editNewPassword" class="form-label">Nuova Password</label>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" id="editNewPassword" name="password">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Annulla
                                         </button>
-                                        <button id="submit" class="btn btn-primary" type="button" name="submit">
-                                            Update
+                                        <button type="submit" class="btn btn-primary">
+                                            Salva
                                         </button>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Edit/Delete/Add Buttons -->
+            <div class="col px-3 nav flex-column">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary mb-4" data-bs-toggle="modal"
+                        data-bs-target="#modalEditInfo">
+                    Modifica informazioni personali
+                </button>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                        data-bs-target="#modalEditPassword">
+                    Modifica password
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

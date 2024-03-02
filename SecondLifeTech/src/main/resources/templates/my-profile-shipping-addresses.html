@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Il mio profilo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+
+    <div class="container">
+        <div class="row">
+            <!-- Links -->
+            <div class="col-md-3">
+                <ul class="nav flex-column nav-pills mb-3">
+                    <li class="nav-item">
+                        <a href="/my-profile" class="nav-link">Informazioni personali</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/payment-methods" class="nav-link">Metodi di pagamento</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/shipping-addresses" class="nav-link active">Indirizzi di spedizione</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/orders" class="nav-link">Ordini</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h2>Indirizzi di spedizione</h2>
+
+                <!-- Button trigger modal Add -->
+                <div class="content text-end">
+                    <button type="button" class="btn btn-secondary mb-4" data-bs-toggle="modal"
+                            data-bs-target="#modalAddAddress">
+                        Aggiungi nuovo indirizzo di spedizione
+                    </button>
+                </div>
+
+                <!-- Modal Add -->
+                <div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitleAdd">
+                                    Aggiungi nuovo indirizzo di spedizione
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form action="/my-profile/shipping-addresses/add" method="post" th:object="${newShippingAddress}">
+                                <div class="modal-body">
+                                    <div class="m-3">
+                                        <label for="addStreet" class="form-label">Via</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addStreet"
+                                                    th:field="*{street}">
+                                        </div>
+
+                                        <label for="addCity" class="form-label">Citt&agrave;</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addCity"
+                                                    th:field="*{city}">
+                                        </div>
+
+                                        <label for="addCountry" class="form-label">Provincia</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addCountry"
+                                                   th:field="*{country}">
+                                        </div>
+
+                                        <label for="addState" class="form-label">Nazione</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addState"
+                                                    th:field="*{state}">
+                                        </div>
+
+                                        <label for="addZip" class="form-label">Codice postale</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addZip"
+                                                    th:field="*{zipCode}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Annulla
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Inserisci
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Via</th>
+                            <th>Citt&agrave;</th>
+                            <th>Provincia</th>
+                            <th>Codice postale</th>
+                            <th>Nazione</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <th:block th:if="${shippingAddresses.isEmpty()}">
+                            <tr>
+                                <td colspan="6" class="text-center">Nessun indirizzo di spedizione presente</td>
+                            </tr>
+                        </th:block>
+
+                        <th:block th:each="shippingAddress : ${shippingAddresses}">
+                            <tr>
+                                <td th:text="${shippingAddress.street}"></td>
+                                <td th:text="${shippingAddress.city}"></td>
+                                <td th:text="${shippingAddress.country}"></td>
+                                <td th:text="${shippingAddress.zipCode}"></td>
+                                <td th:text="${shippingAddress.state}"></td>
+                                <td>
+                                    <!-- Button trigger modal Edit -->
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditAddress">
+                                        Modifica
+                                    </button>
+
+                                    <!-- Modal Edit -->
+                                    <div class="modal fade" id="modalEditAddress" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalTitleId">
+                                                        Modifica questo indirizzo di spedizione
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                    </button>
+                                                </div>
+
+                                                <form action="/my-profile/shipping-addresses/edit" method="post">
+                                                    <input type="hidden" name="id" th:value="${shippingAddress.id}"/>
+
+                                                    <div class="modal-body">
+                                                        <div class="m-3">
+                                                            <label for="editStreet" class="form-label">Via</label>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control"
+                                                                       id="editStreet"
+                                                                       name="street"
+                                                                       th:value="${shippingAddress.street}">
+                                                            </div>
+
+                                                            <label for="editCity"
+                                                                   class="form-label">Citt&agrave;</label>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control"
+                                                                       id="editCity"
+                                                                       name="city"
+                                                                       th:value="${shippingAddress.city}">
+                                                            </div>
+
+                                                            <label for="editCountry"
+                                                                   class="form-label">Provincia</label>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control"
+                                                                       id="editCountry"
+                                                                       name="country"
+                                                                       th:value="${shippingAddress.country}">
+                                                            </div>
+
+                                                            <label for="editState" class="form-label">Nazione</label>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control"
+                                                                       id="editState"
+                                                                       name="state"
+                                                                       th:value="${shippingAddress.state}">
+                                                            </div>
+
+                                                            <label for="editZip" class="form-label">Codice
+                                                                postale</label>
+                                                            <div class="input-group mb-3">
+                                                                <input type="text" class="form-control" id="editZip"
+                                                                       name="zipCode"
+                                                                       th:value="${shippingAddress.zipCode}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Annulla
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Modifica
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button trigger modal Remove -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalRemoveAddress">
+                                        Elimina
+                                    </button>
+
+                                    <!-- Modal Remove -->
+                                    <div class="modal fade" id="modalRemoveAddress" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalTitleRemove">
+                                                        Sei sicuro di voler eliminare questo indirizzo di
+                                                        spedizione?
+                                                    </h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <form action="/my-profile/shipping-addresses/remove" method="post">
+                                                    <input type="hidden" name="id" th:value="${shippingAddress.id}"/>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Annulla
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">
+                                                            Elimina
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>

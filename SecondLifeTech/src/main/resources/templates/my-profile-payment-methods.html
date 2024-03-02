@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Il mio profilo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+
+    <div class="container">
+        <div class="row">
+            <!-- Links -->
+            <div class="col-md-3">
+                <ul class="nav flex-column nav-pills mb-3">
+                    <li class="nav-item">
+                        <a href="/my-profile" class="nav-link">Informazioni personali</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/payment-methods" class="nav-link active">Metodi di pagamento</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/shipping-addresses" class="nav-link">Indirizzi di spedizione</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/orders" class="nav-link">Ordini</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h2>Metodi di pagamento</h2>
+
+                <!-- Button trigger modal Add -->
+                <div class="content text-end">
+                    <button type="button" class="btn btn-secondary mb-4" data-bs-toggle="modal"
+                            data-bs-target="#modalAddMethod">
+                        Aggiungi nuovo metodo di pagamento
+                    </button>
+                </div>
+
+                <!-- Modal Add -->
+                <div class="modal fade" id="modalAddMethod" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitleAdd">
+                                    Aggiungi nuovo metodo di pagamento
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form action="/my-profile/payment-methods/add" method="post" th:object="${newPaymentMethod}">
+                                <div class="modal-body">
+                                    <div class="m-3">
+                                        <label for="addHolderName" class="form-label">Nome Proprietario</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addHolderName"
+                                                    th:field="*{cardHolderName}">
+                                        </div>
+
+                                        <label for="addCardNumber" class="form-label">Numero</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addCardNumber"
+                                                    th:field="*{cardNumber}">
+                                        </div>
+
+                                        <label for="addCVV" class="form-label">CVV</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addCVV"
+                                                    th:field="*{cvv}">
+                                        </div>
+
+                                        <label for="addExpiration" class="form-label">Data Scadenza</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="addExpiration"
+                                                    th:field="*{expirationDate}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Annulla
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Inserisci
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nome Proprietario</th>
+                            <th>Numero</th>
+                            <th>Data Scadenza</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:if="${paymentMethods.isEmpty()}">
+                            <tr>
+                                <td colspan="4" class="text-center">Nessun metodo di pagamento presente</td>
+                            </tr>
+                        </th:block>
+
+                        <th:block th:each="paymentMethod : ${paymentMethods}">
+                            <tr>
+                                <td th:text="${paymentMethod.cardHolderName}"></td>
+                                <td th:text="${paymentMethod.cardNumber}"></td>
+                                <td th:text="${paymentMethod.expirationDate}"></td>
+                                <td>
+                                    <!-- Button trigger modal Remove -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalRemoveMethod">
+                                        Elimina
+                                    </button>
+
+                                    <!-- Modal Remove -->
+                                    <div class="modal fade" id="modalRemoveMethod" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalTitleId">
+                                                        Sei sicuro di voler eliminare questo metodo di pagamento?
+                                                    </h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <form action="/my-profile/payment-methods/remove" method="post">
+                                                    <input type="hidden" name="id" th:value="${paymentMethod.id}"/>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Annulla
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">
+                                                            Elimina
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>

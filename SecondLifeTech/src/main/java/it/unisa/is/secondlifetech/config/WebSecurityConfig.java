@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 				.permitAll()
 			).logout((logout) -> logout
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.logoutSuccessUrl("/logout-success")
+				.logoutSuccessUrl("/")
 				.permitAll()
 			);
 		return http.build();

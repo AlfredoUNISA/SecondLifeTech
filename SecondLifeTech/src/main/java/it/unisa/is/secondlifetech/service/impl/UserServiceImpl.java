@@ -290,7 +290,12 @@ public class UserServiceImpl implements UserService {
 		if (user.getId() == null)
 			throw new IllegalArgumentException("ID dell'utente non specificato nella modifica");
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		String oldPassword = userRepository.findById(user.getId()).get().getPassword();
+		String newPassword = passwordEncoder.encode(user.getPassword());
+		if (newPassword.equalsIgnoreCase(oldPassword))
+			user.setPassword(oldPassword);
+		else
+			user.setPassword(newPassword);
 
 		return userRepository.save(user);
 	}
