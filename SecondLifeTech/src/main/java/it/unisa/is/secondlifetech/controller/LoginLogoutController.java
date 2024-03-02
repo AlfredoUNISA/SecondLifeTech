@@ -39,16 +39,14 @@ public class LoginLogoutController {
     public String showRegistrationForm(HttpServletRequest request, Model model,
                                        @RequestParam(value = "error", required = false) String error,
                                        @RequestParam(value = "name", required = false) String name,
-                                       @RequestParam(value = "surname", required = false) String surname,
-                                       @RequestParam(value = "email", required = false) String email
+                                       @RequestParam(value = "surname", required = false) String surname
     ) {
         User user = new User();
 
-        if (error != null && name != null && surname != null && email != null) {
+        if (error != null && name != null && surname != null) {
             model.addAttribute("error", error);
             user.setFirstName(name);
             user.setLastName(surname);
-            user.setEmail(email);
         }
 
         if (request.getUserPrincipal() != null) {
