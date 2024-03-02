@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.controller;
 
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,18 @@ public class ManageProfileController {
     @GetMapping("/my-profile")
     public String getProfile(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
-        if(principal!=null) {
-            request.setAttribute("user", userService.findUserByEmail(principal.getName()));
-            request.setAttribute("addresses", userService.findUserByEmail(principal.getName()).getShippingAddresses());
+
+        if (principal!=null) {
+            User user = userService.findUserByEmail(principal.getName());
+            request.setAttribute("user", user);
+            request.setAttribute("addresses", user.getShippingAddresses());
+            request.setAttribute("payments", user.getPaymentMethods());
             return "my-profile";
         }
         return "redirect:/login";
+    }
+    @GetMapping("/my-profile/shipping-address/")
+    public String addShippingAddress(){
+        return "shipping-address";
     }
 }
