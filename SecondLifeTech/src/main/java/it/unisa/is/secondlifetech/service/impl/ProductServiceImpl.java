@@ -397,8 +397,6 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private static void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
-		checkProductModel(productModel);
-
 		if (productModel.getName().isEmpty()
 			|| productModel.getBrand().isEmpty()
 			|| productModel.getCategory().isEmpty()){
@@ -424,8 +422,6 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private static void checkProductVariationValues(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField {
-		checkProductVariation(variation);
-
 		if (variation.getState().isEmpty() || variation.getColor().isEmpty()) {
 			throw new MissingRequiredField();
 		}

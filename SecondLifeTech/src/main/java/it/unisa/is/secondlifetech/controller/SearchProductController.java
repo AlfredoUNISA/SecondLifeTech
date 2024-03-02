@@ -96,7 +96,7 @@ public class SearchProductController {
     @PostMapping("/products")
     public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
         String queryString = filters.toQueryString();
-        return "redirect:/view-product-models?" + queryString;
+        return "redirect:/products?" + queryString;
     }
 
 }

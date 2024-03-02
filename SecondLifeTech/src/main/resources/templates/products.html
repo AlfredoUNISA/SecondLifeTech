@@ -17,28 +17,42 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2 col-12 border rounded p-3">
-                <h2>Filters</h2>
+                <h2>Filtri</h2>
                 <hr>
 
-                <form action="" method="post">
+                <form action="/products" method="post" role="form">
                     <div class="form-group mt-3">
-                        <h5>Price</h5>
+                        <h5>Nome</h5>
+                        <input id="name" type="text" th:field="*{filters.name}" class="form-control" placeholder="Nome">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Prezzo</h5>
                         <div class="d-flex">
-                            <div class="input-block"></div>
                             <label for="minPrice">Min</label>
-                            <input type="number" name="minPrice" id="minPrice" class="form-control me-2">
+                            <input type="number" id="minPrice" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_PRICE}"
+                                   th:field="*{filters.minPrice}">
+
                             <label for="maxPrice">Max</label>
-                            <input type="number" name="maxPrice" id="maxPrice" class="form-control">
+                            <input type="number" id="maxPrice" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_PRICE}"
+                                   th:field="*{filters.maxPrice}">
                         </div>
                     </div>
 
                     <div class="form-group mt-3">
-                        <h5>Storage</h5>
+                        <h5>Dimensioni disco</h5>
                         <div class="d-flex">
                             <label for="minStorage">Min</label>
-                            <input type="number" name="minStorage" id="minStorage" class="form-control me-2">
+                            <input type="number" id="minStorage" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_STORAGE_SIZE}"
+                                   th:field="*{filters.minStorageSize}">
+
                             <label for="maxStorage">Max</label>
-                            <input type="number" name="maxStorage" id="maxStorage" class="form-control">
+                            <input type="number" id="maxStorage" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}"
+                                   th:field="*{filters.maxStorageSize}">
                         </div>
                     </div>
 
@@ -46,54 +60,65 @@
                         <h5>RAM</h5>
                         <div class="d-flex">
                             <label for="minRam">Min</label>
-                            <input type="number" name="minRam" id="minRam" class="form-control me-2">
+                            <input type="number" id="minRam" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_RAM}"
+                                   th:field="*{filters.minRam}">
+
                             <label for="maxRam">Max</label>
-                            <input type="number" name="maxRam" id="maxRam" class="form-control">
+                            <input type="number" id="maxRam" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_RAM}"
+                                   th:field="*{filters.maxRam}">
                         </div>
                     </div>
 
                     <div class="form-group mt-3">
-                        <h5>Display Size</h5>
+                        <h5>Dimensione Schermo</h5>
                         <div class="d-flex">
                             <label for="minDisplaySize">Min</label>
-                            <input type="number" name="minDisplaySize" id="minDisplaySize"
-                                   class="form-control me-2">
+                            <input type="number" id="minDisplaySize" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_DISPLAY_SIZE}"
+                                   th:field="*{filters.minDisplaySize}">
+
                             <label for="maxDisplaySize">Max</label>
-                            <input type="number" name="maxDisplaySize" id="maxDisplaySize" class="form-control">
+                            <input type="number" id="maxDisplaySize" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}"
+                                   th:field="*{filters.maxDisplaySize}">
                         </div>
                     </div>
 
                     <div class="form-group mt-3">
                         <h5>Brand</h5>
-                        <select name="brand" id="brand" class="form-select">
-                            <option value="">All</option>
-                            <option value="1">Brand 1</option>
-                            <option value="2">Brand 2</option>
-                            <option value="3">Brand 3</option>
+                        <input id="brand" type="text" th:field="*{filters.brand}" class="form-control" placeholder="Brand">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Condizioni</h5>
+                        <select id="state" th:field="*{filters.state}" class="form-select">
+                            <option selected value="">All States</option>
+                            <th:block th:each="state : ${states}">
+                                <option th:value="${state}" th:text="${state}"></option>
+                            </th:block>
                         </select>
                     </div>
+
                     <div class="form-group mt-3">
-                        <h5>State</h5>
-                        <select name="state" id="state" class="form-select">
-                            <option value="">All</option>
-                            <option value="Accettabile">Accettabile</option>
-                            <option value="Buono">Buono</option>
-                            <option value="Ottimo">Ottimo</option>
-                        </select>
-                    </div>
-                    <div class="form-group mt-3">
-                        <h5>Category</h5>
-                        <select name="category" id="category" class="form-select">
-                            <option value="">All</option>
-                            <option value="Smartphone">Smartphone</option>
-                            <option value="Tablet">Tablet</option>
+                        <h5>Categoria</h5>
+                        <select id="category" th:field="*{filters.category}" class="form-select">
+                            <option value="">All Categories</option>
+                            <th:block th:each="category : ${categories}">
+                                <option th:value="${category}" th:text="${category}"></option>
+                            </th:block>
                         </select>
                     </div>
 
                     <div class="d-flex justify-content-center mt-4">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Applica Filtri</button>
                     </div>
                 </form>
+                <br/>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="reset" class="btn btn-secondary" onclick="window.location.href='/products'">Clear Filters</button>
+                </div>
             </div>
 
             <div class="col-md-9">
@@ -108,10 +133,8 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
                                     <p class="card-text">Product Description</p>
-                                    <a th:href="@{'/product/' + ${product.id}}" class="btn btn-primary">View
-                                        Details</a>
+                                    <a th:href="@{'/product/' + ${product.id}}" class="btn btn-primary">Visualicca</a>
                                 </div>
-
                             </div>
                         </div>
                     </th:block>
