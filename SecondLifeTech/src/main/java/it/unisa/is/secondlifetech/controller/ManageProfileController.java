@@ -39,6 +39,28 @@ public class ManageProfileController {
 		return "redirect:/login";
 	}
 
+	@GetMapping("/my-profile/delete-my-account")
+	public String getDeleteProfile() {
+		return "redirect:/my-profile";
+	}
+
+	@PostMapping("/my-profile/delete-my-account")
+	public String deleteProfile(HttpServletRequest request) {
+		Principal principal = request.getUserPrincipal();
+
+		if (principal != null) {
+			User user = userService.findUserByEmail(principal.getName());
+			try {
+				userService.deleteUser(user);
+			} catch (Exception e) {
+				return "redirect:/error";
+			}
+			return "redirect:/logout";
+		}
+		return "redirect:/login";
+
+	}
+
 	@PostMapping("/my-profile/edit-info")
 	public String editProfileBasic(HttpServletRequest request,
 	                               @RequestParam("name") String name,

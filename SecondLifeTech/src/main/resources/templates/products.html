@@ -13,32 +13,151 @@
 <div th:replace="~{header :: header}"></div>
 
 <div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 col-12 border rounded p-3">
+                <h2>Filters</h2>
+                <hr>
 
-    <div class="card-group">
-
-        <th:block th:if="${products.isEmpty()}">
-            <h3>Non sono stati trovati prodotti</h3>
-        </th:block>
-
-        <th:block th:unless="${products.isEmpty()}">
-            <th:block th:each="product : ${products}">
-                <div class="card">
-                    <img th:if="${product.imageFile != null}"
-                         th:src="@{'data:' + ${product.imageFile.contentType} + ';base64,' + ${product.imageFile.generateBase64Image()}}"
-                         style="max-width: 150px"
-                         class="card-img-top"
-                         alt="Image"/>
-                    <div class="card-body">
-                        <h4 class="card-title" th:text="${product.name}"></h4>
-                        <p class="card-text">
-                            <p th:text="${product.brand}">
-                        </p>
-                        <button class="btn btn-primary" type="button" th:href="@{/details?(model=product.model)}">DETTAGLI</button>
+                <form action="" method="post">
+                    <div class="form-group mt-3">
+                        <h5>Price</h5>
+                        <div class="d-flex">
+                            <div class="input-block"></div>
+                            <label for="minPrice">Min</label>
+                            <input type="number" name="minPrice" id="minPrice" class="form-control me-2">
+                            <label for="maxPrice">Max</label>
+                            <input type="number" name="maxPrice" id="maxPrice" class="form-control">
+                        </div>
                     </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Storage</h5>
+                        <div class="d-flex">
+                            <label for="minStorage">Min</label>
+                            <input type="number" name="minStorage" id="minStorage" class="form-control me-2">
+                            <label for="maxStorage">Max</label>
+                            <input type="number" name="maxStorage" id="maxStorage" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>RAM</h5>
+                        <div class="d-flex">
+                            <label for="minRam">Min</label>
+                            <input type="number" name="minRam" id="minRam" class="form-control me-2">
+                            <label for="maxRam">Max</label>
+                            <input type="number" name="maxRam" id="maxRam" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Display Size</h5>
+                        <div class="d-flex">
+                            <label for="minDisplaySize">Min</label>
+                            <input type="number" name="minDisplaySize" id="minDisplaySize"
+                                   class="form-control me-2">
+                            <label for="maxDisplaySize">Max</label>
+                            <input type="number" name="maxDisplaySize" id="maxDisplaySize" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Brand</h5>
+                        <select name="brand" id="brand" class="form-select">
+                            <option value="">All</option>
+                            <option value="1">Brand 1</option>
+                            <option value="2">Brand 2</option>
+                            <option value="3">Brand 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <h5>State</h5>
+                        <select name="state" id="state" class="form-select">
+                            <option value="">All</option>
+                            <option value="Accettabile">Accettabile</option>
+                            <option value="Buono">Buono</option>
+                            <option value="Ottimo">Ottimo</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <h5>Category</h5>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">All</option>
+                            <option value="Smartphone">Smartphone</option>
+                            <option value="Tablet">Tablet</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <th:block th:each="product : ${productList}">
+                        <div class="col">
+                            <div class="card h-100">
+                                <a href="#">
+                                    <img class="card-img-top" th:src="@{'/images/' + ${product.imageFile.id}}"
+                                         alt="Image" width="100" height="100">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
+                                    <p class="card-text">Product Description</p>
+                                    <a th:href="@{'/product/' + ${product.id}}" class="btn btn-primary">View
+                                        Details</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </th:block>
                 </div>
-            </th:block>
-        </th:block>
+
+                <ul class="pagination justify-content-center mt-5">
+                    <!-- Previous Page Link -->
+                    <li th:class="${productPage.number == 0} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${productPage.number > 0}"
+                           th:href="@{/products(size=${productPage.size}, page=${productPage.number})}"
+                           class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                        </a>
+
+                        <span th:unless="${productPage.number > 0}" class="page-link" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="pageNumber : ${pageNumbers}"
+                        th:class="${pageNumber == productPage.number + 1} ? 'page-item active' : 'page-item'">
+                        <a th:href="@{/products(size=${productPage.size}, page=${pageNumber})}" class="page-link"
+                           th:text="${pageNumber}"></a>
+                    </li>
+
+                    <!-- Next Page Link -->
+                    <li th:class="${productPage.number == productPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${productPage.number < productPage.totalPages - 1}"
+                           th:href="@{/products(size=${productPage.size}, page=${productPage.number + 2})}"
+                           class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span>
+                        </a>
+
+                        <span th:unless="${productPage.number < productPage.totalPages - 1}"
+                              class="page-link"
+                              aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
     </div>
+
+
 </div>
 
 <div th:replace="~{footer :: footer}"></div>
