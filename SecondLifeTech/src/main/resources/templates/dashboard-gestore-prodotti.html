@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>La mia Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container-fluid" th:fragment="products">
+        <div class="row">
+            <div class="col-md-2 col-12 border rounded p-3">
+                <h2>Filtri</h2>
+                <hr>
+
+                <form action="/dashboard-prodotti" method="post" role="form">
+                    <div class="form-group mt-3">
+                        <h5>Nome</h5>
+                        <input id="name" type="text" th:field="*{filters.name}" class="form-control" placeholder="Nome">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Prezzo</h5>
+                        <div class="d-flex">
+                            <label for="minPrice">Min</label>
+                            <input type="number" id="minPrice" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_PRICE}"
+                                   th:field="*{filters.minPrice}">
+
+                            <label for="maxPrice">Max</label>
+                            <input type="number" id="maxPrice" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_PRICE}"
+                                   th:field="*{filters.maxPrice}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Dimensioni disco</h5>
+                        <div class="d-flex">
+                            <label for="minStorage">Min</label>
+                            <input type="number" id="minStorage" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_STORAGE_SIZE}"
+                                   th:field="*{filters.minStorageSize}">
+
+                            <label for="maxStorage">Max</label>
+                            <input type="number" id="maxStorage" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}"
+                                   th:field="*{filters.maxStorageSize}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>RAM</h5>
+                        <div class="d-flex">
+                            <label for="minRam">Min</label>
+                            <input type="number" id="minRam" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_RAM}"
+                                   th:field="*{filters.minRam}">
+
+                            <label for="maxRam">Max</label>
+                            <input type="number" id="maxRam" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_RAM}"
+                                   th:field="*{filters.maxRam}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Dimensione Schermo</h5>
+                        <div class="d-flex">
+                            <label for="minDisplaySize">Min</label>
+                            <input type="number" id="minDisplaySize" class="form-control me-2"
+                                   th:min="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MIN_DISPLAY_SIZE}"
+                                   th:field="*{filters.minDisplaySize}">
+
+                            <label for="maxDisplaySize">Max</label>
+                            <input type="number" id="maxDisplaySize" class="form-control"
+                                   th:max="${T(it.unisa.is.secondlifetech.dto.ProductFilters).MAX_STORAGE_SIZE}"
+                                   th:field="*{filters.maxDisplaySize}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Brand</h5>
+                        <input id="brand" type="text" th:field="*{filters.brand}" class="form-control"
+                               placeholder="Brand">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Condizioni</h5>
+                        <select id="state" th:field="*{filters.state}" class="form-select">
+                            <option selected value="">All States</option>
+                            <th:block th:each="state : ${states}">
+                                <option th:value="${state}" th:text="${state}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Categoria</h5>
+                        <select id="category" th:field="*{filters.category}" class="form-select">
+                            <option value="">All Categories</option>
+                            <th:block th:each="category : ${categories}">
+                                <option th:value="${category}" th:text="${category}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary">Applica Filtri</button>
+                    </div>
+                </form>
+                <br/>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="reset" class="btn btn-secondary" onclick="window.location.href='/dashboard-prodotti'">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <th:block th:each="product : ${productList}">
+                        <div class="col">
+                            <div class="card h-100">
+                                <a href="#">
+                                    <th:block th:if="${product.imageFile != null}">
+                                        <img class="card-img-top" th:src="@{'/images/' + ${product.imageFile.id}}"
+                                             alt="Image" width="100" height="100">
+                                    </th:block>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
+                                    <p class="card-text">Product Description</p>
+                                    <a th:href="@{'/product/' + ${product.id}}" class="btn btn-primary">Visualizza</a>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalDeleteModel">
+                                        Elimina
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modalDeleteModel" tabindex="-1" role="dialog"
+                             aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleDelete">
+                                            Sei sicuro di voler eliminare questo modello?
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Questa azione è irreversibile.<br/>
+                                            Questa azione eliminerà tutte le variazioni del modello</p>
+                                    </div>
+                                    <form action="/dashboard-prodotti/delete" method="post">
+                                        <div class="modal-footer">
+                                            <input type="hidden" th:name="id" th:value="${product.id}">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Annulla Eliminazione
+                                            </button>
+                                            <button type="submit" class="btn btn-danger">
+                                                Elimina
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+
+                </div>
+
+                <ul class="pagination justify-content-center mt-5">
+                    <!-- Previous Page Link -->
+                    <li th:class="${productPage.number == 0} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${productPage.number > 0}"
+                           th:href="@{/dashboard-prodotti(size=${productPage.size}, page=${productPage.number})}"
+                           class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                        </a>
+
+                        <span th:unless="${productPage.number > 0}" class="page-link" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="pageNumber : ${pageNumbers}"
+                        th:class="${pageNumber == productPage.number + 1} ? 'page-item active' : 'page-item'">
+                        <a th:href="@{/dashboard-prodotti(size=${productPage.size}, page=${pageNumber})}"
+                           class="page-link"
+                           th:text="${pageNumber}"></a>
+                    </li>
+
+                    <!-- Next Page Link -->
+                    <li th:class="${productPage.number == productPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${productPage.number < productPage.totalPages - 1}"
+                           th:href="@{/dashboard-prodotti(size=${productPage.size}, page=${productPage.number + 2})}"
+                           class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span>
+                        </a>
+
+                        <span th:unless="${productPage.number < productPage.totalPages - 1}"
+                              class="page-link"
+                              aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>
