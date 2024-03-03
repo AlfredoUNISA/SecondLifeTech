@@ -1,12 +1,15 @@
 package it.unisa.is.secondlifetech.controller;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
+import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +19,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +35,13 @@ import java.util.UUID;
 public class ProductController {
     ProductService productService;
     UserService userService;
+    ImageFileRepository imageFileRepository;
 
     @Autowired
-    public ProductController(ProductService productService, UserService userService) {
+    public ProductController(ProductService productService, UserService userService, ImageFileRepository imageFileRepository) {
         this.productService = productService;
         this.userService = userService;
+        this.imageFileRepository = imageFileRepository;
     }
 
     @GetMapping("/dashboard-prodotti")
@@ -104,10 +112,18 @@ public class ProductController {
             user = userService.findUserByEmail(principal.getName());
         }
         model.addAttribute("user", user);
+        // Utilizzato dal form di aggiunta
+        model.addAttribute("newModel", new ProductModel());
+
         return "dashboard-gestore-prodotti";
     }
 
-
+    //Gestione dei filtri
+    @PostMapping("/dashboard-prodotti")
+    public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
+        String queryString = filters.toQueryString();
+        return "redirect:/dashboard-products?" + queryString;
+    }
     //Rimozione di un prodotto
     @PostMapping("/dashboard-prodotti/delete")
     public String deleteProduct(@RequestParam("id") UUID id) {
@@ -117,6 +133,28 @@ public class ProductController {
             } catch (Exception e) {
                 return "redirect:/error";
             }
+        return "redirect:/dashboard-prodotti";
+    }
+    @PostMapping("/dashboard-prodotti/add")
+    public String otherPost(@ModelAttribute("product") ProductModel model, @RequestParam("image") MultipartFile file) throws IOException, ErrorInField, MissingRequiredField {
+        if(file.isEmpty()) {
+            throw new MissingRequiredField();
+        }
+        ImageFile fileObj = new ImageFile() ;
+        fileObj.setName(model.getName());
+        fileObj.setContentType(file.getContentType());
+        fileObj.setData(file.getBytes());
+        ImageFile imageFile = imageFileRepository.save(fileObj);
+        model.setImageFile(imageFile);
+        try {
+            productService.createNewModel(model);
+        } catch (ErrorInField errorInField) {
+            throw new ErrorInField("Errore nei campi");
+        } catch (MissingRequiredField missingRequiredField) {
+            throw new MissingRequiredField();
+        }   catch (Exception e) {
+            return "redirect:/error";
+        }
         return "redirect:/dashboard-prodotti";
     }
 }
