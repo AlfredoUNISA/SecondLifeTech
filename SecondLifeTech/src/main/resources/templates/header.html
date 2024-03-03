@@ -41,8 +41,18 @@
                         Il mio Profilo
                     </a>
                 </li>
-                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole().contains('GESTORE')}">
-                    <a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/my-dashboard">
+                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole().contains('PRODOTTI')}">
+                    <a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard-prodotti">
+                        La mia Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole().contains('UTENTI')}">
+                    <a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard-utenti">
+                        La mia Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole().contains('ORDINI')}">
+                    <a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/dashboard-ordini">
                         La mia Dashboard
                     </a>
                 </li>
