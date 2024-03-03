@@ -322,7 +322,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public void deleteModel(ProductModel model) {
-		checkProductModel(model);
+		//checkProductModel(model);
 
 		if (model.getImageFile() != null)
 			deleteImage(model.getImageFile());
