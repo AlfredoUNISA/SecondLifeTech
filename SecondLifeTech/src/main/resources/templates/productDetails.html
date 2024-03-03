@@ -9,6 +9,7 @@
     <link th:href="@{../css/style.css}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script th:src="@{../js/productDetails.js}"></script>
+    <script th:src="@{../js/productDetails-FormControl.js}"></script>
 
     <style>
         .btn-check:disabled+.btn,
@@ -90,25 +91,27 @@
                 <div class="col-md-3">
                     <div class="card p-3">
                         <div class="container">
-                            <span class="badge rounded-pill text-bg-warning mb-3" id="stock"></span>
+                            <span class="badge rounded-pill text-bg-warning mb-3" id="stockContainer">
+                                Ancora <span id="stock"></span> in magazzino!
+                            </span>
 
                             <p class="mb-0">Quantit&agrave;:</p>
 
                             <ul class="pagination">
                                 <li class="page-item">
-                                    <a class="page-link" href="#">
+                                    <div class="page-link" id="removeOneQuantity">
                                         <i class="fa fa-minus"></i>
-                                    </a>
+                                    </div>
                                 </li>
 
                                 <li class="page-item" style="pointer-events: none;">
-                                    <div class="page-link fw-bold" href="#">1</div>
+                                    <div class="page-link fw-bold" id="quantity">1</div>
                                 </li>
 
                                 <li class="page-item">
-                                    <a class="page-link" href="#">
+                                    <div class="page-link" id="addOneQuantity">
                                         <i class="fa fa-plus"></i>
-                                    </a>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -116,7 +119,7 @@
                         <div class="container">
                             <h3 class="card-text" id="price"></h3>
 
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" id="addToCartButton">
                                 <i class="fa fa-shopping-cart"></i>
                                 Aggiungi al carrello
                             </button>

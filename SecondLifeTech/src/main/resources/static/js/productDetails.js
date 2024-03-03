@@ -148,7 +148,25 @@ $(document).ready(function () {
 			const variation = findVariation(selectedRam, selectedDisplay, selectedStorage, selectedColor, selectedState);
 
 			$("#price").text(`€ ${variation.price}`);
-			$("#stock").text(`Ancora ${variation.inStock} in magazzino!`);
+
+			if (variation.inStock == 0) {
+				let container = $("#stockContainer");
+				container.text("Out of stock");
+				container.removeClass("text-bg-warning");
+				container.addClass("text-bg-danger");
+				$("#stock").text(0);
+				$("#addToCartButton").prop("disabled", true);
+			} else {
+				let container = $("#stockContainer");
+				container.html("Ancora <span id='stock'></span> in magazzino!");
+				container.removeClass("text-bg-danger");
+				container.addClass("text-bg-warning");
+				$("#stock").text(variation.inStock);
+				$("#stock").val(variation.inStock);
+				$("#addToCartButton").prop("disabled", false);
+			}
+
+			$("#addToCartButton").val(variation.id);
 		}
 
 		// Event listener for radio button change
