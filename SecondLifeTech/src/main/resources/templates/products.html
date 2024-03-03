@@ -127,8 +127,10 @@
                         <div class="col">
                             <div class="card h-100">
                                 <a href="#">
+                                    <th:block th:if="${product.imageFile != null}">
                                     <img class="card-img-top" th:src="@{'/images/' + ${product.imageFile.id}}"
                                          alt="Image" width="100" height="100">
+                                    </th:block>
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
