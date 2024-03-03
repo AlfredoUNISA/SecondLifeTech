@@ -2,12 +2,14 @@ package it.unisa.is.secondlifetech.controller;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ProductModel;
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,10 +54,12 @@ public class ProductController {
                             @RequestParam(value = "color", required = false) String color,
                             @RequestParam(value = "state", required = false) String state,
                             @RequestParam("page") Optional<Integer> page,
-                            @RequestParam("size") Optional<Integer> size
+                            @RequestParam("size") Optional<Integer> size,
+                            HttpServletRequest request
     ) throws ErrorInField {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
+        Principal principal = request.getUserPrincipal();
 
         ProductFilters filters = new ProductFilters(
                 name, brand, category, minYear, maxYear, minRam, maxRam, minDisplaySize, maxDisplaySize,
@@ -95,6 +99,11 @@ public class ProductController {
         model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
         model.addAttribute("states", ProductState.ALL_STATES);
 
+        User user = null;
+        if (principal != null) {
+            user = userService.findUserByEmail(principal.getName());
+        }
+        model.addAttribute("user", user);
         return "dashboard-gestore-prodotti";
     }
 
@@ -102,8 +111,12 @@ public class ProductController {
     //Rimozione di un prodotto
     @PostMapping("/dashboard-prodotti/delete")
     public String deleteProduct(@RequestParam("id") UUID id) {
-        ProductModel model = productService.findModelById(id);
-        productService.deleteModel(model);
+            ProductModel model = productService.findModelById(id);
+            try {
+                productService.deleteModel(model);
+            } catch (Exception e) {
+                return "redirect:/error";
+            }
         return "redirect:/dashboard-prodotti";
     }
 }
