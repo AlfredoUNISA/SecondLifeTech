@@ -34,6 +34,10 @@
                                 <div th:if="${param.error}">
                                     <div class="alert alert-danger">Email o password errate</div>
                                 </div>
+
+                                <div th:if="${register} == true">
+                                    <div class="alert alert-success">Ti sei appena registrato!</div>
+                                </div>
                                 <form class="text-center" method="post" role="form" th:action="@{/login}">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
