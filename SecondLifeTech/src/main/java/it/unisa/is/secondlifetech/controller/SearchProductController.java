@@ -100,6 +100,10 @@ public class SearchProductController {
     public String viewProductVariations(Model model, @PathVariable String name) {
         ProductModel productModel = productService.findModelByName(name);
 
+        if (productModel.getVariations().isEmpty()) {
+            return "redirect:/error";
+        }
+
         model.addAttribute("productModel", productModel);
         model.addAttribute("productVariations", productModel.getVariations());
 
