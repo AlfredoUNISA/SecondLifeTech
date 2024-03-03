@@ -37,6 +37,8 @@ public class ManageCartController {
 
 	@GetMapping
 	public String showCart(HttpServletRequest request, Model model) {
+		User user = null;
+
 		if (request.getUserPrincipal() == null) {
 			// Guest user, retrieve the cart from the cookie
 			Cookie[] cookies = request.getCookies();
@@ -65,11 +67,13 @@ public class ManageCartController {
 				model.addAttribute("total", 0);
 			}
 		} else {
-			User user = userService.findUserByEmail(request.getUserPrincipal().getName());
+			user = userService.findUserByEmail(request.getUserPrincipal().getName());
 			List<CartItem> cartItems = user.getCart().getItems();
 			model.addAttribute("cartItems", cartItems);
 			model.addAttribute("total", user.getCart().getTotal());
 		}
+
+		model.addAttribute("user", user);
 		return "my-cart";
 	}
 
