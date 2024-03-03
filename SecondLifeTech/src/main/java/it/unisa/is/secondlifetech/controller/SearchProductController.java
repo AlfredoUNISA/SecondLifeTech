@@ -12,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +94,29 @@ public class SearchProductController {
     public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
         String queryString = filters.toQueryString();
         return "redirect:/products?" + queryString;
+    }
+
+    @GetMapping("/products/{name}")
+    public String viewProductVariations(Model model, @PathVariable String name) {
+        ProductModel productModel = productService.findModelByName(name);
+
+        model.addAttribute("productModel", productModel);
+        model.addAttribute("productVariations", productModel.getVariations());
+
+        List<String> ramList = productModel.getVariationRamList();
+        List<String> displaySizeList = productModel.getVariationDisplaySizeList();
+        List<String> storageSizeList = productModel.getVariationStorageSizeList();
+
+        List<String> colorList = productModel.getVariationColorList();
+        List<String> stateList = productModel.getVariationStateList();
+
+        model.addAttribute("ramList", ramList);
+        model.addAttribute("displaySizeList", displaySizeList);
+        model.addAttribute("storageSizeList", storageSizeList);
+        model.addAttribute("colorList", colorList);
+        model.addAttribute("stateList", stateList);
+
+        return "productDetails";
     }
 
 }

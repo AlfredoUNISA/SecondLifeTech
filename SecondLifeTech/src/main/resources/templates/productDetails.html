@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dettagli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script th:src="@{../js/productDetails.js}"></script>
+
+    <style>
+        .btn-check:disabled+.btn,
+        .btn-check[disabled]+.btn {
+            pointer-events: none;
+            filter: none;
+            opacity: .65;
+            color: rgb(167, 24, 24);
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <form id="main-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mt-4">
+                    <img class="img-fluid rounded" th:src="@{'/images/' + ${productModel.imageFile.id}}"
+                         alt="Product Image">
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card p-3 mb-3">
+                        <h2 th:text="${productModel.name}" id="name"></h2>
+                        <h5 th:text="${productModel.brand}"></h5>
+                        <hr>
+
+                        <h5>RAM</h5>
+                        <div class="btn-group mb-3" role="group">
+                            <th:block th:each="ram : ${ramList}">
+                                <input type="radio" class="btn-check" name="ram-radio" th:id="'ram-radio-' + ${ram}"
+                                       autocomplete="off" th:value="${ram}">
+                                <label class="btn btn-outline-primary" th:for="${'ram-radio-' + ram}" th:text="${ram}"></label>
+                            </th:block>
+                        </div>
+
+                        <h5>Schermo</h5>
+                        <div class="btn-group mb-3" role="group">
+                            <th:block th:each="display : ${displaySizeList}">
+                                <input type="radio" class="btn-check" name="display-radio" th:id="'display-radio-' + ${display}"
+                                       autocomplete="off" th:value="${display}">
+                                <label class="btn btn-outline-primary" th:for="${'display-radio-' + display}" th:text="${display}"></label>
+                            </th:block>
+                        </div>
+
+                        <h5>Capacità</h5>
+                        <div class="btn-group mb-3" role="group">
+                            <th:block th:each="size : ${storageSizeList}">
+                                <input type="radio" class="btn-check" name="size-radio" th:id="'size-radio-' + ${size}"
+                                       autocomplete="off" th:value="${size}">
+                                <label class="btn btn-outline-primary" th:for="${'size-radio-' + size}" th:text="${size}"></label>
+                            </th:block>
+                        </div>
+
+                        <h5>Colore</h5>
+                        <div class="btn-group mb-3" role="group">
+                            <th:block th:each="color : ${colorList}">
+                                <input type="radio" class="btn-check" name="color-radio" th:id="'color-radio-' + ${color}"
+                                       autocomplete="off" th:value="${color}">
+                                <label class="btn btn-outline-primary" th:for="${'color-radio-' + color}" th:text="${color}"></label>
+                            </th:block>
+                        </div>
+
+                        <h5>Condizioni</h5>
+                        <div class="btn-group mb-3" role="group">
+                            <th:block th:each="state : ${stateList}">
+                                <input type="radio" class="btn-check" name="state-radio" th:id="'state-radio-' + ${state}"
+                                       autocomplete="off" th:value="${state}">
+                                <label class="btn btn-outline-primary" th:for="${'state-radio-' + state}" th:text="${state}"></label>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card p-3">
+                        <div class="container">
+                            <span class="badge rounded-pill text-bg-warning mb-3" id="stock"></span>
+
+                            <p class="mb-0">Quantit&agrave;:</p>
+
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="fa fa-minus"></i>
+                                    </a>
+                                </li>
+
+                                <li class="page-item" style="pointer-events: none;">
+                                    <div class="page-link fw-bold" href="#">1</div>
+                                </li>
+
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="container">
+                            <h3 class="card-text" id="price"></h3>
+
+                            <button type="button" class="btn btn-primary">
+                                <i class="fa fa-shopping-cart"></i>
+                                Aggiungi al carrello
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>

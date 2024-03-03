@@ -63,6 +63,123 @@ public class ProductModel {
 		this.imageFile = null;
 	}
 
+	/**
+	 * Restituisce una lista di tutte le ram disponibili per questo modello.
+	 *
+	 * @return una lista di Stringhe rappresentanti le ram disponibili
+	 */
+	public List<String> getVariationRamList() {
+		// Crea una lista di tutte le ram disponibili per questo modello
+		List<Integer> ramList = new ArrayList<>();
+
+		for (ProductVariation variation : variations) {
+			if (!ramList.contains(variation.getRam()))
+				ramList.add(variation.getRam());
+		}
+		ramList.sort(Integer::compareTo);
+
+		// Converti la lista di interi in una lista di stringhe
+		List<String> ramListString = new ArrayList<>();
+		for (Integer ram : ramList) {
+			ramListString.add(ram.toString());
+		}
+
+		return ramListString;
+	}
+
+	/**
+	 * Restituisce una lista di tutte le dimensioni dello schermo disponibili per questo modello.
+	 *
+	 * @return una lista di Stringhe rappresentanti le dimensioni dello schermo disponibili
+	 */
+	public List<String> getVariationDisplaySizeList() {
+		// Crea una lista di tutte le dimensioni dello schermo disponibili per questo modello
+		List<Double> displaySizeList = new ArrayList<>();
+
+		for (ProductVariation variation : variations) {
+			if (!displaySizeList.contains(variation.getDisplaySize()))
+				displaySizeList.add(variation.getDisplaySize());
+		}
+		displaySizeList.sort(Double::compareTo);
+
+		// Converti la lista di double in una lista di stringhe
+		List<String> displaySizeListString = new ArrayList<>();
+
+		for (Double display : displaySizeList) {
+			String displaySizeString;
+
+			// Convert double to string
+			if (display % 1 == 0) {
+				// If the double has no decimal part, use integer representation
+				displaySizeString = Integer.toString((int) (double) display);
+			} else {
+				// Otherwise, use the full double representation
+				displaySizeString = Double.toString(display);
+			}
+
+			// Check if the displaySizeString is already in the list
+			if (!displaySizeListString.contains(displaySizeString)) {
+				displaySizeListString.add(displaySizeString);
+			}
+		}
+
+		return displaySizeListString;
+	}
+
+	/**
+	 * Restituisce una lista di tutte le dimensioni del disco disponibili per questo modello.
+	 *
+	 * @return una lista di Stringhe rappresentanti le dimensioni del disco disponibili
+	 */
+	public List<String> getVariationStorageSizeList() {
+		// Crea una lista di tutte le dimensioni del disco disponibili per questo modello
+		List<Integer> storageSizeList = new ArrayList<>();
+
+		for (ProductVariation variation : variations) {
+			if (!storageSizeList.contains(variation.getStorageSize()))
+				storageSizeList.add(variation.getStorageSize());
+		}
+		storageSizeList.sort(Integer::compareTo);
+
+		// Converti la lista di interi in una lista di stringhe
+		List<String> storageSizeListString = new ArrayList<>();
+		for (Integer storageSize : storageSizeList) {
+			storageSizeListString.add(storageSize.toString());
+		}
+
+		return storageSizeListString;
+	}
+
+	/**
+	 * Restituisce una lista di tutti i colori disponibili per questo modello.
+	 *
+	 * @return una lista di Stringhe rappresentanti i colori disponibili
+	 */
+	public List<String> getVariationColorList() {
+		List<String> colorList = new ArrayList<>();
+
+		for (ProductVariation variation : variations) {
+			if (!colorList.contains(variation.getColor()))
+				colorList.add(variation.getColor());
+		}
+		return colorList;
+	}
+
+	/**
+	 * Restituisce una lista di tutte le condizioni disponibili per questo modello.
+	 *
+	 * @return una lista di Stringhe rappresentanti le condizioni disponibili
+	 */
+	public List<String> getVariationStateList() {
+		List<String> stateList = new ArrayList<>();
+
+		for (ProductVariation variation : variations) {
+			if (!stateList.contains(variation.getState()))
+				stateList.add(variation.getState());
+		}
+		return stateList;
+	}
+
 	public ProductModel(String name, String brand, String category) {
 		this.name = name;
 		this.brand = brand;
