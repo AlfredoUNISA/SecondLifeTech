@@ -22,25 +22,30 @@ public class DatabasePopulator {
 	@PostConstruct
 	public void populate() {
 		try {
-			for (int i = 0; i < 5; i++) {
-				if (service.findModelByName("model" + i) == null) {
-					String category;
+//			for (int i = 0; i < 5; i++) {
+//				if (service.findModelByName("model" + i) == null) {
+//					String category;
+//
+//					if (i % 2 == 0) {
+//						category = ProductCategory.SMARTPHONE;
+//					} else {
+//						category = ProductCategory.TABLET;
+//					}
+//
+//
+//
+////					for (int j = 0; j < 5; j++) {
+////						ProductVariation variation = getProductVariation(j, i, model);
+////						service.createNewVariation(model, variation);
+////					}
+//				}
+//			}
+			ProductModel iPhone7 = new ProductModel("iPhone 708", "Apple", ProductCategory.SMARTPHONE);
+			service.createNewModel(iPhone7);
 
-					if (i % 2 == 0) {
-						category = ProductCategory.SMARTPHONE;
-					} else {
-						category = ProductCategory.TABLET;
-					}
-
-					ProductModel model = new ProductModel("model" + i, "brand" + i, category);
-					service.createNewModel(model);
-
-					for (int j = 0; j < 5; j++) {
-						ProductVariation variation = getProductVariation(j, i, model);
-						service.createNewVariation(model, variation);
-					}
-				}
-			}
+			ProductVariation variation = new ProductVariation(2008,4,5.1,128,800,10,"nero",ProductState.ACCETTABILE,iPhone7);
+			variation = new ProductVariation(2008,4,5.1,128,120,10,"nero",ProductState.ACCETTABILE,iPhone7);
+			variation = new ProductVariation(2020,8,6.1,1200,1200,1,"nero",ProductState.ACCETTABILE,iPhone7);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
