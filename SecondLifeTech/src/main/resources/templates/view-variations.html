@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container">
+        <a class="btn btn-primary mb-5" href="/dashboard-prodotti/add-variation">Aggiungi variazione</a>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nome modello</th>
+                    <th>Marca</th>
+                    <th>Categoria</th>
+                    <th>Anno</th>
+                    <th>RAM</th>
+                    <th>Dimensione Display</th>
+                    <th>Dimensione Memoria</th>
+                    <th>Prezzo</th>
+                    <th>Quantità</th>
+                    <th>Colore</th>
+                    <th>Condizione</th>
+                    <th/>
+                </thead>
+                <tbody>
+                <th:block th:if="${variations.isEmpty()}">
+                    <tr>
+                        <td colspan="11">Nessuna variazione trovata</td>
+                    </tr>
+                </th:block>
+                <th:block th:unless="${variations.isEmpty()}">
+                    <th:block th:each="variation : ${variations}">
+                        <tr>
+                            <td th:text="${variation.model.name}"></td>
+                            <td th:text="${variation.model.brand}"></td>
+                            <td th:text="${variation.model.category}"></td>
+                            <td th:text="${variation.year}"></td>
+                            <td th:text="${variation.ram}"></td>
+                            <td th:text="${variation.displaySize}"></td>
+                            <td th:text="${variation.storageSize}"></td>
+                            <td th:text="${variation.price}"></td>
+                            <td th:text="${variation.quantityInStock}"></td>
+                            <td th:text="${variation.color}"></td>
+                            <td th:text="${variation.state}"></td>
+                            <td>
+                                <a class="btn btn-primary"
+                                   th:href="@{'/dashboard-prodotti/edit-variation/' + ${variation.id}}">Modifica</a>
+                                <a class="btn btn-danger"
+                                   th:href="@{'/dashboard-prodotti/delete-variation/' + ${variation.id}}">Elimina</a>
+                            </td>
+                        </tr>
+                    </th:block>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>
