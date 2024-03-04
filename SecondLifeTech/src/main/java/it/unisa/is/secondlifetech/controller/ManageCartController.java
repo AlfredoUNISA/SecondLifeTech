@@ -54,7 +54,7 @@ public class ManageCartController {
 						List<CartItem> cartItems = getProductDetails(cartMap);
 						model.addAttribute("cartItems", cartItems);
 						model.addAttribute("total", cartItems.stream().mapToDouble(item ->
-							item.getProductVariation().getPrice() * item.getQuantity()).sum()
+								item.getProductVariation().getPrice() * item.getQuantity()).sum()
 						);
 						cartFound = true;
 						break;
@@ -69,6 +69,26 @@ public class ManageCartController {
 		} else {
 			user = userService.findUserByEmail(request.getUserPrincipal().getName());
 			List<CartItem> cartItems = user.getCart().getItems();
+
+			// Check if the product is still available in the database
+			// Copia la lista per evitare ConcurrentModificationException
+			for (CartItem cartItem : new ArrayList<>(cartItems)) {
+				int stock = cartItem.getProductVariation().getQuantityInStock();
+				int quantity = cartItem.getQuantity();
+
+				if (stock == 0) {
+					cartItems.remove(cartItem);
+					cartService.removeProductFromCart(user.getCart(), cartItem.getProductVariation().getId());
+				} else if (stock < quantity) {
+					cartItem.setQuantity(stock);
+					try {
+						cartService.editProductQuantityInCart(user.getCart(), cartItem.getProductVariation().getId(), stock);
+					} catch (Exception e) {
+						return "redirect:/error";
+					}
+				}
+			}
+
 			model.addAttribute("cartItems", cartItems);
 			model.addAttribute("total", user.getCart().getTotal());
 		}
@@ -154,7 +174,106 @@ public class ManageCartController {
 			User user = userService.findUserByEmail(request.getUserPrincipal().getName());
 			try {
 				cartService.addToCart(user.getCart(), UUID.fromString(id), Integer.parseInt(quantity));
-			} catch (NoDevicesAvailableException e) {
+			} catch (Exception e) {
+				return "redirect:/error";
+			}
+		}
+
+		return "redirect:/my-cart";
+	}
+
+	@PostMapping("/edit")
+	public String editQuantity(HttpServletRequest request,
+	                           HttpServletResponse response,
+	                           @RequestParam("productVariationId") String productVariationId,
+	                           @RequestParam("quantity") String quantity) {
+
+		if (request.getUserPrincipal() == null) {
+			// Guest user, store the cart in a cookie
+			Cookie[] cookies = request.getCookies();
+
+			boolean cartFound = false;
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("cart")) {
+						// Cart cookie found, update it with new quantity
+						String cartValue = cookie.getValue();
+						// Parse the cart cookie value to retrieve product id and quantity pairs
+						Map<String, Integer> cartMap = parseCartCookie(cartValue);
+						// Update the quantity for the specified product variation id
+						cartMap.put(productVariationId, Integer.parseInt(quantity));
+						// Convert the updated cart map back to a string
+						String updatedCartValue = convertCartToString(cartMap);
+						// Update the cart cookie value
+						cookie.setValue(updatedCartValue);
+						// Set the cookie to expire in 1 day
+						cookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+						// Add the cookie back to the response
+						response.addCookie(cookie);
+						cartFound = true;
+						break;
+					}
+				}
+			}
+			if (!cartFound) {
+				// Cart cookie not found, create a new one
+				Map<String, Integer> cartMap = new HashMap<>();
+				cartMap.put(productVariationId, Integer.parseInt(quantity));
+				String cartValue = convertCartToString(cartMap);
+				Cookie newCookie = new Cookie("cart", cartValue);
+				// Set the cookie to expire in 1 day
+				newCookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+				// Add the cookie to the response
+				response.addCookie(newCookie);
+			}
+		} else {
+			User user = userService.findUserByEmail(request.getUserPrincipal().getName());
+			try {
+				cartService.editProductQuantityInCart(user.getCart(), UUID.fromString(productVariationId), Integer.parseInt(quantity));
+			} catch (Exception e) {
+				return "redirect:/error";
+			}
+		}
+
+		return "redirect:/my-cart";
+	}
+
+	@PostMapping("/remove")
+	public String removeProductFromCart(HttpServletRequest request,
+	                                    HttpServletResponse response,
+	                                    @RequestParam(value = "cartItemId", required = false) String cartItemId,
+	                                    @RequestParam(value = "productVariationId", required = false) String productVariationId) {
+
+		if (request.getUserPrincipal() == null) {
+			// Guest user, store the cart in a cookie
+			Cookie[] cookies = request.getCookies();
+
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("cart")) {
+						// Cart cookie found, update it by removing the specified cart item
+						String cartValue = cookie.getValue();
+						// Parse the cart cookie value to retrieve product id and quantity pairs
+						Map<String, Integer> cartMap = parseCartCookie(cartValue);
+						// Remove the specified cart item
+						cartMap.remove(productVariationId);
+						// Convert the updated cart map back to a string
+						String updatedCartValue = convertCartToString(cartMap);
+						// Update the cart cookie value
+						cookie.setValue(updatedCartValue);
+						// Set the cookie to expire in 1 day
+						cookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+						// Add the cookie back to the response
+						response.addCookie(cookie);
+						break;
+					}
+				}
+			}
+		} else {
+			User user = userService.findUserByEmail(request.getUserPrincipal().getName());
+			try {
+				cartService.removeProductFromCart(user.getCart(), UUID.fromString(cartItemId));
+			} catch (Exception e) {
 				return "redirect:/error";
 			}
 		}
@@ -175,10 +294,14 @@ public class ManageCartController {
 		for (String pair : pairs) {
 			// Split each pair by '=' to separate product id and quantity
 			String[] keyValue = pair.split("=");
-			cartMap.put(keyValue[0], Integer.parseInt(keyValue[1]));
+			if (keyValue.length == 2) {
+				// Ensure that the keyValue array contains both product id and quantity
+				cartMap.put(keyValue[0], Integer.parseInt(keyValue[1]));
+			}
 		}
 		return cartMap;
 	}
+
 
 	/**
 	 * Convert the cart map to a string that can be stored in a cookie
@@ -192,9 +315,13 @@ public class ManageCartController {
 			// Append product id and quantity pairs separated by '='
 			cartValue.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
 		}
-		// Remove the last '&' character
-		cartValue.setLength(cartValue.length() - 1);
+		// Check if the cart is not empty before removing the last '&'
+		if (!cartValue.isEmpty()) {
+			// Remove the last '&' character
+			cartValue.setLength(cartValue.length() - 1);
+		}
 		return cartValue.toString();
 	}
+
 
 }
