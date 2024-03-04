@@ -3,6 +3,7 @@ package it.unisa.is.secondlifetech.controller;
 import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
+import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
@@ -156,5 +157,68 @@ public class ProductController {
             return "redirect:/error";
         }
         return "redirect:/dashboard-prodotti";
+    }
+
+    @GetMapping("/dashboard-prodotti/view-variations")
+    public String viewVariations(Model model, Principal principal) {
+        User user = null;
+        if (principal != null) {
+            user = userService.findUserByEmail(principal.getName());
+        }
+        List<ProductVariation> list = productService.findAllVariations();
+        model.addAttribute("user", user);
+        model.addAttribute("variations", list);
+        return "view-variations";
+    }
+    @GetMapping("/dashboard-prodotti/add-variation")
+    public String addVariation(Model model, Principal principal) {
+        User user = null;
+        if (principal != null) {
+            user = userService.findUserByEmail(principal.getName());
+        }
+        List<ProductModel> models = productService.findAllModels();
+        model.addAttribute("models", models);
+        model.addAttribute("newVariation", new ProductVariation());
+        model.addAttribute("user", user);
+        return "add-variation";
+    }
+    @PostMapping("/dashboard-prodotti/add-variation")
+    public String addVariation(@ModelAttribute("newVariation") ProductVariation variation,
+                               @RequestParam("image") MultipartFile file,
+                               Principal principal) {
+        ProductModel model= null;
+        User user = null;
+        if (principal != null) {
+            user = userService.findUserByEmail(principal.getName());
+        }
+        //Aggiunta Immagine
+        if(!file.isEmpty()) {
+            ImageFile fileObj = new ImageFile() ;
+            fileObj.setName(variation.getModel().getName());
+            fileObj.setContentType(file.getContentType());
+            try {
+                fileObj.setData(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ImageFile imageFile = imageFileRepository.save(fileObj);
+            variation.getModel().setImageFile(imageFile);
+        }
+        //Aggiunta della variazione
+
+        if(variation.getModel().getBrand().isBlank()){ //Se il modello non è presente nel database
+            model = productService.findModelById(variation.getModel().getId());
+        }
+        else{
+            model = variation.getModel();
+        }
+        try {
+            productService.createNewModel(model);
+            productService.createNewVariation(model,variation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/error";
+        }
+        return "redirect:/dashboard-prodotti/view-variations";
     }
 }
