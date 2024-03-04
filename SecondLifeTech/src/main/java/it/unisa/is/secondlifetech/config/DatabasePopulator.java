@@ -40,12 +40,12 @@ public class DatabasePopulator {
 ////					}
 //				}
 //			}
-			ProductModel iPhone7 = new ProductModel("iPhone 708", "Apple", ProductCategory.SMARTPHONE);
-			service.createNewModel(iPhone7);
-
-			ProductVariation variation = new ProductVariation(2008,4,5.1,128,800,10,"nero",ProductState.ACCETTABILE,iPhone7);
-			variation = new ProductVariation(2008,4,5.1,128,120,10,"nero",ProductState.ACCETTABILE,iPhone7);
-			variation = new ProductVariation(2020,8,6.1,1200,1200,1,"nero",ProductState.ACCETTABILE,iPhone7);
+//			ProductModel iPhone7 = new ProductModel("iPhone 708", "Apple", ProductCategory.SMARTPHONE);
+//			service.createNewModel(iPhone7);
+//
+//			ProductVariation variation = new ProductVariation(2008,4,5.1,128,800,10,"nero",ProductState.ACCETTABILE,iPhone7);
+//			variation = new ProductVariation(2008,4,5.1,128,120,10,"nero",ProductState.ACCETTABILE,iPhone7);
+//			variation = new ProductVariation(2020,8,6.1,1200,1200,1,"nero",ProductState.ACCETTABILE,iPhone7);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

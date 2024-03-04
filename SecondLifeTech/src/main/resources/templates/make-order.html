@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Dettagli</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+</head>
+
+<body data-bs-theme="light">
+
+	<nav class="navbar navbar-expand-lg bg-primary">
+		<div class="container-fluid">
+			<!-- Brand-->
+			<a class="text-white navbar-brand" href="/">
+				SecondLifeTech
+			</a>
+
+			<!-- Pulsante per restringere la navbar in base alla dimensione dello schermo-->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent">
+				<span class="navbar-toggler-icon navbar-dark"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<!-- Tasti a sinistra della navbar -->
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<!--Tasto per visualizzare i prodotti solo nel caso non sia un gestore-->
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/products">
+							Prodotti
+						</a>
+					</li>
+					<!--Tasti per accedere alle pagine di login o profilo o dashboard o logout-->
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/login">
+							Login/Registrazione
+						</a>
+					</li>
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/my-profile">
+							Il mio Profilo
+						</a>
+					</li>
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/my-dashboard">
+							La mia Dashboard
+						</a>
+					</li>
+
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/logout">
+							Logout
+						</a>
+					</li>
+					<li class="nav-item mx-0 mx-lg-1">
+						<a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/my-cart">
+							Il mio Carrello
+						</a>
+					</li>
+					<li>
+						<div class="form-check form-switch m-lg-3">
+							<label class="form-check-label" for="lightSwitch">
+								<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+									class="bi-brightness-high" viewBox="1 1 16 18">
+									<path
+										d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+								</svg>
+							</label>
+							<input class="form-check-input bg-secondary" type="checkbox" id="lightSwitch" />
+						</div>
+					</li>
+				</ul>
+
+				<!-- Tasti a destra della navbar -->
+				<form class="d-flex" role="search" action="/products">
+					<input class="form-control me-2" name="name" type="search" placeholder="Cerca il prodotto..."
+						aria-label="Search">
+					<button class="text-white btn bg-success" type="submit">
+						Cerca
+					</button>
+				</form>
+			</div>
+		</div>
+
+		<script>
+			// Script per cambiare il tema da light a dark e viceversa
+			const switchElement = document.getElementById('lightSwitch');
+			const bodyElement = document.body;
+
+			function getThemeFromStorage() {
+				const storedTheme = localStorage.getItem('theme');
+				return storedTheme || 'light'; // Return 'light' if no theme is stored
+			}
+
+			function setThemeToStorage(theme) {
+				localStorage.setItem('theme', theme);
+			}
+
+			function toggleTheme() {
+				const currentTheme = bodyElement.dataset.bsTheme;
+				const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+				bodyElement.dataset.bsTheme = newTheme;
+				setThemeToStorage(newTheme);
+			}
+
+			// Check if the theme is already saved in local storage and apply it
+			const storedTheme = getThemeFromStorage();
+			bodyElement.dataset.bsTheme = storedTheme;
+
+			switchElement.addEventListener('change', toggleTheme);
+		</script>
+	</nav>
+
+	<div class="my-content" style="min-height: calc(100vh - 17em);">
+		<br />
+		<div class="container">
+			<h2>Finalizza Ordine</h2>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-body">
+							<form action="payment.html">
+								<div class="mb-3">
+									<h5 class="card-title">Indirizzo di spedizione</h5>
+									<select class="form-select form-select" name="shippingAddress">
+										<option selected value="">Seleziona uno</option>
+										<option value="New Delhi">New Delhi</option>
+										<option value="Istanbul">Istanbul</option>
+										<option value="Jakarta">Jakarta</option>
+									</select>
+								</div>
+
+								<div class="mb-3">
+									<h5 class="card-title">Metodo di pagamento</h5>
+									<select class="form-select form-select" name="paymentMethod">
+										<option selected value="">Seleziona uno</option>
+										<option value="Carta 1">Carta 1</option>
+										<option value="Carta 2">Carta 2</option>
+										<option value="Carta 3">Carta 3</option>
+									</select>
+								</div>
+
+								<div class="text-end">
+									<button type="submit" disabled class="btn btn-primary">Place Order</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 mt-md-0 mt-sm-4">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Riassunto Ordine</h5>
+							<ul class="list-group">
+								<li class="list-group-item d-flex justify-content-between align-items-center">
+									Product 1
+									<span class="badge bg-primary rounded-pill">€ 10.00</span>
+								</li>
+
+								<li class="list-group-item d-flex justify-content-between align-items-center">
+									Product 2
+									<span class="badge bg-primary rounded-pill">€ 15.00</span>
+								</li>
+
+								<li class="list-group-item d-flex justify-content-between align-items-center">
+									Product 3
+									<span class="badge bg-primary rounded-pill">€ 5.00</span>
+								</li>
+
+								<li class="list-group-item d-flex justify-content-between align-items-center">
+									<strong>Totale</strong>
+									<strong>€ 30.00</strong>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			// Funzione per controllare se la select di indirizzo di spedizione e quella del metodo di pagamento non sono vuote
+			function checkFields() {
+				var shippingAddress = $('select[name="shippingAddress"]').val();
+				var paymentMethod = $('select[name="paymentMethod"]').val();
+
+				// Attiva il pulsante se entrambi i campi non sono vuoti, altrimenti lo disattiva
+				if (shippingAddress !== "" && paymentMethod !== "") {
+					$('button[type="submit"]').prop('disabled', false);
+				} else {
+					$('button[type="submit"]').prop('disabled', true);
+				}
+			}
+
+			// Richiama la funzione al caricamento della pagina e ogni volta che una delle select viene modificata
+			checkFields();
+			$('select[name="shippingAddress"], select[name="paymentMethod"]').change(function () {
+				checkFields();
+			});
+		});
+
+	</script>
+
+	<footer class="text-center mt-auto">
+		<hr />
+		<!-- Contenuto footer diviso in griglia di bootstrap-->
+		<div class="container-fluid">
+			<!-- Unica riga del footer-->
+			<div class="row">
+				<!-- Location -->
+				<div class="col-md-4 mb-5 mb-lg-0">
+					<h4 class="text-uppercase mb-4">Location</h4>
+					<p>Via Giovanni Paolo II, 132<br />Fisciano SA, 84084 </p>
+				</div>
+				<!-- Link social-->
+				<div class="col-md-4 mb-5 mb-lg-0">
+					<h4 class="text-uppercase">Puoi trovarci anche su:</h4>
+					<ul class="list-inline">
+						<li class="list-inline-item">
+							<a class="btn btn-outline-primary text-center btn-social rounded-circle" role="button"
+								href="https://facebook.com">
+								<b class="fa fa-facebook fa-fw"></b>
+							</a>
+						</li>
+						<li class="list-inline-item">
+							<a class="btn btn-outline-primary text-center btn-social rounded-circle" role="button"
+								href="https://x.com">
+								<i class="fa fa-twitter fa-fw"></i>
+							</a>
+						</li>
+						<li class="list-inline-item">
+							<a class="btn btn-outline-primary text-center btn-social rounded-circle" role="button"
+								href="https://instagram.com">
+								<i class="fa fa-instagram fa-fw"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Contattaci-->
+				<div class="col-md-4">
+					<h4 class="text-uppercase mb-4">Contattaci</h4>
+					<a class="text-center" href="/contact-us">
+						<i class="fa fa-envelope"> </i>
+						Contattaci
+					</a>
+				</div>
+			</div>
+
+			<!-- Copyright-->
+			<div class="text-center copyright py-4">
+				<div class="container-fluid"><small>Copyright © SecondLifeTech 2024</small></div>
+			</div>
+		</div>
+	</footer>
+
+</body>
+
+</html>
