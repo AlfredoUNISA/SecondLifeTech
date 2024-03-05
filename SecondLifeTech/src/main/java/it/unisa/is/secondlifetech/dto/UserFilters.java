@@ -23,15 +23,16 @@ public class UserFilters {
 
 	public String toQueryString() {
 		StringBuilder queryString = new StringBuilder();
-		if (email != null)
-			queryString.append("email=").append(email);
+		if (!email.isBlank())
+			queryString.append("email=").append(email).append("&");
 
-		if (role != null)
+		if (!role.isBlank())
 			queryString.append("role=").append(role);
 
 		// Rimuovi l'ultimo "&"
 		if (!queryString.isEmpty())
-			queryString.setLength(queryString.length() - 1);
+			if(queryString.charAt(queryString.length() - 1) == '&')
+				queryString.setLength(queryString.length() - 1);
 
 		return queryString.toString();
 	}

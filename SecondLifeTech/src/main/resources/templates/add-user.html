@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container">
+        <form method="post" role="form" enctype="multipart/form-data" action="/dashboard-utenti/add-user"
+              th:object="${newUser}">
+            <div class="mb-3">
+                <label for="nameAdd" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nameAdd" placeholder="Inserisci il nome"
+                       th:field="*{firstName}">
+            </div>
+            <div class="mb-3">
+                <label for="brandAdd" class="form-label">Cognome</label>
+                <input type="text" class="form-control" id="brandAdd" placeholder="Inserisci il cognome"
+                       th:field="*{lastName}">
+            </div>
+            <div class="mb-3">
+                <label for="displayAdd" class="form-label">Email</label>
+                <input type="text" class="form-control" id="displayAdd" placeholder="Inserisci Email"
+                       th:field="*{email}">
+            </div>
+            <div class="mb-3">
+                <label for="phoneAdd" class="form-label">Numero di telefono</label>
+                <input type="number" class="form-control" id="phoneAdd" placeholder="Inserisci Numero di telefono"
+                       th:field="*{phoneNumber}">
+            </div>
+            <div class="mb-3">
+                <label for="stateAdd" class="form-label">Ruolo</label>
+                <select id="stateAdd" class="form-select" th:field="*{role}">
+                    <th:block th:each="role : ${roles}">
+                        <option th:value="${role}" th:text="${role}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div class="mb-3">
+                <button type="reset" class="btn btn-danger">Reset</button>
+                <button type="submit" class="btn btn-primary">Aggiungi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>

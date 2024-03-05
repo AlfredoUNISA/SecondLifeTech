@@ -34,16 +34,22 @@ public class DatabasePopulator {
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
 				ProductVariation variation = new ProductVariation(2008,4,5.1,128,800,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2008,4,5.1,128,120,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2020,8,6.1,1200,1200,1,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 			}
 
 			model = new ProductModel("iPhone 8", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
 				ProductVariation variation = new ProductVariation(2008,4,5.1,128,800,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2008,4,5.1,128,120,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2020,8,6.1,1200,1200,1,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
 			}
 
 		} catch (Exception e) {

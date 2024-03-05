@@ -113,9 +113,6 @@ public class ProductController {
             user = userService.findUserByEmail(principal.getName());
         }
         model.addAttribute("user", user);
-        // Utilizzato dal form di aggiunta
-        model.addAttribute("newModel", new ProductModel());
-
         return "dashboard-gestore-prodotti";
     }
 
