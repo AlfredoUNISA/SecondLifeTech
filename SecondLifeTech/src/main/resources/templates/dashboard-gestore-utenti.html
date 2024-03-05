@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>La mia Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 col-12 border rounded p-3">
+                <h2>Filtri</h2>
+                <hr>
+
+                <form action="/dashboard-utenti" method="post" role="form">
+                    <div class="form-group mt-3">
+                        <h5>Email</h5>
+                        <input id="email" name="email" type="text" th:field="*{filters.email}" class="form-control"
+                               placeholder="Email">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <h5>Ruolo</h5>
+                        <select id="role" th:field="*{filters.role}" class="form-select" name="role">
+                            <option selected value="">All Roles</option>
+                            <th:block th:each="role : ${roles}">
+                                <option th:value="${role}" th:text="${role}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary">Applica Filtri</button>
+                    </div>
+                </form>
+                <br/>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="reset" class="btn btn-secondary" onclick="window.location.href='/dashboard-utenti'">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <a class="btn btn-primary mb-5" href="/dashboard-utenti/add-user">Aggiungi Utente</a>
+                <br/>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Nome</th>
+                            <th>Ruolo</th>
+                            <th/>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:if="${userPage.isEmpty()}">
+                            <tr>
+                                <td colspan="4">Nessun utente trovato</td>
+                            </tr>
+                        </th:block>
+                        <th:block th:unless="${userPage.isEmpty()}">
+                        <th:block th:each="user : ${userPage}">
+                            <tr>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                                <td th:text="${user.role}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalDeleteUser">
+                                        Elimina
+                                    </button>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </th:block>
+                        </tbody>
+                    </table>
+                        <div class="modal fade" id="modalDeleteUser" tabindex="-1" role="dialog"
+                             aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleDelete">
+                                            Sei sicuro di voler eliminare questo utente?
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Questa azione è irreversibile.<br/></p>
+                                    </div>
+                                    <form action="/dashboard-utenti/delete" method="post">
+                                        <div class="modal-footer">
+                                            <input type="hidden" th:name="id" th:value="${user.id}">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Annulla Eliminazione
+                                            </button>
+                                            <button type="submit" class="btn btn-danger">
+                                                Elimina
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        </th:block>
+
+                </div>
+
+                <ul class="pagination justify-content-center mt-5">
+                    <!-- Previous Page Link -->
+                    <li th:class="${userPage.number == 0} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${userPage.number > 0}"
+                           th:href="@{/dashboard-utenti(size=${userPage.size}, page=${userPage.number})}"
+                           class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                        </a>
+
+                        <span th:unless="${userPage.number > 0}" class="page-link" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="pageNumber : ${pageNumbers}"
+                        th:class="${pageNumber == userPage.number + 1} ? 'page-item active' : 'page-item'">
+                        <a th:href="@{/dashboard-utenti(size=${userPage.size}, page=${pageNumber})}"
+                           class="page-link"
+                           th:text="${pageNumber}"></a>
+                    </li>
+
+                    <!-- Next Page Link -->
+                    <li th:class="${userPage.number == userPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${userPage.number < userPage.totalPages - 1}"
+                           th:href="@{/dashboard-utenti(size=${userPage.size}, page=${userPage.number + 2})}"
+                           class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span>
+                        </a>
+
+                        <span th:unless="${userPage.number < userPage.totalPages - 1}"
+                              class="page-link"
+                              aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>
