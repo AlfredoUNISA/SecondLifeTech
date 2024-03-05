@@ -19,10 +19,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig {
 	private UserDetailsService userDetailsService;
+	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
 	@Autowired
-	public WebSecurityConfig(UserDetailsService userDetailsService) {
+	public WebSecurityConfig(UserDetailsService userDetailsService, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
 		this.userDetailsService = userDetailsService;
+		this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
 	}
 
 	@Bean
@@ -49,6 +51,7 @@ public class WebSecurityConfig {
 				.loginPage("/login")
 				.loginProcessingUrl("/login")
 				.defaultSuccessUrl("/")
+				.successHandler(customAuthenticationSuccessHandler)
 				.permitAll()
 			).logout((logout) -> logout
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

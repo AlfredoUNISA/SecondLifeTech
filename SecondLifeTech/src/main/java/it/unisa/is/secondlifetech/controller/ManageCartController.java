@@ -151,6 +151,7 @@ public class ManageCartController {
 						// Update the cart cookie value
 						cookie.setValue(updatedCartValue);
 						cookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+						cookie.setPath("/");
 						response.addCookie(cookie);
 						cartFound = true;
 						break;
@@ -167,6 +168,7 @@ public class ManageCartController {
 
 				// Add the cookie to the response
 				newCookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+				newCookie.setPath("/");
 				response.addCookie(newCookie);
 			}
 		} else {
@@ -207,6 +209,7 @@ public class ManageCartController {
 						cookie.setValue(updatedCartValue);
 						// Set the cookie to expire in 1 day
 						cookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+						cookie.setPath("/");
 						// Add the cookie back to the response
 						response.addCookie(cookie);
 						cartFound = true;
@@ -222,6 +225,7 @@ public class ManageCartController {
 				Cookie newCookie = new Cookie("cart", cartValue);
 				// Set the cookie to expire in 1 day
 				newCookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+				newCookie.setPath("/");
 				// Add the cookie to the response
 				response.addCookie(newCookie);
 			}
@@ -262,6 +266,7 @@ public class ManageCartController {
 						cookie.setValue(updatedCartValue);
 						// Set the cookie to expire in 1 day
 						cookie.setMaxAge(WebSecurityConfig.COOKIE_MAX_AGE);
+						cookie.setPath("/");
 						// Add the cookie back to the response
 						response.addCookie(cookie);
 						break;
