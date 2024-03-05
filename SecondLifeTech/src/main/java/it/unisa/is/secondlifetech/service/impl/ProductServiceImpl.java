@@ -64,8 +64,6 @@ public class ProductServiceImpl implements ProductService {
 		return productModelRepository.save(productModel);
 	}
 
-
-
 	/**
 	 * Aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
 	 *
@@ -77,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 		if (variation == null)
 			return null;
 
-		checkProductVariationValues(model, variation);
+		checkProductVariationValues(variation);
 
 		model.addVariation(variation);
 
@@ -322,7 +320,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public void deleteModel(ProductModel model) {
-		//checkProductModel(model);
+		checkProductModel(model);
 
 		if (model.getImageFile() != null)
 			deleteImage(model.getImageFile());
@@ -343,9 +341,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public void deleteVariation(ProductVariation variation) {
-		checkProductVariation(variation);
-
 		ProductModel model = variation.getModel();
+		checkProductModel(model);
+		checkProductVariation(variation);
 
 		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
 		for (OrderItem item : orderService.findOrderItemsByProductVariation(variation)) {
@@ -388,14 +386,36 @@ public class ProductServiceImpl implements ProductService {
 	// =============== OTHER ===========================================================================================
 	// ================================================================================================================
 
-	private static void checkProductModel(ProductModel productModel) {
-		if (productModel == null)
-			throw new IllegalArgumentException("Il modello specificato non è valido");
 
-		if (productModel.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un modello esistente");
+	/**
+	 * Controlla se il modello di prodotto specificato è valido.
+	 *
+	 * @param model l'oggetto ProductModel da controllare
+	 * @throws IllegalArgumentException se il modello di prodotto specificato è null
+	 */
+	private static void checkProductModel(ProductModel model) {
+		if (model == null)
+			throw new IllegalArgumentException("Il modello specificato non è valido");
 	}
 
+	/**
+	 * Controlla se la variante di prodotto specificata è valida.
+	 *
+	 * @param variation l'oggetto ProductVariation da controllare
+	 * @throws IllegalArgumentException se la variante di prodotto specificata è null
+	 */
+	private static void checkProductVariation(ProductVariation variation) {
+		if (variation == null)
+			throw new IllegalArgumentException("La variante specificata non è valida");
+	}
+
+	/**
+	 * Controlla che i valori del modello di prodotto siano validi.
+	 *
+	 * @param productModel l'oggetto ProductModel da controllare
+	 * @throws ErrorInField se uno dei valori non è valido
+	 * @throws MissingRequiredField se uno dei valori richiesti è mancante
+	 */
 	private static void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
 		if (productModel.getName().isEmpty()
 			|| productModel.getBrand().isEmpty()
@@ -413,15 +433,7 @@ public class ProductServiceImpl implements ProductService {
 			throw new ErrorInField("La categoria specificata non è valida");
 	}
 
-	private static void checkProductVariation(ProductVariation productVariation) {
-		if (productVariation == null)
-			throw new IllegalArgumentException("La variante specificata non è valida");
-
-		if (productVariation.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare una variante esistente");
-	}
-
-	private static void checkProductVariationValues(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField {
+	private static void checkProductVariationValues(ProductVariation variation) throws ErrorInField, MissingRequiredField {
 		if (variation.getState().isEmpty() || variation.getColor().isEmpty()) {
 			throw new MissingRequiredField();
 		}
@@ -446,9 +458,6 @@ public class ProductServiceImpl implements ProductService {
 
 		if (!List.of(ProductState.ALL_STATES).contains(variation.getState()))
 			throw new ErrorInField("Lo stato specificato non è valido");
-
-		if (model == null)
-			throw new ErrorInField("Il modello specificato non è valido");
 	}
 
 	/**

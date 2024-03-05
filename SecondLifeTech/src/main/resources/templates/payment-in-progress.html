@@ -11,7 +11,6 @@
 	<style>
 		body {
 			font-family: "Open Sans", sans-serif;
-			/* Specify your desired font */
 		}
 	</style>
 </head>
@@ -40,7 +39,7 @@
 				<form action="/my-cart/place-order/payment-in-progress/proceed">
 					<input type="hidden" th:value="${paymentMethodId}" name="paymentMethodId">
 					<input type="hidden" th:value="${shippingAddressId}" name="shippingAddressId">
-					<input type="submit" class="btn btn-success">Pagamento Riuscito</input>
+					<input type="submit" class="btn btn-success" value="Pagamento Riuscito">
 				</form>
 			</div>
 		</div>

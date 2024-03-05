@@ -54,6 +54,7 @@
                             <th>Data</th>
                             <th>Totale</th>
                             <th></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -75,6 +76,70 @@
                                     <th:block th:if="${order.shipped == true}">
                                         <div class="badge bg-success rounded-pill">Spedito</div>
                                     </th:block>
+                                </td>
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalId' + ${order.id}">
+                                        Dettagli
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" th:id="'modalId' + ${order.id}" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalTitleId">
+                                                        Dettagli ordine
+                                                    </h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="container-fluid">
+                                                        <div class="row mb-3">
+                                                            <b th:text="${'Totale: ' + order.total}"></b>
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th scope="col">Modello</th>
+                                                                    <th scope="col">Quantit&agrave;</th>
+                                                                    <th scope="col">Subtotale</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <th:block th:each="item : ${order.items}">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <th:block th:if="${item.productVariation != null}">
+                                                                                <a th:href="@{'/products/' + ${item.productVariation.model.name}}"
+                                                                                   th:text="${item.productVariation.model.name}"></a>
+                                                                            </th:block>
+                                                                            <th:block th:if="${item.productVariation == null}">
+                                                                                <div th:text="${item.modelName}"></div>
+                                                                            </th:block>
+                                                                        </td>
+                                                                        <td th:text="${item.quantityOrdered}"></td>
+                                                                        <td th:text="${item.subTotal}"></td>
+                                                                    </tr>
+                                                                </th:block>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Chiudi
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </th:block>
