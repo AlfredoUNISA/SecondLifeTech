@@ -333,7 +333,7 @@ public class ManageCartController {
 			return "redirect:/error";
 		}
 
-		return "redirect:/my-orders";
+		return "redirect:/my-profile/orders";
 	}
 
 	// TODO: non permettere al guest di selezionare una quantità < 0 e > stock

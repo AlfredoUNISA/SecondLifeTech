@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/my-profile/orders")
 public class OrderController {
 	private final UserService userService;
 
@@ -21,8 +19,8 @@ public class OrderController {
 		this.userService = userService;
 	}
 
-	@GetMapping
-	public String getOrders(HttpServletRequest request, Model model) {
+	@GetMapping("/my-profile/orders")
+	public String getCurrentUserOrders(HttpServletRequest request, Model model) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
