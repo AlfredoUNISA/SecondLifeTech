@@ -69,51 +69,52 @@
                             </tr>
                         </th:block>
                         <th:block th:unless="${userPage.isEmpty()}">
-                        <th:block th:each="user : ${userPage}">
-                            <tr>
-                                <td th:text="${user.email}"></td>
-                                <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
-                                <td th:text="${user.role}"></td>
-                                <td>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#modalDeleteUser">
-                                        Elimina
-                                    </button>
-                                </td>
-                            </tr>
-                        </th:block>
+                            <th:block th:each="user : ${userPage}">
+                                <tr>
+                                    <td th:text="${user.email}"></td>
+                                    <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                                    <td th:text="${user.role}"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#modalDeleteUser">
+                                            Elimina
+                                        </button>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="modalDeleteUser" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalTitleId" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalTitleDelete">
+                                                    Sei sicuro di voler eliminare questo utente?
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Questa azione è irreversibile.<br/></p>
+                                            </div>
+                                            <form action="/dashboard-utenti/delete" method="post">
+                                                <div class="modal-footer">
+                                                    <input type="hidden" th:name="id" th:value="${user.id}">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Annulla Eliminazione
+                                                    </button>
+                                                    <button type="submit" class="btn btn-danger">
+                                                        Elimina
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
                         </th:block>
                         </tbody>
                     </table>
-                        <div class="modal fade" id="modalDeleteUser" tabindex="-1" role="dialog"
-                             aria-labelledby="modalTitleId" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalTitleDelete">
-                                            Sei sicuro di voler eliminare questo utente?
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Questa azione è irreversibile.<br/></p>
-                                    </div>
-                                    <form action="/dashboard-utenti/delete" method="post">
-                                        <div class="modal-footer">
-                                            <input type="hidden" th:name="id" th:value="${user.id}">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                Annulla Eliminazione
-                                            </button>
-                                            <button type="submit" class="btn btn-danger">
-                                                Elimina
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        </th:block>
+
 
                 </div>
 
