@@ -40,6 +40,8 @@ public class WebSecurityConfig {
 				.requestMatchers("/cliente/**").hasAnyAuthority(UserRole.CLIENTE)
 				.requestMatchers("/gestore/**").hasAnyAuthority(UserRole.GESTORE_PRODOTTI, UserRole.GESTORE_UTENTI, UserRole.GESTORE_ORDINI)
 				.requestMatchers("/dashboard-prodotti/**").hasAnyAuthority(UserRole.GESTORE_PRODOTTI)
+				.requestMatchers("/dashboard-ordini/**").hasAnyAuthority(UserRole.GESTORE_ORDINI)
+				.requestMatchers("/dashboard-utenti/**").hasAnyAuthority(UserRole.GESTORE_UTENTI)
 				.anyRequest().permitAll()
 			).rememberMe((remember) -> remember
 				.rememberMeServices(rememberMeServices(userDetailsService))
