@@ -141,6 +141,7 @@
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
                                     <p class="card-text">Product Description</p>
                                     <a th:href="@{'/products/' + ${product.name}}" class="btn btn-primary">Visualizza</a>
+                                    <a th:href="@{'/dashboard-prodotti/view-variations?modelName='+ ${product.name}}" class="btn btn-secondary">Visualizza variazioni</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#modalDeleteModel">
                                         Elimina
