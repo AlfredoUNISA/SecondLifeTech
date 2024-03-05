@@ -288,10 +288,10 @@ public class ManageCartController {
 		User user = userService.findUserByEmail(request.getUserPrincipal().getName());
 
 		if (user.getPaymentMethods().isEmpty())
-			return "redirect:/my-profile/payment-methods";
+			return "redirect:/my-profile/payment-methods?error_finalizing";
 
 		if (user.getShippingAddresses().isEmpty())
-			return "redirect:/my-profile/shipping-addresses";
+			return "redirect:/my-profile/shipping-addresses?error_finalizing";
 
 		model.addAttribute("user", user);
 		model.addAttribute("cartItems", user.getCart().getItems());

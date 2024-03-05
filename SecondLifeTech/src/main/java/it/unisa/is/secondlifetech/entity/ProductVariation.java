@@ -57,6 +57,10 @@ public class ProductVariation {
 		this.model = model;
 	}
 
+	public String getTwoDigitPrice() {
+		return String.format("%.2f", price);
+	}
+
 	// ToString manuale per evitare ricorsione infinita nei log
 	@Override
 	public String toString() {

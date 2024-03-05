@@ -61,6 +61,46 @@ $(document).ready(function () {
 		// Initialize with the first product variation
 		updateOptions();
 
+		// Inizializza la quantità corrente
+		var currentQuantity = 1;
+
+		// Imposta il valore iniziale di stock (puoi cambiarlo secondo le tue esigenze)
+		var stock = $('#stock').text();
+
+		// Mostra la quantità corrente e il valore di stock
+		$('#quantity').text(currentQuantity);
+		$('#stock').text(stock);
+
+		// Gestisci il clic sul pulsante di rimozione della quantità
+		$('#removeOneQuantity').click(function () {
+			if (currentQuantity > 1) {
+				currentQuantity--;
+				$('#quantity').text(currentQuantity);
+				// Riattiva il pulsante di aggiunta se la quantità corrente è inferiore a stock
+				if (currentQuantity < stock) {
+					$('#addOneQuantity').parent().removeAttr('style');
+				}
+			}
+			// Disabilita il pulsante di rimozione se la quantità corrente è 1
+			if (currentQuantity === 1) {
+				$(this).parent().attr('style', 'pointer-events: none;');
+			}
+		});
+
+		// Gestisci il clic sul pulsante di aggiunta della quantità
+		$('#addOneQuantity').click(function () {
+			if (currentQuantity < stock) {
+				currentQuantity++;
+				$('#quantity').text(currentQuantity);
+				// Riattiva il pulsante di rimozione se la quantità corrente è > 1
+				$('#removeOneQuantity').parent().removeAttr('style');
+			}
+			// Disabilita il pulsante di aggiunta se la quantità corrente è uguale a stock
+			if (currentQuantity === stock) {
+				$(this).parent().attr('style', 'pointer-events: none;');
+			}
+		});
+
 		// Function to disable options based on selected variation
 		function updateOptions() {
 			// Disable options that are not available
@@ -224,4 +264,6 @@ $(document).ready(function () {
 			});
 		}
 	}
+
+
 });

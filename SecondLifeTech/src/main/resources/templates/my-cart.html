@@ -5,7 +5,9 @@
     <title>Carrello</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{js/cartQuantityControl.js}"></script>
     <link th:href="@{css/style.css}" rel="stylesheet">
 </head>
 <body data-bs-theme="dark">
@@ -62,6 +64,10 @@
                                                     <small th:text="${product.productVariation.storageSize} + ' GB'">Size</small><br>
                                                     <small th:text="${product.productVariation.color}">Color</small><br>
                                                     <small th:text="${product.productVariation.state}">State</small><br>
+                                                    <small class="badge rounded-pill text-bg-warning mb-3" th:id="'stockContainer' + ${product.productVariation.id}">
+                                                        Ancora <span th:id="'stock' + ${product.productVariation.id}"
+                                                        th:text="${product.productVariation.quantityInStock}"></span> in magazzino
+                                                    </small>
                                                 </div>
 
                                                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -72,9 +78,17 @@
                                                                        th:value="${product.quantity - 1}">
                                                                 <input type="hidden" name="productVariationId"
                                                                        th:value="${product.productVariation.id}">
-                                                                <button type="submit" class="page-link">
-                                                                    <i class="fa fa-minus"></i>
-                                                                </button>
+
+                                                                <th:block th:if="${product.quantity > 1}">
+                                                                    <button type="submit" class="page-link" th:id="'reduceQuantity' + ${product.productVariation.id}">
+                                                                        <i class="fa fa-minus"></i>
+                                                                    </button>
+                                                                </th:block>
+                                                                <th:block th:if="${product.quantity == 1}">
+                                                                    <button disabled class="page-link disabled" th:id="'reduceQuantity' + ${product.productVariation.id}">
+                                                                        <i class="fa fa-minus"></i>
+                                                                    </button>
+                                                                </th:block>
                                                             </form>
                                                         </li>
 
@@ -83,19 +97,25 @@
                                                                  th:text="${product.quantity}"></div>
                                                         </li>
 
-
                                                         <li class="page-item">
                                                             <form method="post" action="/my-cart/edit">
                                                                 <input type="hidden" name="quantity"
                                                                        th:value="${product.quantity + 1}">
                                                                 <input type="hidden" name="productVariationId"
                                                                        th:value="${product.productVariation.id}">
-                                                                <button type="submit" class="page-link">
-                                                                <i class="fa fa-plus"></i>
-                                                                </button>
+                                                                <th:block th:if="${product.quantity < product.productVariation.quantityInStock}">
+                                                                    <button type="submit" class="page-link" th:id="'addQuantity' + ${product.productVariation.id}">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </button>
+                                                                </th:block>
+
+                                                                <th:block th:if="${product.quantity == product.productVariation.quantityInStock}">
+                                                                    <button disabled class="page-link disabled" th:id="'addQuantity' + ${product.productVariation.id}">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </button>
+                                                                </th:block>
                                                             </form>
                                                         </li>
-
                                                     </ul>
                                                 </div>
 
@@ -111,8 +131,8 @@
                                                                    th:value="${product.productVariation.id}">
                                                         </th:block>
                                                         <th:block th:if="${user != null}">
-                                                        <input type="hidden" name="cartItemId"
-                                                               th:value="${product.id}">
+                                                            <input type="hidden" name="cartItemId"
+                                                                   th:value="${product.id}">
                                                         </th:block>
                                                         <button type="submit" class="page-link">
                                                             <i class="fa text-danger fa-times"></i>
@@ -141,11 +161,25 @@
                                         </div>
 
                                         <div class="content text-center">
-                                            <a type="button" href="/my-cart/place-order" class="btn btn-primary btn-block btn-lg">
-                                                <i class="fa fa-shopping-bag"></i> Finalizza Ordine
-                                            </a>
+                                            <th:block th:if="${user == null}">
+                                                <a type="button" href="/login" class="btn btn-primary btn-block btn-lg">
+                                                    <i class="fa fa-shopping-bag"></i> Finalizza Ordine
+                                                </a>
+                                            </th:block>
+                                            <th:block th:if="${user != null}">
+                                                <th:block th:if="${cartItems.size() > 0}">
+                                                    <a type="button" href="/my-cart/place-order"
+                                                       class="btn btn-primary btn-block btn-lg">
+                                                        <i class="fa fa-shopping-bag"></i> Finalizza Ordine
+                                                    </a>
+                                                </th:block>
+                                                <th:block th:if="${cartItems.size() == 0}">
+                                                    <button disabled class="btn btn-primary btn-block btn-lg">
+                                                        <i class="fa fa-shopping-bag"></i> Finalizza Ordine
+                                                    </button>
+                                                </th:block>
+                                            </th:block>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

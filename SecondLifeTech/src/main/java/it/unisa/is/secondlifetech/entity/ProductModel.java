@@ -180,6 +180,34 @@ public class ProductModel {
 		return stateList;
 	}
 
+	public String getTwoDigitMaxPrice() {
+		return String.format("%.2f", getMaxPrice());
+	}
+
+	public String getTwoDigitMinPrice() {
+		return String.format("%.2f", getMinPrice());
+	}
+
+	public Double getMinPrice() {
+		double minPrice = Double.MAX_VALUE;
+		for (ProductVariation variation : variations) {
+			if (variation.getPrice() < minPrice) {
+				minPrice = variation.getPrice();
+			}
+		}
+		return minPrice;
+	}
+
+	public Double getMaxPrice() {
+		double maxPrice = Double.MIN_VALUE;
+		for (ProductVariation variation : variations) {
+			if (variation.getPrice() > maxPrice) {
+				maxPrice = variation.getPrice();
+			}
+		}
+		return maxPrice;
+	}
+
 	public ProductModel(String name, String brand, String category) {
 		this.name = name;
 		this.brand = brand;

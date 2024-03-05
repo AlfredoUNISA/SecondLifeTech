@@ -46,6 +46,12 @@
             <div class="col-md-9">
                 <h2>Metodi di pagamento</h2>
 
+                <th:block th:if="${param.error_finalizing}">
+                    <div class="alert alert-danger" role="alert">
+                        Non è stato possibile finalizzare il pagamento perché non hai inserito nessun metodo di pagamento.
+                    </div>
+                </th:block>
+
                 <!-- Button trigger modal Add -->
                 <div class="content text-end">
                     <button type="button" class="btn btn-secondary mb-4" data-bs-toggle="modal"

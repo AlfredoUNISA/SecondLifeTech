@@ -140,7 +140,7 @@
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
-                                    <p class="card-text">Product Description</p>
+                                    <p class="card-text" th:text="${'Tra € ' + product.getTwoDigitMinPrice() + ' e € ' + product.getTwoDigitMaxPrice()}"></p>
                                     <a th:href="@{'/products/' + ${product.name}}" class="btn btn-primary">Visualizza</a>
                                 </div>
                             </div>
