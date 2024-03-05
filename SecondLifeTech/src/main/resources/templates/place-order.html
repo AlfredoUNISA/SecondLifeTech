@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dettagli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+</head>
+
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container">
+        <h2>Finalizza Ordine</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/my-cart/place-order/payment-in-progress">
+                            <div class="mb-3">
+                                <h5 class="card-title">Indirizzo di spedizione</h5>
+                                <select class="form-select form-select" name="shippingAddressId">
+                                    <option selected value="">Seleziona uno</option>
+                                    <th:block th:each="address : ${addresses}">
+                                        <option th:value="${address.id}"
+                                                th:text="${address.fullAddress()}"></option>
+                                    </th:block>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5 class="card-title">Metodo di pagamento</h5>
+                                <select class="form-select form-select" name="paymentMethodId">
+                                    <option selected value="">Seleziona uno</option>
+                                    <th:block th:each="paymentMethod : ${paymentMethods}">
+                                        <option th:value="${paymentMethod.id}"
+                                                th:text="${paymentMethod.fullPayment()}"></option>
+                                    </th:block>
+                                </select>
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" disabled class="btn btn-primary">Finalizza ordine</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-md-0 mt-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Riassunto Ordine</h5>
+                        <ul class="list-group">
+                            <th:block th:each="item : ${cartItems}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span th:text="${item.productVariation.model.name}">Product</span>
+                                    <div class="badge bg-primary rounded-pill" th:text="'€ ' + ${item.productVariation.price}"></div>
+                                </li>
+                            </th:block>
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Totale</strong>
+                                <strong th:text="${'€ ' + total}"></strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Funzione per controllare se la select di indirizzo di spedizione e quella del metodo di pagamento non sono vuote
+        function checkFields() {
+            var shippingAddress = $('select[name="shippingAddress"]').val();
+            var paymentMethod = $('select[name="paymentMethod"]').val();
+
+            // Attiva il pulsante se entrambi i campi non sono vuoti, altrimenti lo disattiva
+            if (shippingAddress !== "" && paymentMethod !== "") {
+                $('button[type="submit"]').prop('disabled', false);
+            } else {
+                $('button[type="submit"]').prop('disabled', true);
+            }
+        }
+
+        // Richiama la funzione al caricamento della pagina e ogni volta che una delle select viene modificata
+        checkFields();
+        $('select[name="shippingAddress"], select[name="paymentMethod"]').change(function () {
+            checkFields();
+        });
+    });
+</script>
+
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+
+</html>

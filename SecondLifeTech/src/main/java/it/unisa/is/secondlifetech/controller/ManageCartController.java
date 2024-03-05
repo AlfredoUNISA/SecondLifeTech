@@ -1,16 +1,14 @@
 package it.unisa.is.secondlifetech.controller;
 
 import it.unisa.is.secondlifetech.config.WebSecurityConfig;
-import it.unisa.is.secondlifetech.entity.CartItem;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.entity.User;
-import it.unisa.is.secondlifetech.exception.NoDevicesAvailableException;
+import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.*;
 
 @Controller
+@Slf4j
 @RequestMapping("/my-cart")
 public class ManageCartController {
 	private final ProductService productService;
@@ -280,6 +279,64 @@ public class ManageCartController {
 
 		return "redirect:/my-cart";
 	}
+
+	@GetMapping("/place-order")
+	public String placeOrder(HttpServletRequest request, Model model) {
+		if (request.getUserPrincipal() == null) {
+			return "redirect:/login";
+		}
+		User user = userService.findUserByEmail(request.getUserPrincipal().getName());
+
+		if (user.getPaymentMethods().isEmpty())
+			return "redirect:/my-profile/payment-methods";
+
+		if (user.getShippingAddresses().isEmpty())
+			return "redirect:/my-profile/shipping-addresses";
+
+		model.addAttribute("user", user);
+		model.addAttribute("cartItems", user.getCart().getItems());
+		model.addAttribute("total", user.getCart().getTotal());
+		model.addAttribute("addresses", user.getShippingAddresses());
+		model.addAttribute("paymentMethods", user.getPaymentMethods());
+		return "place-order";
+	}
+
+	@GetMapping("/place-order/payment-in-progress")
+	public String payment(Model model, HttpServletRequest request,
+	                      @RequestParam("shippingAddressId") UUID shippingAddressId,
+	                      @RequestParam("paymentMethodId") UUID paymentMethodId) {
+		if (request.getUserPrincipal() == null) {
+			return "redirect:/login";
+		}
+
+		model.addAttribute("shippingAddressId", shippingAddressId);
+		model.addAttribute("paymentMethodId", paymentMethodId);
+		return "payment-in-progress";
+	}
+
+	@GetMapping("/place-order/payment-in-progress/proceed")
+	public String paymentSuccessful(Model model, HttpServletRequest request,
+	                                @RequestParam("shippingAddressId") UUID shippingAddressId,
+	                                @RequestParam("paymentMethodId") UUID paymentMethodId) {
+		if (request.getUserPrincipal() == null) {
+			return "redirect:/login";
+		}
+
+		User user = userService.findUserByEmail(request.getUserPrincipal().getName());
+		ShippingAddress shippingAddress = userService.findShippingAddressById(shippingAddressId);
+		PaymentMethod paymentMethod = userService.findPaymentMethodById(paymentMethodId);
+
+		try {
+			cartService.finalizeOrder(user.getCart(), shippingAddress, paymentMethod, true);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return "redirect:/error";
+		}
+
+		return "redirect:/my-orders";
+	}
+
+	// TODO: non permettere al guest di selezionare una quantità < 0 e > stock
 
 	/**
 	 * Parse the cart cookie value into a map

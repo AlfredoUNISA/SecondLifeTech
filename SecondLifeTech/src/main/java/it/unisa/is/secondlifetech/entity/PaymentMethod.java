@@ -37,6 +37,10 @@ public class PaymentMethod {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	public String fullPayment() {
+		return cardNumber + " " + cardHolderName + " " + expirationDate;
+	}
+
 	@Override
 	public String toString() {
 		return "PaymentMethod{" +

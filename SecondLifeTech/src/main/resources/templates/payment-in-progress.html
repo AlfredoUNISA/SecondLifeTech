@@ -36,9 +36,11 @@
 
 		<div class="row">
 			<div class="col-12 mt-3 text-center">
-				<form action="">
-					<button href="index.html" class="btn btn-danger">Pagamento Fallito</button>
-					<button href="index.html" class="btn btn-success">Pagamento Riuscito</button>
+				<a href="/error" class="btn btn-danger">Pagamento Fallito</a>
+				<form action="/my-cart/place-order/payment-in-progress/proceed">
+					<input type="hidden" th:value="${paymentMethodId}" name="paymentMethodId">
+					<input type="hidden" th:value="${shippingAddressId}" name="shippingAddressId">
+					<input type="submit" class="btn btn-success">Pagamento Riuscito</input>
 				</form>
 			</div>
 		</div>
