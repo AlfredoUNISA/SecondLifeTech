@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Il mio profilo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+
+    <div class="container">
+        <div class="row">
+            <!-- Links -->
+            <div class="col-md-3">
+                <ul class="nav flex-column nav-pills mb-3">
+                    <li class="nav-item">
+                        <a href="/my-profile" class="nav-link">Informazioni personali</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/payment-methods" class="nav-link">Metodi di pagamento</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/shipping-addresses" class="nav-link">Indirizzi di spedizione</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/my-profile/orders" class="nav-link active">Ordini</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h2>I miei ordini</h2>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Indirizzo</th>
+                            <th>Data</th>
+                            <th>Totale</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:if="${orders.isEmpty()}">
+                            <tr>
+                                <td colspan="4" class="text-center">Nessun ordine presente</td>
+                            </tr>
+                        </th:block>
+
+                        <th:block th:each="order : ${orders}">
+                            <tr>
+                                <td th:text="${order.address}"></td>
+                                <td th:text="${order.date.toLocaleString()}"></td>
+                                <td th:text="${order.total}"></td>
+                                <td>
+                                    <th:block th:if="${order.shipped == false}">
+                                        <div class="badge bg-warning rounded-pill">Non spedito</div>
+                                    </th:block>
+                                    <th:block th:if="${order.shipped == true}">
+                                        <div class="badge bg-success rounded-pill">Spedito</div>
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>
