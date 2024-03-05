@@ -117,6 +117,7 @@ public class UserListController {
     @PostMapping("/dashboard-utenti/add-user")
     public String otherPost(@ModelAttribute("user") User user) throws IOException, ErrorInField, MissingRequiredField {
         try {
+            user.setRole("ROLE_"+user.getRole());
             user.setPassword("standardPassword");
             userService.createNewUser(user);
         } catch (ErrorInField errorInField) {
