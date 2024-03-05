@@ -214,6 +214,36 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 			}
 
+			model = new ProductModel("iPhone 11", "Apple", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019,3,6.1,128,340,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,340,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,340,10,"oro",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,350,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,350,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,360,10,"oro",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,360,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,128,360,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,256,350,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,256,350,10,"oro",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,256,370,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,256,389,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,3,6.1,256,389,10,"oro",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+			}
 
 
 

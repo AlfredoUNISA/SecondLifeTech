@@ -2,10 +2,12 @@ package it.unisa.is.secondlifetech.controller;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ProductModel;
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.service.ProductService;
+import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +24,12 @@ import java.util.Optional;
 @Controller
 public class SearchProductController {
     ProductService productService;
+    UserService userService;
 
     @Autowired
-    public SearchProductController(ProductService productService) {
+    public SearchProductController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/products")
@@ -97,7 +102,7 @@ public class SearchProductController {
     }
 
     @GetMapping("/products/{name}")
-    public String viewProductVariations(Model model, @PathVariable String name) {
+    public String viewProductVariations(Model model, @PathVariable String name, Principal principal) {
         ProductModel productModel = productService.findModelByName(name);
 
         if (productModel.getVariations().isEmpty()) {
@@ -119,7 +124,11 @@ public class SearchProductController {
         model.addAttribute("storageSizeList", storageSizeList);
         model.addAttribute("colorList", colorList);
         model.addAttribute("stateList", stateList);
-
+        User user = null;
+        if (principal != null) {
+            user = userService.findUserByEmail(principal.getName());
+        }
+        model.addAttribute("user", user);
         return "productDetails";
     }
 
