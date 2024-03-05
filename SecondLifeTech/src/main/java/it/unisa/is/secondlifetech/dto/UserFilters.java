@@ -23,10 +23,10 @@ public class UserFilters {
 
 	public String toQueryString() {
 		StringBuilder queryString = new StringBuilder();
-		if (email != null)
+		if (!email.isBlank())
 			queryString.append("email=").append(email).append("&");
 
-		if (role != null)
+		if (!role.isBlank())
 			queryString.append("role=").append(role);
 
 		// Rimuovi l'ultimo "&"
