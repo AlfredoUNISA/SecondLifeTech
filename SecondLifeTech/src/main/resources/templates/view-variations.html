@@ -15,7 +15,8 @@
 <div class="my-content" style="min-height: calc(100vh - 17em);">
     <br/>
     <div class="container">
-        <a class="btn btn-primary mb-5" href="/dashboard-prodotti/add-variation">Aggiungi variazione</a>
+        <h1>Variazioni del modello: <span th:text="${modelName}"></span></h1>
+        <a class="btn btn-primary mb-5" th:href="'/dashboard-prodotti/add-variation?modelName='+${modelName}">Aggiungi variazione</a>
         <div class="table-responsive">
             <table class="table">
                 <thead>

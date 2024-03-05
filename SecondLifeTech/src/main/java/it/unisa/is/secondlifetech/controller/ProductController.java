@@ -159,14 +159,15 @@ public class ProductController {
     }
 
     @GetMapping("/dashboard-prodotti/view-variations")
-    public String viewVariations(Model model, Principal principal) {
+    public String viewVariations(Model model, Principal principal, @RequestParam(value = "modelName") String modelName){
         User user = null;
         if (principal != null) {
             user = userService.findUserByEmail(principal.getName());
         }
-        List<ProductVariation> list = productService.findAllVariations();
+        ProductModel modelObj = productService.findModelByName(modelName);
+        model.addAttribute("modelName", modelObj.getName());
         model.addAttribute("user", user);
-        model.addAttribute("variations", list);
+        model.addAttribute("variations", modelObj.getVariations());
         return "view-variations";
     }
 
@@ -233,6 +234,6 @@ public class ProductController {
             e.printStackTrace();
             return "redirect:/error";
         }
-        return "redirect:/dashboard-prodotti/view-variations";
+        return "redirect:/dashboard-prodotti/view-variations?modelName=" + model.getName();
     }
 }
