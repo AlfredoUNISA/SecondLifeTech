@@ -1,18 +1,13 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
-import it.unisa.is.secondlifetech.entity.ImageFile;
-import it.unisa.is.secondlifetech.entity.OrderItem;
-import it.unisa.is.secondlifetech.entity.ProductModel;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
-import it.unisa.is.secondlifetech.repository.ImageFileRepository;
-import it.unisa.is.secondlifetech.repository.OrderItemRepository;
-import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.repository.*;
+import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +25,18 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 	private final ProductModelRepository productModelRepository;
 	private final ProductVariationRepository productVariationRepository;
+	private final CartItemRepository cartItemRepository;
+	private final CartRepository cartRepository;
 	private final OrderService orderService;
 	private final OrderItemRepository orderItemRepository;
 	private final ImageFileRepository imageFileRepository;
 
 	@Autowired
-	public ProductServiceImpl(ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, OrderService orderService, OrderItemRepository orderItemRepository, ImageFileRepository imageFileRepository) {
+	public ProductServiceImpl(ProductModelRepository productModelRepository, ProductVariationRepository productVariationRepository, CartItemRepository cartItemRepository, CartRepository cartRepository, OrderService orderService, OrderItemRepository orderItemRepository, ImageFileRepository imageFileRepository) {
 		this.productModelRepository = productModelRepository;
 		this.productVariationRepository = productVariationRepository;
+		this.cartItemRepository = cartItemRepository;
+		this.cartRepository = cartRepository;
 		this.orderService = orderService;
 		this.orderItemRepository = orderItemRepository;
 		this.imageFileRepository = imageFileRepository;
@@ -363,6 +362,17 @@ public class ProductServiceImpl implements ProductService {
 			// Salva
 			item.setProductVariation(null);
 			orderItemRepository.save(item);
+		}
+
+		// Se la variante è presente in un carrello, eliminala dal carrello
+		for (CartItem item : cartItemRepository.findByProductVariationId(variation.getId())) {
+			// Rimuovi il prodotto dal carrello e aggiorna il totale
+			Cart cart = item.getCart();
+			cart.removeItem(item);
+
+			// Salva le modifiche
+			cartItemRepository.delete(item);
+			cartRepository.save(cart);
 		}
 
 		model.removeVariation(variation);
