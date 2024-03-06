@@ -74,6 +74,7 @@ public class ProductServiceImpl implements ProductService {
 		if (variation == null)
 			return null;
 
+		checkProductModel(model);
 		checkProductVariationValues(variation);
 
 		model.addVariation(variation);
@@ -462,6 +463,9 @@ public class ProductServiceImpl implements ProductService {
 
 		if (variation.getStorageSize() < ProductFilters.MIN_STORAGE_SIZE || variation.getStorageSize() > ProductFilters.MAX_STORAGE_SIZE)
 			throw new ErrorInField("La dimensione dello storage deve essere compresa tra " + ProductFilters.MIN_STORAGE_SIZE + " e " + ProductFilters.MAX_STORAGE_SIZE);
+
+		if (variation.getQuantityInStock() < 1)
+			throw new ErrorInField("La quantità in stock deve essere almeno 1");
 
 		if (variation.getColor().length() < ProductFilters.MIN_STRING_LENGTH || variation.getColor().length() > ProductFilters.MAX_STRING_LENGTH)
 			throw new ErrorInField("Il colore deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
