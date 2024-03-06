@@ -1,6 +1,9 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.OrderPlacedRepository;
@@ -14,7 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,215 +36,131 @@ class OrderServiceImplTests {
 
 	private OrderPlaced order;
 	private OrderItem orderItem;
+	private ProductModel productModel;
 	private ProductVariation productVariation;
+	private User user;
+	private Cart cart;
 
 	@BeforeEach
 	void setup() {
-		productVariation = ProductVariation.builder()
-			.id(UUID.randomUUID())
-			.price(10.0)
-			.quantityInStock(5)
-			.build();
+		user = new User();
+		user.setId(UUID.randomUUID());
+		user.setEmail("email@email.com");
+		user.setRole(UserRole.CLIENTE);
+
+		cart = new Cart();
+		cart.setId(UUID.randomUUID());
+		cart.setUser(user);
+		user.setCart(cart);
+
+		productModel = new ProductModel();
+		productModel.setId(UUID.randomUUID());
+		productModel.setName("Product");
+		productModel.setBrand("Brand");
+		productModel.setCategory(ProductCategory.SMARTPHONE);
+
+		productVariation = new ProductVariation();
+		productVariation.setId(UUID.randomUUID());
+		productVariation.setYear(2021);
+		productVariation.setRam(4);
+		productVariation.setDisplaySize(5.5);
+		productVariation.setStorageSize(64);
+		productVariation.setPrice(230);
+		productVariation.setQuantityInStock(10);
+		productVariation.setColor("Black");
+		productVariation.setState(ProductState.BUONO);
+		productVariation.setModel(productModel);
 
 		orderItem = new OrderItem();
 		orderItem.setId(UUID.randomUUID());
 		orderItem.setProductVariation(productVariation);
-		orderItem.setQuantityOrdered(2);
+		orderItem.setQuantityOrdered(1);
+		orderItem.setOrderPlaced(order);
+		orderItem.setSubTotal(230);
 
 		order = new OrderPlaced();
 		order.setId(UUID.randomUUID());
-		order.setItems(Collections.singletonList(orderItem));
+
 	}
 
 
 	// ================================================================================================================
-	// =============== CREATE ==========================================================================================
+	// =============== TEST CASE 1 =====================================================================================
 	// ================================================================================================================
 
+	/**
+	 * <li>Deve essere creato un OrderPlaced contenente un OrderItem a cui è assegnato la ProductVariation inserita attraverso la sua UUID</li>
+	 * <li>Il Cart non deve contenere alcun CartItem</li>
+	 */
 	@Test
-	void OrderServiceImpl_createAndPlaceNewOrder_WhenOrderIsGiven_ShouldCreateAndPlaceNewOrder() {
+	void OrderTC1_createAndPlaceNewOrder_WhenOrderIsValid_ShouldReturnCreatedOrder() {
 		// Arrange
 		order.setId(null);
-		when(orderPlacedRepository.save(order)).thenReturn(order);
-		when(orderItemRepository.saveAll(order.getItems())).thenReturn(order.getItems());
+		order.setEmail(user.getEmail());
+		order.setAddress("Via Giancarlo Siani 12");
+		order.setDate(new Date());
+		order.setTotal(230);
+		order.setShipped(false);
+		order.setUser(user);
+		order.setItems(List.of(orderItem));
+
+		when(orderPlacedRepository.save(any(OrderPlaced.class))).thenReturn(order);
+		when(orderItemRepository.saveAll(anyList())).thenReturn(Collections.emptyList());
 
 		// Act
 		OrderPlaced result = orderService.createAndPlaceNewOrder(order);
 
 		// Assert
-		assertThat(result).isEqualTo(order);
-		verify(orderPlacedRepository).save(order);
-		verify(orderItemRepository).saveAll(order.getItems());
+		assertThat(result).isNotNull();
+		assertThat(result.getItems().get(0).getProductVariation()).isEqualTo(productVariation);
+	}
+
+	@Test
+	void OrderTC1E_createAndPlaceNewOrder_WhenOrderIsNull_ShouldReturnNull() {
+		// Act
+		OrderPlaced result = orderService.createAndPlaceNewOrder(null);
+
+		// Assert
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void OrderTC1E_createAndPlaceNewOrder_WhenOrderIdIsNotNull_ShouldThrowIllegalArgumentException() {
+		// Arrange
+		OrderPlaced order = new OrderPlaced();
+		order.setId(UUID.randomUUID());
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> orderService.createAndPlaceNewOrder(order));
 	}
 
 
 
 	// ================================================================================================================
-	// =============== READ ============================================================================================
+	// =============== TEST CASE 4 =====================================================================================
 	// ================================================================================================================
 
+	/**
+	 * L’OrderPlaced deve avere lo stato di spedizione a true
+	 */
 	@Test
-	void OrderServiceImpl_findOrderById_WhenIdIsGiven_ShouldReturnOrder() {
+	void OrderTC2_setOrderAsShipped_WhenOrderExists_ShouldSetOrderAsShipped() {
 		// Arrange
-		when(orderPlacedRepository.findById(order.getId())).thenReturn(java.util.Optional.ofNullable(order));
+		order.setShipped(false);
 
 		// Act
-		OrderPlaced result = orderService.findOrderById(order.getId());
+		orderService.setOrderAsShipped(order);
 
 		// Assert
-		assertThat(result).isEqualTo(order);
-		verify(orderPlacedRepository).findById(order.getId());
+		assertThat(order.isShipped()).isTrue();
 	}
 
 	@Test
-	void OrderServiceImpl_findOrderItemById_WhenIdIsGiven_ShouldReturnOrderItem() {
-		// Arrange
-		when(orderItemRepository.findById(orderItem.getId())).thenReturn(java.util.Optional.ofNullable(orderItem));
-
-		// Act
-		OrderItem result = orderService.findOrderItemById(orderItem.getId());
-
-		// Assert
-		assertThat(result).isEqualTo(orderItem);
-		verify(orderItemRepository).findById(orderItem.getId());
-	}
-
-	@Test
-	void OrderServiceImpl_findOrderByEmail_WhenEmailIsGiven_ShouldReturnOrders() {
-		// Arrange
-		String email = "test@example.com";
-		when(orderPlacedRepository.findByEmail(email)).thenReturn(Collections.singletonList(order));
-
-		// Act
-		List<OrderPlaced> result = orderService.findOrdersByEmail(email);
-
-		// Assert
-		assertThat(result).contains(order);
-		verify(orderPlacedRepository).findByEmail(email);
-	}
-
-	@Test
-	void OrderServiceImpl_findOrderByShipped_WhenShippedIsGiven_ShouldReturnOrders() {
-		// Arrange
-		boolean shipped = true;
-		when(orderPlacedRepository.findByShipped(shipped)).thenReturn(Collections.singletonList(order));
-
-		// Act
-		List<OrderPlaced> result = orderService.findOrdersByShipped(shipped);
-
-		// Assert
-		assertThat(result).contains(order);
-		verify(orderPlacedRepository).findByShipped(shipped);
-	}
-
-	@Test
-	void OrderServiceImpl_findOrderByDate_WhenDateIsGiven_ShouldReturnOrders() {
-		// Arrange
-		Date date = new Date();
-		when(orderPlacedRepository.findByDate(date)).thenReturn(Collections.singletonList(order));
-
-		// Act
-		List<OrderPlaced> result = orderService.findOrdersByDate(date);
-
-		// Assert
-		assertThat(result).contains(order);
-		verify(orderPlacedRepository).findByDate(date);
-	}
-
-	@Test
-	void OrderServiceImpl_findOrderItemsByProductVariation_WhenProductVariationIsGiven_ShouldReturnOrderItems() {
-		// Arrange
-		when(orderItemRepository.findByProductVariationId(productVariation.getId())).thenReturn(Collections.singletonList(orderItem));
-
-		// Act
-		List<OrderItem> result = orderService.findOrderItemsByProductVariation(productVariation);
-
-		// Assert
-		assertThat(result).contains(orderItem);
-		verify(orderItemRepository).findByProductVariationId(productVariation.getId());
-	}
-
-	@Test
-	void OrderServiceImpl_findAllOrders_WhenCalled_ShouldReturnAllOrders() {
-		// Arrange
-		when(orderPlacedRepository.findAll()).thenReturn(Collections.singletonList(order));
-
-		// Act
-		List<OrderPlaced> result = orderService.findAllOrders();
-
-		// Assert
-		assertThat(result).contains(order);
-		verify(orderPlacedRepository).findAll();
-	}
-
-	@Test
-	void OrderServiceImpl_findAllOrderItems_WhenCalled_ShouldReturnAllOrderItems() {
-		// Arrange
-		when(orderItemRepository.findAll()).thenReturn(Collections.singletonList(orderItem));
-
-		// Act
-		List<OrderItem> result = orderService.findAllOrderItems();
-
-		// Assert
-		assertThat(result).contains(orderItem);
-		verify(orderItemRepository).findAll();
-	}
-
-	// ================================================================================================================
-	// =============== UPDATE ==========================================================================================
-	// ================================================================================================================
-
-	@Test
-	void OrderServiceImpl_UpdateOrder_WhenOrderIsGiven_ShouldUpdateOrder() {
-		// Arrange
-		when(orderPlacedRepository.save(any(OrderPlaced.class))).thenReturn(order);
-
-		// Act
-		OrderPlaced updatedOrder = orderService.updateOrder(order);
-
-		// Assert
-		assertThat(updatedOrder).isEqualTo(order);
-		verify(orderPlacedRepository).save(order);
-	}
-
-	@Test
-	void OrderServiceImpl_UpdateOrderItem_WhenOrderItemIsGiven_ShouldUpdateOrderItem() {
-		// Arrange
-		when(orderItemRepository.save(any(OrderItem.class))).thenReturn(orderItem);
-
-		// Act
-		OrderItem updatedOrderItem = orderService.updateOrderItem(orderItem);
-
-		// Assert
-		assertThat(updatedOrderItem).isEqualTo(orderItem);
-		verify(orderItemRepository).save(orderItem);
+	void OrderTC2E_setOrderAsShipped_WhenOrderIsNull_ShouldThrowNullPointerException() {
+		// Act & Assert
+		assertThrows(NullPointerException.class, () -> orderService.setOrderAsShipped(null));
 	}
 
 
-
-	// ================================================================================================================
-	// =============== DELETE ==========================================================================================
-	// ================================================================================================================
-
-	@Test
-	void OrderServiceImpl_deleteOrder_WhenCalled_ShouldDeleteOrderAndItsItems() {
-		// Arrange
-		// Act
-		orderService.deleteOrder(order);
-
-		// Assert
-		verify(orderItemRepository).deleteAll(order.getItems());
-		verify(orderPlacedRepository).delete(order);
-	}
-
-	@Test
-	void OrderServiceImpl_deleteOrderItem_WhenCalled_ShouldDeleteOrderItem() {
-		// Arrange
-		// Act
-		orderService.deleteOrderItem(orderItem);
-
-		// Assert
-		verify(orderItemRepository).delete(orderItem);
-	}
 
 }

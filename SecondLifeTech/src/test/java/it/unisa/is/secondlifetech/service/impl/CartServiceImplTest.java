@@ -85,9 +85,6 @@ public class CartServiceImplTest {
 		productVariation.setState(ProductState.BUONO);
 		productVariation.setModel(productModel);
 
-//		cartItem = new CartItem();
-//		cartItem.setId(UUID.randomUUID());
-
 		shippingAddress = new ShippingAddress();
 		shippingAddress.setId(UUID.randomUUID());
 		shippingAddress.setCity("City");
