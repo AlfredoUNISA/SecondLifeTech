@@ -1,5 +1,6 @@
 package it.unisa.is.secondlifetech.config;
 
+import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
@@ -8,9 +9,17 @@ import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import it.unisa.is.secondlifetech.service.ProductService;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Component
 public class DatabasePopulator {
 
@@ -25,6 +34,20 @@ public class DatabasePopulator {
         this.variationRepository = variationRepository;
         this.productService = productService;
     }
+
+	public static ImageFile createFromFile(String filePath) throws IOException {
+		File file = new File(filePath);
+
+		String name = file.getName();
+		String contentType = Files.probeContentType(file.toPath());
+		byte[] data = Files.readAllBytes(file.toPath());
+
+		return ImageFile.builder()
+			.name(name)
+			.contentType(contentType)
+			.data(data)
+			.build();
+	}
 
 	@PostConstruct
 	public void populate() {

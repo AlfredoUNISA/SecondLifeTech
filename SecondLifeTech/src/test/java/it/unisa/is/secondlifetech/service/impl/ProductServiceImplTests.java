@@ -7,6 +7,7 @@ import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.OrderItemRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
@@ -76,13 +77,8 @@ class ProductServiceImplTests {
 	}
 
 
-
-	// ================================================================================================================
-	// =============== CREATE ==========================================================================================
-	// ================================================================================================================
-
 	@Test
-	void ProductServiceImpl_CreateNewModel_ShouldReturnCreatedModel() throws ErrorInField {
+	void ProductServiceImpl_CreateNewModel_ShouldReturnCreatedModel() throws ErrorInField, MissingRequiredField {
 		// Arrange
 		productModel.setId(null);
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
@@ -96,7 +92,7 @@ class ProductServiceImplTests {
 	}
 
 	@Test
-	void ProductServiceImpl_CreateNewVariation_ShouldReturnCreatedVariation() throws ErrorInField {
+	void ProductServiceImpl_CreateNewVariation_ShouldReturnCreatedVariation() throws ErrorInField, MissingRequiredField {
 		// Arrange
 		productVariation.setId(null);
 		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
@@ -285,7 +281,7 @@ class ProductServiceImplTests {
 	// ================================================================================================================
 
 	@Test
-	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException, ErrorInField {
+	void ProductServiceImpl_UpdateModel_ShouldUpdateModel() throws IOException, ErrorInField, MissingRequiredField {
 		// Arrange
 		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);

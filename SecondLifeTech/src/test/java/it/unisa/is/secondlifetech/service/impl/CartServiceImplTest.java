@@ -1,6 +1,9 @@
 package it.unisa.is.secondlifetech.service.impl;
 
 import it.unisa.is.secondlifetech.entity.*;
+import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
+import it.unisa.is.secondlifetech.entity.constant.ProductState;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.*;
 import it.unisa.is.secondlifetech.repository.CartItemRepository;
 import it.unisa.is.secondlifetech.repository.CartRepository;
@@ -20,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +47,7 @@ public class CartServiceImplTest {
 	private User user;
 	private Cart cart;
 	private CartItem cartItem;
+	private ProductModel productModel;
 	private ProductVariation productVariation;
 	private ShippingAddress shippingAddress;
 	private PaymentMethod paymentMethod;
@@ -52,18 +57,36 @@ public class CartServiceImplTest {
 		user = new User();
 		user.setId(UUID.randomUUID());
 		user.setEmail("email@email.com");
-
-		productVariation = new ProductVariation();
-		productVariation.setId(UUID.randomUUID());
-		productVariation.setQuantityInStock(10);
+		user.setRole(UserRole.CLIENTE);
 
 		cart = new Cart();
 		cart.setId(UUID.randomUUID());
 		cart.setUser(user);
+		user.setCart(cart);
 
 		cartItem = new CartItem();
 		cartItem.setId(UUID.randomUUID());
-		cartItem.setCart(cart);
+
+		productModel = new ProductModel();
+		productModel.setId(UUID.randomUUID());
+		productModel.setName("Product");
+		productModel.setBrand("Brand");
+		productModel.setCategory(ProductCategory.SMARTPHONE);
+
+		productVariation = new ProductVariation();
+		productVariation.setId(UUID.randomUUID());
+		productVariation.setYear(2021);
+		productVariation.setRam(4);
+		productVariation.setDisplaySize(5.5);
+		productVariation.setStorageSize(64);
+		productVariation.setPrice(230);
+		productVariation.setQuantityInStock(10);
+		productVariation.setColor("Black");
+		productVariation.setState(ProductState.BUONO);
+		productVariation.setModel(productModel);
+
+//		cartItem = new CartItem();
+//		cartItem.setId(UUID.randomUUID());
 
 		shippingAddress = new ShippingAddress();
 		shippingAddress.setId(UUID.randomUUID());
@@ -82,193 +105,277 @@ public class CartServiceImplTest {
 		paymentMethod.setUser(user);
 	}
 
-
 	// ================================================================================================================
-	// =============== CREATE ==========================================================================================
+	// =============== TEST CASE 1 =====================================================================================
 	// ================================================================================================================
 
-
-//	@Test
-//	public void CartServiceImpl_createNewCart_WhenCartIsProvided_ShouldReturnSavedCart() {
-//		// Arrange
-//		Cart cart = new Cart();
-//		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
-//
-//		// Act
-//		Cart savedCart = cartService.createNewCart(cart);
-//
-//		// Assert
-//		assertThat(savedCart).isNotNull();
-//		verify(cartRepository, times(1)).save(cart);
-//	}
-
+	/**
+	 * Il carrello deve contenere un CartItem a cui è assegnata la ProductVariation inserita attraverso la sua UUID
+	 */
 	@Test
-	public void CartServiceImpl_addToCart_WhenProductVariationExists_ShouldAddProductToCart() throws NoDevicesAvailableException {
+	public void CartTC1_addToCart_WhenProductVariationExists_ShouldAddProductToCart() throws NoDevicesAvailableException {
 		// Arrange
 		UUID productVariationId = productVariation.getId();
-		int quantity = 5;
+		int quantity = 1;
 
-		when(productService.findVariationById(any(UUID.class))).thenReturn(productVariation);
-		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
+		when(productService.findVariationById(productVariation.getId())).thenReturn(productVariation);
+		when(cartRepository.save(cart)).thenReturn(cart);
 
 		// Act
 		cartService.addToCart(cart, productVariationId, quantity);
 
 		// Assert
-		verify(cartRepository, times(1)).save(cart);
-		verify(cartItemRepository, times(1)).save(any(CartItem.class));
+		assertThat(cart.getItems().get(0).getProductVariation()).isEqualTo(productVariation);
+		assertThat(cart.getItems().get(0).getQuantity()).isEqualTo(quantity);
+		assertThat(cart.getItems().get(0).getSubTotal()).isEqualTo(productVariation.getPrice() * quantity);
+		assertThat(cart.getTotal()).isEqualTo(productVariation.getPrice() * quantity);
 	}
 
 	@Test
-	public void CartServiceImpl_finalizeOrder_WhenCartAndShippingAddressAreProvided_ShouldFinalizeOrder() throws NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, NoItemsForFinalizationException, PaymentFailedException {
+	public void CartTC1E_addToCart_WhenCartIsNull_ShouldThrowNullPointerException() {
 		// Arrange
-		when(productService.findVariationById(any(UUID.class))).thenReturn(productVariation);
-		when(orderService.createAndPlaceNewOrder(any(OrderPlaced.class))).thenReturn(new OrderPlaced());
+		Cart cartError = null;
+		UUID productVariationId = productVariation.getId();
+		int quantity = 1;
 
-		// Act
-		cartService.addToCart(cart, productVariation.getId(), 5);
-		cartService.finalizeOrder(cart, shippingAddress, paymentMethod, true);
-
-		// Assert
-		verify(orderService, times(1)).createAndPlaceNewOrder(any(OrderPlaced.class));
+		// Act & Assert
+		assertThrows(NullPointerException.class, () -> cartService.addToCart(cartError, productVariationId, quantity));
 	}
 
-
-
-	// ================================================================================================================
-	// =============== READ ============================================================================================
-	// ================================================================================================================
-
 	@Test
-	public void CartServiceImpl_findCartById_WhenIdIsProvided_ShouldReturnCart() {
+	public void CartTC1E_addToCart_WhenProductVariationDoesNotExist_ShouldThrowIllegalArgumentException() {
 		// Arrange
-		UUID cartId = cart.getId();
-		when(cartRepository.findById(any(UUID.class))).thenReturn(Optional.of(cart));
+		UUID productVariationIdError = UUID.randomUUID();
+		int quantity = 1;
 
-		// Act
-		Cart foundCart = cartService.findCartById(cartId);
+		when(productService.findVariationById(productVariationIdError)).thenReturn(null);
 
-		// Assert
-		assertThat(foundCart).isNotNull();
-		assertThat(foundCart).isEqualTo(cart);
-		verify(cartRepository, times(1)).findById(cartId);
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> cartService.addToCart(cart, productVariationIdError, quantity));
 	}
 
 	@Test
-	public void CartServiceImpl_findCartItemById_WhenIdIsProvided_ShouldReturnCartItem() {
-		// Arrange
-		UUID cartItemId = cartItem.getId();
-		when(cartItemRepository.findById(any(UUID.class))).thenReturn(Optional.of(cartItem));
-
-		// Act
-		CartItem foundCartItem = cartService.findCartItemById(cartItemId);
-
-		// Assert
-		assertThat(foundCartItem).isNotNull();
-		assertThat(foundCartItem).isEqualTo(cartItem);
-		verify(cartItemRepository, times(1)).findById(cartItemId);
-	}
-
-	@Test
-	public void CartServiceImpl_findCartItemByProductVariation_WhenProductVariationIsProvided_ShouldReturnCartItems() {
-		// Arrange
-		List<CartItem> cartItems = new ArrayList<>();
-		cartItems.add(cartItem);
-		when(cartItemRepository.findByProductVariationId(any(UUID.class))).thenReturn(cartItems);
-
-		// Act
-		List<CartItem> foundCartItems = cartService.findCartItemByProductVariation(productVariation);
-
-		// Assert
-		assertThat(foundCartItems).isNotNull();
-		assertThat(foundCartItems).hasSize(1);
-		assertThat(foundCartItems.get(0)).isEqualTo(cartItem);
-		verify(cartItemRepository, times(1)).findByProductVariationId(productVariation.getId());
-	}
-
-
-
-	// ================================================================================================================
-	// =============== UPDATE ==========================================================================================
-	// ================================================================================================================
-
-	@Test
-	public void CartServiceImpl_updateCart_WhenCartIsProvided_ShouldReturnUpdatedCart() {
-		// Arrange
-		Cart updatedCart = new Cart();
-		updatedCart.setId(cart.getId());
-		updatedCart.setUser(user);
-		when(cartRepository.save(any(Cart.class))).thenReturn(updatedCart);
-
-		// Act
-		Cart returnedCart = cartService.updateCart(updatedCart);
-
-		// Assert
-		assertThat(returnedCart).isNotNull();
-		assertThat(returnedCart.getId()).isEqualTo(updatedCart.getId());
-		verify(cartRepository, times(1)).save(updatedCart);
-	}
-
-	@Test
-	public void CartServiceImpl_editProductQuantityInCart_WhenProductVariationIdAndNewQuantityAreProvided_ShouldUpdateProductQuantityInCart() throws NoDevicesAvailableException {
+	public void CartTC1E_addToCart_WhenQuantityIsLessThanOne_ShouldThrowIllegalArgumentException() {
 		// Arrange
 		UUID productVariationId = productVariation.getId();
-		int newQuantity = 7;
+		int quantityError = -5;
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> cartService.addToCart(cart, productVariationId, quantityError));
+	}
+
+	@Test
+	public void CartTC1E_addToCart_WhenQuantityIsGreaterThanStock_ShouldThrowNoDevicesAvailableException() {
+		// Arrange
+		UUID productVariationId = productVariation.getId();
+		int quantityError = 5000;
+
+		when(productService.findVariationById(productVariationId)).thenReturn(productVariation);
+
+		// Act & Assert
+		assertThrows(NoDevicesAvailableException.class, () -> cartService.addToCart(cart, productVariationId, quantityError));
+	}
+
+
+	// ================================================================================================================
+	// =============== TEST CASE 2 =====================================================================================
+	// ================================================================================================================
+
+
+	/**
+	 * Il carrello non contiene un CartItem con UUID specificato
+	 */
+	@Test
+	public void CartTC2_removeFromCart_WhenCartItemExists_ShouldRemoveProductFromCart() {
+		// Arrange
+		UUID cartItemId = cartItem.getId();
+		cart.addItem(cartItem);
+
+		when(cartRepository.save(cart)).thenReturn(cart);
+
+		// Act
+		cartService.removeProductFromCart(cart, cartItemId);
+
+		// Assert
+		assertThat(cart.getItems()).doesNotContain(cartItem);
+		assertThat(cart.getTotal()).isEqualTo(0);
+	}
+
+	@Test
+	public void removeFromCart_WhenCartIsNull_ShouldThrowNullPointerException() {
+		// Arrange
+		Cart cartError = null;
+		UUID cartItemId = cartItem.getId();
+
+		// Act & Assert
+		assertThrows(NullPointerException.class, () -> cartService.removeProductFromCart(cartError, cartItemId));
+	}
+
+	@Test
+	public void removeFromCart_WhenCartItemDoesNotExist_ShouldNotChangeCart() {
+		// Arrange
+		UUID cartItemIdError = UUID.randomUUID();
+		cart.addItem(cartItem);
+
+		int initialCartSize = cart.getItems().size();
+
+		// Act
+		cartService.removeProductFromCart(cart, cartItemIdError);
+
+		// Assert
+		assertThat(cart.getItems().size()).isEqualTo(initialCartSize);
+	}
+
+	// ================================================================================================================
+	// =============== TEST CASE 3 =====================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Deve essere aggiornata alla quantità inserita e il subtotale e il carrello deve avere il totale giusto
+	 */
+	@Test
+	public void CartTC3_editProductQuantityInCart_WhenProductVariationExists_ShouldUpdateProductQuantityInCart() throws NoDevicesAvailableException {
+		// Arrange
+		UUID productVariationId = productVariation.getId();
+		int newQuantity = 2;
 		cartItem.setProductVariation(productVariation);
 		cartItem.setQuantity(newQuantity);
-		cart.getItems().add(cartItem);
+		cart.addItem(cartItem);
+
+		when(cartRepository.save(cart)).thenReturn(cart);
 
 		// Act
 		cartService.editProductQuantityInCart(cart, productVariationId, newQuantity);
 
 		// Assert
 		assertThat(cart.getItems().get(0).getQuantity()).isEqualTo(newQuantity);
-		verify(cartRepository, times(1)).save(cart);
+		assertThat(cart.getItems().get(0).getSubTotal()).isEqualTo(productVariation.getPrice() * newQuantity);
+		assertThat(cart.getTotal()).isEqualTo(productVariation.getPrice() * newQuantity);
 	}
 
+	@Test
+	public void CartTC3E_editProductQuantityInCart_WhenCartIsNull_ShouldThrowNullPointerException() {
+		// Arrange
+		Cart cartError = null;
+		UUID productVariationId = productVariation.getId();
+		int newQuantity = 2;
+
+		// Act & Assert
+		assertThrows(NullPointerException.class, () -> cartService.editProductQuantityInCart(cartError, productVariationId, newQuantity));
+	}
+
+	@Test
+	public void CartTC3E_editProductQuantityInCart_WhenProductVariationDoesNotExist_ShouldHappenNothing() throws NoDevicesAvailableException {
+		// Arrange
+		UUID productVariationIdError = UUID.randomUUID();
+		int newQuantity = 2;
+
+		// Act
+		cartService.editProductQuantityInCart(cart, productVariationIdError, newQuantity);
+
+		// Assert
+		assertThat(cart.getItems()).isEmpty();
+		assertThat(cart.getTotal()).isEqualTo(0);
+	}
+
+	@Test
+	public void CartTC3E_editProductQuantityInCart_WhenTheNewQuantityIsTooMuch_ShouldThrowNoDevicesAvailableException() {
+		// Arrange
+		UUID productVariationId = productVariation.getId();
+		int newQuantity = 50000;
+		cartItem.setProductVariation(productVariation);
+		cart.addItem(cartItem);
+
+
+		// Act & Assert
+		assertThrows(NoDevicesAvailableException.class, () -> cartService.editProductQuantityInCart(cart, productVariationId, newQuantity));
+	}
 
 
 	// ================================================================================================================
-	// =============== DELETE ==========================================================================================
+	// =============== TEST CASE 4 =====================================================================================
 	// ================================================================================================================
 
+	/**
+	 * <li>Deve essere creato un OrderPlaced contenente un OrderItem a cui è assegnato la ProductVariation inserita attraverso la sua UUID</li>
+	 * <li>Il Cart non deve contenere alcun CartItem</li>
+	 * <li>L’ordine deve essere presente tra gli ordini dell’User</li>
+	 */
 	@Test
-	public void CartServiceImpl_deleteCart_WhenCartIsProvided_ShouldDeleteCart() {
+	public void CartTC4_finalizeOrder_WhenCartAndShippingAddressAndPaymentMethodAreProvided_ShouldFinalizeOrder() throws NoItemsForFinalizationException, NoDevicesAvailableException, NoShippingAddressException, NoPaymentMethodException, PaymentFailedException {
 		// Arrange
+		cartItem.setProductVariation(productVariation);
+		int quantity = 1;
+		cartItem.setQuantity(quantity);
+		cartItem.setSubTotal(productVariation.getPrice() * quantity);
 		cart.addItem(cartItem);
 
+		when(orderService.createAndPlaceNewOrder(any(OrderPlaced.class))).thenReturn(new OrderPlaced());
+
 		// Act
-		cartService.deleteCart(cart);
+		cartService.finalizeOrder(cart, shippingAddress, paymentMethod, true);
 
 		// Assert
-		verify(cartItemRepository, times(1)).deleteAll(cart.getItems());
-		verify(cartRepository, times(1)).delete(cart);
+		assertThat(cart.getItems()).isEmpty();
+		assertThat(user.getOrders().get(0).getItems().get(0).getProductVariation()).isEqualTo(productVariation);
+		assertThat(user.getOrders().get(0).getItems().get(0).getQuantityOrdered()).isEqualTo(quantity);
 	}
 
 	@Test
-	public void CartServiceImpl_removeProductFromCart_WhenCartAndCartItemIdAreProvided_ShouldRemoveProductFromCart() {
+	public void CartTC4E_finalizeOrder_WhenCartIsEmpty_ShouldThrowNoItemsForFinalizationException() {
 		// Arrange
-		cart.addItem(cartItem);
-		UUID cartItemId = cartItem.getId();
+		Cart emptyCart = new Cart();
+		emptyCart.setId(UUID.randomUUID());
+		emptyCart.setUser(user);
+		user.setCart(emptyCart);
 
-		// Act
-		cartService.removeProductFromCart(cart, cartItemId);
-
-		// Assert
-		verify(cartItemRepository, times(1)).delete(cartItem);
-		verify(cartRepository, times(1)).save(cart);
+		// Act & Assert
+		assertThrows(NoItemsForFinalizationException.class, () -> cartService.finalizeOrder(emptyCart, shippingAddress, paymentMethod, true));
 	}
 
 	@Test
-	public void CartServiceImpl_clearCart_WhenCartIsProvided_ShouldClearCart() {
+	public void CartTC4E_finalizeOrder_WhenShippingAddressIsNull_ShouldThrowNoShippingAddressException() {
 		// Arrange
+		cartItem.setProductVariation(productVariation);
+		int quantity = 1;
+		cartItem.setQuantity(quantity);
+		cartItem.setSubTotal(productVariation.getPrice() * quantity);
 		cart.addItem(cartItem);
 
-		// Act
-		cartService.clearCart(cart);
+		ShippingAddress nullShippingAddress = null;
 
-		// Assert
-		verify(cartItemRepository, times(1)).deleteAll(cart.getItems());
-		verify(cartRepository, times(1)).save(cart);
+		// Act & Assert
+		assertThrows(NoShippingAddressException.class, () -> cartService.finalizeOrder(cart, nullShippingAddress, paymentMethod, true));
 	}
+
+	@Test
+	public void CartTC4E_finalizeOrder_WhenPaymentMethodIsNull_ShouldThrowNoPaymentMethodException() {
+		// Arrange
+		cartItem.setProductVariation(productVariation);
+		int quantity = 1;
+		cartItem.setQuantity(quantity);
+		cartItem.setSubTotal(productVariation.getPrice() * quantity);
+		cart.addItem(cartItem);
+
+		PaymentMethod nullPaymentMethod = null;
+
+		// Act & Assert
+		assertThrows(NoPaymentMethodException.class, () -> cartService.finalizeOrder(cart, shippingAddress, nullPaymentMethod, true));
+	}
+
+	@Test
+	public void CartTC4E_finalizeOrder_WhenPaymentFails_ShouldThrowPaymentFailedException() {
+		// Arrange
+		cartItem.setProductVariation(productVariation);
+		int quantity = 1;
+		cartItem.setQuantity(quantity);
+		cartItem.setSubTotal(productVariation.getPrice() * quantity);
+		cart.addItem(cartItem);
+
+		boolean paymentSuccessfulMock = false;
+
+		// Act & Assert
+		assertThrows(PaymentFailedException.class, () -> cartService.finalizeOrder(cart, shippingAddress, paymentMethod, paymentSuccessfulMock));
+	}
+
 }

@@ -135,6 +135,8 @@ public class CartServiceImpl implements CartService {
 			user
 		);
 
+		user.addOrder(order);
+
 		// Aggiungi tutti gli oggetti del carrello all'ordine
 		for (CartItem cartItem : cart.getItems()) {
 			ProductVariation productVariation = cartItem.getProductVariation();

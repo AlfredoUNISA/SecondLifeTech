@@ -95,6 +95,11 @@ public class User {
 		paymentMethod.setUser(null);
 	}
 
+	public void addOrder(OrderPlaced order) {
+		this.orders.add(order);
+		order.setUser(this);
+	}
+
 	public User(String firstName, String lastName, String email, String password, Date birthDate, String role, String phoneNumber) {
 		this.firstName = firstName;
 		this.lastName = lastName;
