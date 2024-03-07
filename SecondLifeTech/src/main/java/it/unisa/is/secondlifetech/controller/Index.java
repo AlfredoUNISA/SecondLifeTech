@@ -1,4 +1,5 @@
 package it.unisa.is.secondlifetech.controller;
+
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
@@ -31,11 +32,18 @@ public class Index {
     public String index(Model model, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
         User user = null;
-        if(principal!=null)
-            user= userService.findUserByEmail(principal.getName());
-
+        if (principal != null)
+            user = userService.findUserByEmail(principal.getName());
         model.addAttribute("user", user);
-
+        if (user != null)
+            switch (user.getRole()) {
+                case (UserRole.GESTORE_PRODOTTI):
+                    return "redirect:/dashboard-prodotti";
+                case (UserRole.GESTORE_UTENTI):
+                    return "redirect:/dashboard-utenti";
+                case (UserRole.GESTORE_ORDINI):
+                    return "redirect:/dashboard-ordini";
+            }
         return "homepage";
     }
 
@@ -52,8 +60,7 @@ public class Index {
             User user = userService.findUserByEmail(principal.getName());
             model.addAttribute("principal", user.getFirstName() + " " + user.getLastName() +
                     " (" + UserRole.getRoleName(user.getRole()) + ")");
-        }
-        else
+        } else
             model.addAttribute("principal", "anonymous");
 
         return "/testing/index";
