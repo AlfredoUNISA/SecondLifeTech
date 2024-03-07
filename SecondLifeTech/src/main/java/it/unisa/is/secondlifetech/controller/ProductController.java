@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -173,11 +174,16 @@ public class ProductController {
 
     @GetMapping("/dashboard-prodotti/add-variation")
     public String addVariation(Model model, Principal principal,
-                               @RequestParam(value = "modelName", required = false) String modelName) {
+                               @RequestParam(value = "modelName", required = false) String modelName,
+                               HttpServletRequest request) {
         User user = null;
         List<ProductModel> models;
         if (principal != null) {
             user = userService.findUserByEmail(principal.getName());
+        }
+        Object error = request.getAttribute("error");
+        if (error != null) {
+            model.addAttribute("error", error);
         }
         //Controllo se non è stata richiesto di aggiungere una variazione ad un modello specifico
         if (modelName != null && !modelName.isBlank()) {
@@ -196,7 +202,7 @@ public class ProductController {
     @PostMapping("/dashboard-prodotti/add-variation")
     public String addVariation(@ModelAttribute("newVariation") ProductVariation variation,
                                @RequestParam(value = "image", required = false) MultipartFile file,
-                               Principal principal) {
+                               Principal principal, RedirectAttributes redirectAttributes) {
         ProductModel model = null;
         User user = null;
         if (principal != null) {
@@ -223,8 +229,10 @@ public class ProductController {
             model = variation.getModel(); //Se il modello non è presente nel database
             try {
                 productService.createNewModel(model); //Aggiungo il modello al database
+            } catch (MissingRequiredField | ErrorInField e) {
+                redirectAttributes.addFlashAttribute("error", e.getMessage());
+                return "redirect:/dashboard-prodotti/add-variation";
             } catch (Exception e) {
-                e.printStackTrace();
                 return "redirect:/error";
             }
         }

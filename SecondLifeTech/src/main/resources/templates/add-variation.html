@@ -15,14 +15,17 @@
 <div class="my-content" style="min-height: calc(100vh - 17em);">
     <br/>
     <div class="container">
+        <th:block th:if="${error}">
+            <div class="alert alert-danger" role="alert" th:text="'Errore: ' + ${error}"></div>
+        </th:block>
         <th:block th:if="${models.size()>1}"> <!-- Se ci sono più di un modello, mostro i radio button -->
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="inlineRadio1" value="option1" name="radioOption">
-            <label class="form-check-label" for="inlineRadio1">Nuovo Modello</label>
-        </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="inlineRadio1" value="option1" name="radioOption">
+                <label class="form-check-label" for="inlineRadio1">Nuovo Modello</label>
+            </div>
         </th:block>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="inlineRadio2" value="option2" name="radioOption" aria-selected="true">
+            <input class="form-check-input" type="radio" id="inlineRadio2" value="option2" name="radioOption" checked>
             <label class="form-check-label" for="inlineRadio2">Da Modello Già Esistente</label>
         </div>
         <form method="post" role="form" enctype="multipart/form-data" action="/dashboard-prodotti/add-variation"
@@ -34,7 +37,8 @@
                     <option th:each="model : ${models}" th:value="${model.id}" th:text="${model.name}"></option>
                 </select>
             </div>
-            <th:block th:if="${models.size()>1}"> <!-- Se ci sono più di un modello, mostro i campi per il nuovo modello -->
+            <th:block th:if="${models.size()>1}">
+                <!-- Se ci sono più di un modello, mostro i campi per il nuovo modello -->
                 <div class="mb-3" id="newModel" style="display: none;">
                     <label for="newModelNameAdd" class="form-label">Nome modello</label>
                     <input type="text" class="form-control" id="newModelNameAdd"
@@ -49,9 +53,8 @@
                         <option value="SMARTPHONE">Smartphone</option>
                         <option value="TABLET">Tablet</option>
                     </select>
-                    <div class="input-group mb-3">
-                        <input class="form-control" type="file" id="imageForm" name="image">
-                    </div>
+                    <label class="form-label" for="imageForm">Immagine</label>
+                    <input class="form-control" type="file" id="imageForm" name="image">
                 </div>
             </th:block>
             <div class="mb-3">
