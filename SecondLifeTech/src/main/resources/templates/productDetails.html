@@ -43,8 +43,9 @@
                 <div class="col-md-5">
                     <div class="card p-3 mb-3">
                         <th:block th:if="${user!=null && user.getRole().contains('GESTORE')}">
-                            <a class="btn btn-primary" th:href="@{'/dashboard-prodotti/add-variation?modelName=' + ${productModel.name}}">Nuova variazione di questo modello</a>
+                            <a class="btn btn-secondary mb-3" th:href="@{'/dashboard-prodotti/add-variation?modelName=' + ${productModel.name}}">Nuova variazione di questo modello</a>
                         </th:block>
+
                         <h2 th:text="${productModel.name}" id="name"></h2>
                         <h5 th:text="${productModel.brand}"></h5>
                         <hr>
@@ -127,10 +128,13 @@
                         <div class="container">
                             <h3 class="card-text" id="price"></h3>
 
-                            <button type="button" class="btn btn-primary" id="addToCartButton">
-                                <i class="fa fa-shopping-cart"></i>
-                                Aggiungi al carrello
-                            </button>
+                            <th:block th:if="${user == null || user!=null && user.getRole().contains('CLIENTE')}">
+                                <button type="button" class="btn btn-primary" id="addToCartButton">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Aggiungi al carrello
+                                </button>
+                            </th:block>
+
                         </div>
                     </div>
                 </div>

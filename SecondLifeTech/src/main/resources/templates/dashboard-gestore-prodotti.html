@@ -143,13 +143,13 @@
                                     <a th:href="@{'/products/' + ${product.name}}" class="btn btn-primary">Visualizza</a>
                                     <a th:href="@{'/dashboard-prodotti/view-variations?modelName='+ ${product.name}}" class="btn btn-secondary">Visualizza variazioni</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#modalDeleteModel">
+                                            th:data-bs-target="'#modalDeleteModel' + ${product.id}">
                                         Elimina
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="modalDeleteModel" tabindex="-1" role="dialog"
+                        <div class="modal fade" th:id="'modalDeleteModel' + ${product.id}" tabindex="-1" role="dialog"
                              aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
