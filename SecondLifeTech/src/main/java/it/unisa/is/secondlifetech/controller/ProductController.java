@@ -67,7 +67,7 @@ public class ProductController {
                             HttpServletRequest request
     ) throws ErrorInField {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int pageSize = size.orElse(12);
         Principal principal = request.getUserPrincipal();
 
         ProductFilters filters = new ProductFilters(
@@ -120,7 +120,7 @@ public class ProductController {
     @PostMapping("/dashboard-prodotti")
     public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
         String queryString = filters.toQueryString();
-        return "redirect:/dashboard-products?" + queryString;
+        return "redirect:/dashboard-prodotti?" + queryString;
     }
 
     //Rimozione di un prodotto

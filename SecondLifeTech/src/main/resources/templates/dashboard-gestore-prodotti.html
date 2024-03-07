@@ -131,25 +131,27 @@
                     <th:block th:each="product : ${productList}">
                         <div class="col">
                             <div class="card h-100">
-                                <a href="#">
+                                <a th:href="@{'/products/' + ${product.name}}">
                                     <th:block th:if="${product.imageFile != null}">
                                         <img class="card-img-top" th:src="@{'/images/' + ${product.imageFile.id}}"
-                                             alt="Image" width="100" height="100">
+                                             alt="Image" width="auto" height="auto">
+                                    </th:block>
+                                    <th:block th:if="${product.imageFile == null}">
+                                        <p class="card-img-top">Nessuna immagine</p>
                                     </th:block>
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
-                                    <p class="card-text">Product Description</p>
                                     <a th:href="@{'/products/' + ${product.name}}" class="btn btn-primary">Visualizza</a>
                                     <a th:href="@{'/dashboard-prodotti/view-variations?modelName='+ ${product.name}}" class="btn btn-secondary">Visualizza variazioni</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#modalDeleteModel">
+                                            th:data-bs-target="'#modalDeleteModel' + ${product.id}">
                                         Elimina
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="modalDeleteModel" tabindex="-1" role="dialog"
+                        <div class="modal fade" th:id="'modalDeleteModel' + ${product.id}" tabindex="-1" role="dialog"
                              aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">

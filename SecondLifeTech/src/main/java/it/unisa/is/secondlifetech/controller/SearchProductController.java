@@ -50,7 +50,8 @@ public class SearchProductController {
                                     @RequestParam(value = "color", required = false) String color,
                                     @RequestParam(value = "state", required = false) String state,
                                     @RequestParam("page") Optional<Integer> page,
-                                    @RequestParam("size") Optional<Integer> size
+                                    @RequestParam("size") Optional<Integer> size,
+                                    HttpServletRequest request
     ) throws ErrorInField {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
@@ -88,6 +89,9 @@ public class SearchProductController {
             }
             model.addAttribute("pageNumbers", pageNumbers);
         }
+
+        if (request.getUserPrincipal() != null)
+            model.addAttribute("user", userService.findUserByEmail(request.getUserPrincipal().getName()));
 
         model.addAttribute("filters", filters);
         model.addAttribute("categories", ProductCategory.ALL_CATEGORIES);
