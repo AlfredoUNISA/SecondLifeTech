@@ -236,4 +236,26 @@ public class ProductController {
         }
         return "redirect:/dashboard-prodotti/view-variations?modelName=" + model.getName();
     }
+    @PostMapping("/dashboard-prodotti/edit-model")
+    public String editModel(@ModelAttribute("editModelID") String modelID, @RequestParam("image") MultipartFile file) throws IOException, ErrorInField, MissingRequiredField {
+        if (file.isEmpty()) {
+            throw new MissingRequiredField();
+        }
+        ProductModel model = productService.findModelById(UUID.fromString(modelID));
+        ImageFile fileObj = new ImageFile();
+        fileObj.setName(model.getName());
+        fileObj.setContentType(file.getContentType());
+        fileObj.setData(file.getBytes());
+        ImageFile imageFile = imageFileRepository.save(fileObj);
+        try {
+            productService.updateModel(model, file);
+        } catch (ErrorInField errorInField) {
+            throw new ErrorInField("Errore nei campi");
+        } catch (MissingRequiredField missingRequiredField) {
+            throw new MissingRequiredField();
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
+        return "redirect:/dashboard-prodotti";
+    }
 }

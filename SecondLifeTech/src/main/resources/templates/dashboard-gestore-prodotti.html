@@ -142,15 +142,94 @@
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate" th:text="${product.name}"></h5>
-                                    <a th:href="@{'/products/' + ${product.name}}" class="btn btn-primary">Visualizza</a>
-                                    <a th:href="@{'/dashboard-prodotti/view-variations?modelName='+ ${product.name}}" class="btn btn-secondary">Visualizza variazioni</a>
+                                    <!--                                    <a th:href="@{'/products/' + ${product.name}}"-->
+                                    <!--                                       class="btn btn-primary">Visualizza</a>-->
+                                    <a th:href="@{'/dashboard-prodotti/view-variations?modelName='+ ${product.name}}"
+                                       class="btn btn-primary">Visualizza</a>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                             th:data-bs-target="'#modalDeleteModel' + ${product.id}">
                                         Elimina
                                     </button>
+                                    <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                                            th:data-bs-target="'#modalEditModel' + ${product.id}">
+                                        Modifica
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                        <!-- Modale di modifica modello -->
+                        <div class="modal fade" th:id="'modalEditModel'+ ${product.id}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleInfo">
+                                            Modifica modello
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+
+                                    <form action="/dashboard-prodotti/edit-model" method="post"
+                                          enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="m-3">
+                                                <input type="hidden" th:value="${product.id}" name="editModelID">
+                                                <div class="input-group mb-3">
+                                                    <a th:href="@{'/products/' + ${product.name}}">
+                                                        <th:block th:if="${product.imageFile != null}">
+                                                            <img class="card-img-top"
+                                                                 th:src="@{'/images/' + ${product.imageFile.id}}"
+                                                                 alt="Image" width="auto" height="auto">
+                                                        </th:block>
+                                                        <th:block th:if="${product.imageFile == null}">
+                                                            <p class="card-img-top">Nessuna immagine</p>
+                                                        </th:block>
+                                                    </a>
+                                                    <input class="form-control" type="file" id="imageForm" name="image">
+                                                </div>
+                                                <label for="editName" class="form-label">Nome</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="editName"
+                                                           name="name"
+                                                           th:value="${product.name}">
+                                                </div>
+
+                                                <label for="editBrand" class="form-label">Brand</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="editBrand"
+                                                           name="surname"
+                                                           th:value="${product.brand}">
+
+                                                </div>
+
+                                                <label for="editCategory" class="form-label">Category</label>
+                                                <div class="input-group mb-3">
+                                                    <select id="editCategory" class="form-select">
+                                                        <option value="">All Categories</option>
+                                                        <th:block th:each="category : ${categories}">
+                                                            <option th:value="${category}"
+                                                                    th:text="${category}"></option>
+                                                        </th:block>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Annulla
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Salva
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modale di eliminazione modello -->
                         <div class="modal fade" th:id="'modalDeleteModel' + ${product.id}" tabindex="-1" role="dialog"
                              aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -180,6 +259,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </th:block>
 
                 </div>
