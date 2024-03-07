@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+
+    <div class="container">
+        <form action="/secondhand" method="post" th:object="${dto}" class="mt-4">
+            <div class="form-group mb-3">
+                <label for="brand">Brand</label>
+                <input id="brand" type="text" th:field="*{brand}" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="category">Categoria</label>
+                <select id="category" th:field="*{category}" class="form-control">
+                    <th:block
+                            th:each="category : ${T(it.unisa.is.secondlifetech.entity.constant.ProductCategory).ALL_CATEGORIES}">
+                        <option th:value="${category}" th:text="${category}"></option>
+                    </th:block>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="ram">RAM</label>
+                <input id="ram" type="number" th:field="*{ram}" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="storage">Dimensione disco</label>
+                <input id="storage" type="number" th:field="*{storageSize}" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="size">Dimensione schermo</label>
+                <input id="size" type="number" step="0.1" th:field="*{displaySize}" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="state">Condizioni</label>
+                <select id="state" th:field="*{state}" class="form-control">
+                    <th:block
+                            th:each="state : ${T(it.unisa.is.secondlifetech.entity.constant.ProductState).ALL_STATES}">
+                        <option th:value="${state}" th:text="${state}"></option>
+                    </th:block>
+                </select>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <div th:if="${error}" class="mt-4 alert alert-danger" role="alert" th:text="${error}"></div>
+
+        <div th:if="${value != null}" class="mt-4 alert alert-success" role="alert">
+            Il valore stimato è di € <span><b th:text="${value}"></b></span>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>

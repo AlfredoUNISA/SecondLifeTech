@@ -14,7 +14,7 @@ public class ProductFilters {
 	public static int MIN_YEAR = 2000;
 	public static int MAX_YEAR = Year.now().getValue();
 	public static int MIN_RAM = 1;
-	public static int MAX_RAM = 128;
+	public static int MAX_RAM = 64;
 	public static double MIN_DISPLAY_SIZE = 0.1;
 	public static double MAX_DISPLAY_SIZE = 20.0;
 	public static int MIN_STORAGE_SIZE = 1;
