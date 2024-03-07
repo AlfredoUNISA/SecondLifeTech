@@ -33,7 +33,7 @@
                 <div class="col-md-4 mt-4">
                     <th:block th:if="${productModel.imageFile != null}">
                         <img class="img-fluid rounded" th:src="@{'/images/' + ${productModel.imageFile.id}}"
-                             alt="Image" width="100" height="100">
+                             alt="Image" width="auto" height="auto">
                     </th:block>
                     <th:block th:if="${productModel.imageFile == null}">
                         <p class="img-fluid rounded">Nessuna immagine</p>

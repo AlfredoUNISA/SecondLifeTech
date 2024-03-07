@@ -120,7 +120,7 @@ public class ProductController {
     @PostMapping("/dashboard-prodotti")
     public String viewProductModelsWithFilters(@ModelAttribute("filters") ProductFilters filters) {
         String queryString = filters.toQueryString();
-        return "redirect:/dashboard-products?" + queryString;
+        return "redirect:/dashboard-prodotti?" + queryString;
     }
 
     //Rimozione di un prodotto
