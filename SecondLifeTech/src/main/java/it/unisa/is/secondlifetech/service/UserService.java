@@ -38,7 +38,7 @@ public interface UserService {
 	 * @param user            l'utente a cui aggiungere l'indirizzo
 	 * @param shippingAddress l'indirizzo da aggiungere
 	 */
-	ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress);
+	ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField;
 
 	/**
 	 * Crea e aggiunge un nuovo metodo di pagamento a un utente.
@@ -46,7 +46,7 @@ public interface UserService {
 	 * @param user  	    l'utente a cui aggiungere il metodo di pagamento
 	 * @param paymentMethod il metodo di pagamento da aggiungere
 	 */
-	PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod);
+	PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) throws MissingRequiredField, ErrorInField;
 
 
 
@@ -133,7 +133,7 @@ public interface UserService {
 	 *
 	 * @param shippingAddress l'indirizzo da aggiornare
 	 */
-	ShippingAddress updateShippingAddress(ShippingAddress shippingAddress);
+	ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField;
 
 	/**
 	 * Aggiorna un metodo di pagamento di un utente.

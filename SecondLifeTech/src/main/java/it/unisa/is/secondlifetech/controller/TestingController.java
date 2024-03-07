@@ -253,7 +253,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/add-shipping-address-test")
-	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) {
+	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) throws MissingRequiredField, ErrorInField {
 		User user = userService.findUserById(userId);
 		userService.createNewShippingAddress(user, newShippingAddress);
 		return "redirect:/view-user-test?userId=" + userId;
@@ -278,7 +278,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/add-payment-method-test")
-	public String addPaymentMethod(@RequestParam("userId") UUID userId, @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) {
+	public String addPaymentMethod(@RequestParam("userId") UUID userId, @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) throws MissingRequiredField, ErrorInField {
 		User user = userService.findUserById(userId);
 		userService.createNewPaymentMethod(user, newPaymentMethod);
 		return "redirect:/view-user-test?userId=" + userId;

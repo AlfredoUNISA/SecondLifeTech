@@ -53,7 +53,7 @@ public class ManageCartController {
 						List<CartItem> cartItems = getProductDetails(cartMap);
 						model.addAttribute("cartItems", cartItems);
 						model.addAttribute("total", cartItems.stream().mapToDouble(item ->
-								item.getProductVariation().getPrice() * item.getQuantity()).sum()
+							item.getProductVariation().getPrice() * item.getQuantity()).sum()
 						);
 						cartFound = true;
 						break;

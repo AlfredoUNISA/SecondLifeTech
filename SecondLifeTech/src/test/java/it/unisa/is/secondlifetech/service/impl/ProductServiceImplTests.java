@@ -1,14 +1,14 @@
 package it.unisa.is.secondlifetech.service.impl;
 
+import it.unisa.is.secondlifetech.entity.Cart;
+import it.unisa.is.secondlifetech.entity.CartItem;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
-import it.unisa.is.secondlifetech.repository.OrderItemRepository;
-import it.unisa.is.secondlifetech.repository.ProductModelRepository;
-import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
+import it.unisa.is.secondlifetech.repository.*;
 import it.unisa.is.secondlifetech.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +39,12 @@ class ProductServiceImplTests {
 
 	@Mock
 	private OrderItemRepository orderItemRepository;
+
+	@Mock
+	private CartItemRepository cartItemRepository;
+
+	@Mock
+	private CartRepository cartRepository;
 
 	@InjectMocks
 	private ProductServiceImpl productService;
@@ -248,5 +257,146 @@ class ProductServiceImplTests {
 		assertThrows(IllegalArgumentException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
+
+	// ================================================================================================================
+	// =============== TEST CASE 3 =====================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Il ProductModel deve essere aggiornato con i nuovi dati
+ 	 */
+	@Test
+	void ProductTC3_updateModel_WhenModelIsValid_ShouldUpdateModel() throws ErrorInField, MissingRequiredField, IOException {
+		// Arrange
+		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
+		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
+
+		// Act
+		ProductModel updatedModel = productService.updateModel(productModel, null);
+
+		// Assert
+		assertThat(updatedModel).isEqualTo(productModel);
+		verify(productModelRepository, times(1)).save(productModel);
+	}
+
+	@Test
+	void ProductTC3E_updateModel_WhenModelIsNull_ShouldThrowIllegalArgumentException() {
+		// Arrange
+		ProductModel nullModel = null;
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> productService.updateModel(nullModel, null));
+	}
+
+
+
+	// ================================================================================================================
+	// =============== TEST CASE 4 =====================================================================================
+	// ================================================================================================================
+
+	/**
+	 * La ProductVariation deve essere aggiornata con i nuovi dati
+	 */
+	@Test
+	void ProductTC4_updateVariation_WhenVariationIsValid_ShouldUpdateVariation() {
+		// Arrange
+		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
+
+		// Act
+		ProductVariation updatedVariation = productService.updateVariation(productVariation);
+
+		// Assert
+		assertThat(updatedVariation).isEqualTo(productVariation);
+		verify(productVariationRepository, times(1)).save(productVariation);
+	}
+
+	@Test
+	void ProductTC4E_updateVariation_WhenVariationIsNull_ShouldThrowIllegalArgumentException() {
+		// Arrange
+		ProductVariation nullVariation = null;
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> productService.updateVariation(nullVariation));
+	}
+
+
+
+	// ================================================================================================================
+	// =============== TEST CASE 5 =====================================================================================
+	// ================================================================================================================
+
+	/**
+	 * <li>Il ProductModel deve essere eliminato dal sistema</li>
+	 * <li>Tutte le ProductVariation associate devono essere eliminate dal sistema e dai carrelli</li>
+	 */
+	@Test
+	void ProductTC5_deleteModel_WhenModelIsValid_ShouldDeleteModelAndItsVariations() {
+		// Arrange
+		productModel.addVariation(productVariation);
+
+		Cart cart = new Cart();
+		CartItem cartItem = new CartItem();
+		cartItem.setProductVariation(productVariation);
+		cartItem.setQuantity(1);
+		cart.addItem(cartItem);
+
+		when(cartItemRepository.findByProductVariationId(any(UUID.class))).thenReturn(List.of(cartItem));
+		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
+
+		// Act
+		productService.deleteModel(productModel);
+
+		// Assert
+		verify(productModelRepository, times(1)).delete(productModel);
+		assertThat(productModel.getVariations()).isEmpty();
+		assertThat(cart.getItems()).isEmpty();
+	}
+
+	@Test
+	void ProductTC5E_deleteModel_WhenModelIsNull_ShouldThrowIllegalArgumentException() {
+		// Arrange
+		ProductModel nullModel = null;
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> productService.deleteModel(nullModel));
+	}
+
+
+
+	// ================================================================================================================
+	// =============== TEST CASE 6 =====================================================================================
+	// ================================================================================================================
+
+	/**
+	 * La ProductVariation deve essere eliminata dal sistema e dai carrelli
+	 */
+	@Test
+	void ProductTC6_deleteVariation_WhenVariationIsValid_ShouldDeleteVariation() {
+		// Arrange
+		Cart cart = new Cart();
+		CartItem cartItem = new CartItem();
+		cartItem.setProductVariation(productVariation);
+		cartItem.setQuantity(1);
+		cart.addItem(cartItem);
+
+		when(cartItemRepository.findByProductVariationId(any(UUID.class))).thenReturn(List.of(cartItem));
+		when(cartRepository.save(any(Cart.class))).thenReturn(cart);
+
+		// Act
+		productService.deleteVariation(productVariation);
+
+		// Assert
+		verify(productVariationRepository, times(1)).delete(productVariation);
+		assertThat(cart.getItems()).isEmpty();
+	}
+
+	@Test
+	void ProductTC6E_deleteVariation_WhenVariationIsNull_ShouldThrowIllegalArgumentException() {
+		// Arrange
+		ProductVariation nullVariation = null;
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> productService.deleteVariation(nullVariation));
+	}
 
 }

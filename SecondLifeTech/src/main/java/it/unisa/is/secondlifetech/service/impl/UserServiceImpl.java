@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField, ErrorInField {
+		checkUser(user);
 		checkUserValues(user);
 
 		if (userRepository.existsByEmail(user.getEmail()))
@@ -92,9 +93,9 @@ public class UserServiceImpl implements UserService {
 	 * @param shippingAddress l'indirizzo da aggiungere
 	 */
 	@Override
-	public ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) {
-		if (shippingAddress.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un indirizzo esistente");
+	public ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField {
+		checkShippingAddress(shippingAddress);
+		checkShippingAddressValues(shippingAddress);
 
 		user.addShippingAddress(shippingAddress);
 
@@ -111,9 +112,9 @@ public class UserServiceImpl implements UserService {
 	 * @param paymentMethod il metodo di pagamento da aggiungere
 	 */
 	@Override
-	public PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) {
-		if (paymentMethod.getId() != null)
-			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un metodo di pagamento esistente");
+	public PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) throws MissingRequiredField, ErrorInField {
+		checkPaymentMethod(paymentMethod);
+		checkPaymentMethodValues(paymentMethod);
 
 		user.addPaymentMethod(paymentMethod);
 
@@ -306,9 +307,12 @@ public class UserServiceImpl implements UserService {
 	 * @param shippingAddress l'indirizzo da aggiornare
 	 */
 	@Override
-	public ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) {
+	public ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField {
 		if (shippingAddress.getId() == null)
 			throw new IllegalArgumentException("ID dell'indirizzo non specificato nella modifica");
+
+		checkShippingAddressValues(shippingAddress);
+
 		return shippingAddressRepository.save(shippingAddress);
 	}
 
@@ -339,6 +343,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void deleteUser(User user) {
+		if (user == null || user.getId() == null)
+			return;
+
 		Cart cart = user.getCart();
 		List<PaymentMethod> paymentMethods = user.getPaymentMethods();
 		List<ShippingAddress> shippingAddresses = user.getShippingAddresses();
@@ -405,8 +412,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private static void checkUserValues(User user) throws MissingRequiredField, ErrorInField {
-		checkUser(user);
-
 		if (user.getFirstName().isEmpty()
 			||user.getLastName().isEmpty()
 			||user.getEmail().isEmpty()
@@ -434,4 +439,68 @@ public class UserServiceImpl implements UserService {
 		if (!List.of(UserRole.ALL_ROLES).contains(UserRole.getRoleName(user.getRole())))
 			throw new ErrorInField("Il ruolo specificato non è valido");
 	}
+
+	private void checkShippingAddress(ShippingAddress shippingAddress) {
+		if (shippingAddress == null)
+			throw new IllegalArgumentException("L'indirizzo specificato non è valido");
+
+		if (shippingAddress.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un indirizzo esistente");
+	}
+
+	private void checkShippingAddressValues(ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField {
+		if (shippingAddress.getStreet().isEmpty()
+			|| shippingAddress.getCity().isEmpty()
+			|| shippingAddress.getZipCode().isEmpty()
+			|| shippingAddress.getState().isEmpty()
+			|| shippingAddress.getCountry().isEmpty()) {
+			throw new MissingRequiredField();
+		}
+
+		if (shippingAddress.getStreet().length() < UserFilters.MIN_STRING_LENGTH || shippingAddress.getStreet().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("La via deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (shippingAddress.getCity().length() < UserFilters.MIN_STRING_LENGTH || shippingAddress.getCity().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("La città deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (shippingAddress.getZipCode().length() < 4 || shippingAddress.getZipCode().length() > 10)
+			throw new ErrorInField("Il codice postale deve essere lungo tra i 4 e i 10 caratteri");
+
+		if (shippingAddress.getCountry().length() < UserFilters.MIN_STRING_LENGTH || shippingAddress.getCountry().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("La provincia/paese deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (shippingAddress.getState().length() < UserFilters.MIN_STRING_LENGTH || shippingAddress.getState().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("La nazione deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+	}
+
+	private void checkPaymentMethod(PaymentMethod paymentMethod) {
+		if (paymentMethod == null)
+			throw new IllegalArgumentException("Il metodo di pagamento specificato non è valido");
+
+		if (paymentMethod.getId() != null)
+			throw new IllegalArgumentException("Usare la funzione di aggiornamento per modificare un metodo di pagamento esistente");
+	}
+
+	private void checkPaymentMethodValues(PaymentMethod paymentMethod) throws MissingRequiredField, ErrorInField {
+		if (paymentMethod.getCardNumber().isEmpty()
+			|| paymentMethod.getCardHolderName().isEmpty()
+			|| paymentMethod.getExpirationDate().isEmpty()
+			|| paymentMethod.getCvv().isEmpty()) {
+			throw new MissingRequiredField();
+		}
+
+		if (paymentMethod.getCardNumber().length() < 16 || paymentMethod.getCardNumber().length() > 19)
+			throw new ErrorInField("Il numero della carta deve essere lungo tra i 16 e i 19 caratteri");
+
+		if (paymentMethod.getCardHolderName().length() < UserFilters.MIN_STRING_LENGTH || paymentMethod.getCardHolderName().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInField("Il titolare della carta deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (paymentMethod.getExpirationDate().length() != 5)
+			throw new ErrorInField("La data di scadenza deve essere lunga 5 caratteri");
+
+		if (paymentMethod.getCvv().length() != 3)
+			throw new ErrorInField("Il CVC deve essere lungo 3 caratteri");
+	}
+
+	// TODO: implementare gli errori su thymeleaf
 }

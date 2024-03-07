@@ -3,6 +3,8 @@ package it.unisa.is.secondlifetech.controller;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -137,6 +140,12 @@ public class ManageProfileController {
 			model.addAttribute("user", user);
 			model.addAttribute("paymentMethods", user.getPaymentMethods());
 			model.addAttribute("newPaymentMethod", new PaymentMethod());
+
+			Object error = request.getAttribute("error");
+			if (error != null) {
+				model.addAttribute("error", error);
+			}
+
 			return "my-profile-payment-methods";
 		}
 		return "redirect:/login";
@@ -144,7 +153,8 @@ public class ManageProfileController {
 
 	@PostMapping("/my-profile/payment-methods/add")
 	public String addPaymentMethod(HttpServletRequest request,
-	                               @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) {
+	                               @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod,
+	                               RedirectAttributes redirectAttributes) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
@@ -152,6 +162,9 @@ public class ManageProfileController {
 
 			try {
 				userService.createNewPaymentMethod(user, newPaymentMethod);
+			} catch (MissingRequiredField | ErrorInField e) {
+				redirectAttributes.addFlashAttribute("error", e.getMessage());
+				return "redirect:/my-profile/payment-methods";
 			} catch (Exception e) {
 				return "redirect:/error";
 			}
@@ -186,7 +199,7 @@ public class ManageProfileController {
 	}
 
 	@GetMapping("/my-profile/shipping-addresses")
-	public String getShippingAddresses(HttpServletRequest request, Model model) {
+	public String getShippingAddresses(HttpServletRequest request, Model model){
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
@@ -194,6 +207,12 @@ public class ManageProfileController {
 			model.addAttribute("user", user);
 			model.addAttribute("shippingAddresses", user.getShippingAddresses());
 			model.addAttribute("newShippingAddress", new ShippingAddress());
+
+			Object error = request.getAttribute("error");
+			if (error != null) {
+				model.addAttribute("error", error);
+			}
+
 			return "my-profile-shipping-addresses";
 		}
 		return "redirect:/login";
@@ -201,7 +220,8 @@ public class ManageProfileController {
 
 	@PostMapping("/my-profile/shipping-addresses/add")
 	public String addShippingAddress(HttpServletRequest request,
-	                                 @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) {
+	                                 @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress,
+	                                 RedirectAttributes redirectAttributes) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
@@ -209,6 +229,9 @@ public class ManageProfileController {
 
 			try {
 				userService.createNewShippingAddress(user, newShippingAddress);
+			} catch (MissingRequiredField | ErrorInField e) {
+				redirectAttributes.addFlashAttribute("error", e.getMessage());
+				return "redirect:/my-profile/shipping-addresses";
 			} catch (Exception e) {
 				return "redirect:/error";
 			}
@@ -225,7 +248,8 @@ public class ManageProfileController {
 	                                    @RequestParam("city") String city,
 	                                    @RequestParam("country") String country,
 	                                    @RequestParam("zipCode") String zipCode,
-	                                    @RequestParam("state") String state) {
+	                                    @RequestParam("state") String state,
+	                                    RedirectAttributes redirectAttributes) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
@@ -233,6 +257,9 @@ public class ManageProfileController {
 
 			try {
 				userService.updateShippingAddress(new ShippingAddress(id, street, city, state, zipCode, country, user));
+			} catch (MissingRequiredField | ErrorInField e) {
+				redirectAttributes.addFlashAttribute("error", e.getMessage());
+				return "redirect:/my-profile/shipping-addresses";
 			} catch (Exception e) {
 				return "redirect:/error";
 			}

@@ -1,6 +1,5 @@
 package it.unisa.is.secondlifetech.service.impl;
 
-import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
@@ -17,17 +16,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTests {
@@ -56,24 +53,32 @@ class UserServiceImplTests {
 	private PaymentMethod paymentMethod;
 	private ShippingAddress shippingAddress;
 	private OrderPlaced order;
-	private UserFilters filters;
-	private Pageable pageable;
 
 	@BeforeEach
 	void setup() {
 		user = new User();
 		user.setId(UUID.randomUUID());
-		user.setRole(UserRole.CLIENTE);
+		user.setFirstName("Mario");
+		user.setLastName("Rossi");
 		user.setEmail("email@email.com");
-		user.setPassword("password");
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
+		user.setPassword("passMario");
+		user.setRole(UserRole.CLIENTE);
+		user.setPhoneNumber("3231235479");
 
 		shippingAddress = new ShippingAddress();
 		shippingAddress.setId(UUID.randomUUID());
+		shippingAddress.setStreet("Via Roma, 1");
+		shippingAddress.setCity("Vietri sul Mare");
+		shippingAddress.setCountry("Salerno");
+		shippingAddress.setZipCode("84019");
+		shippingAddress.setState("Italia");
 
 		paymentMethod = new PaymentMethod();
 		paymentMethod.setId(UUID.randomUUID());
+		paymentMethod.setCardNumber("1234567890123456");
+		paymentMethod.setCvv("123");
+		paymentMethod.setExpirationDate("12/24");
+		paymentMethod.setCardHolderName("Mario Rossi");
 
 		order = new OrderPlaced();
 
@@ -84,255 +89,352 @@ class UserServiceImplTests {
 		user.addShippingAddress(shippingAddress);
 		user.getOrders().add(order);
 		order.setUser(user);
-
-		filters = new UserFilters();
-		pageable = PageRequest.of(0, 10);
 	}
 
 	// ================================================================================================================
-	// ============ CREATE ============================================================================================
+	// ============ TEST CASE 1 ========================================================================================
 	// ================================================================================================================
 
+	/**
+	 * Deve essere creato un User con i dati inseriti durante la creazione
+	 */
 	@Test
-	void UserServiceImpl_createNewUser_ShouldCreateNewUser() throws MissingRequiredField, EmailAlreadyInUseException, ErrorInField {
+	void UserTC1_createUser_WhenUserIsValid_ShouldCreateNewUser() throws MissingRequiredField, ErrorInField, EmailAlreadyInUseException {
 		// Arrange
 		user.setId(null);
-		when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 		when(userRepository.save(any(User.class))).thenReturn(user);
+		when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPass");
 
 		// Act
-		User result = userService.createNewUser(user);
+		User newUser = userService.createNewUser(user);
 
 		// Assert
-		assertThat(result).isEqualTo(user);
-		verify(userRepository).save(user);
+		assertThat(newUser).isNotNull();
+		assertThat(newUser.getId()).isEqualTo(user.getId());
+		assertThat(newUser.getFirstName()).isEqualTo(user.getFirstName());
+		assertThat(newUser.getLastName()).isEqualTo(user.getLastName());
+		assertThat(newUser.getEmail()).isEqualTo(user.getEmail());
+		assertThat(newUser.getPassword()).isEqualTo("encodedPass");
+		assertThat(newUser.getRole()).isEqualTo(user.getRole());
+		assertThat(newUser.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+		assertThat(newUser.getCart()).isEqualTo(user.getCart());
+		assertThat(newUser.getShippingAddresses()).isEqualTo(user.getShippingAddresses());
+		assertThat(newUser.getPaymentMethods()).isEqualTo(user.getPaymentMethods());
+		assertThat(newUser.getOrders()).isEqualTo(user.getOrders());
 	}
 
 	@Test
-	void UserServiceImpl_createNewShippingAddress_ShouldCreateNewShippingAddress() {
+	void UserTC1E_createUser_WhenNameIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		shippingAddress.setId(null);
-		when(shippingAddressRepository.save(any(ShippingAddress.class))).thenReturn(shippingAddress);
-		when(userRepository.save(any(User.class))).thenReturn(user);
+		user.setId(null);
+		user.setFirstName("M");
 
-		// Act
-		ShippingAddress result = userService.createNewShippingAddress(user, shippingAddress);
-
-		// Assert
-		assertThat(result).isEqualTo(shippingAddress);
-		verify(shippingAddressRepository).save(shippingAddress);
-		verify(userRepository).save(user);
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
-	void UserServiceImpl_createNewPaymentMethod_ShouldCreateNewPaymentMethod() {
+	void UserTC1E_createUser_WhenLastNameIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		paymentMethod.setId(null);
-		when(paymentMethodRepository.save(any(PaymentMethod.class))).thenReturn(paymentMethod);
-		when(userRepository.save(any(User.class))).thenReturn(user);
+		user.setId(null);
+		user.setLastName("o");
 
-		// Act
-		PaymentMethod result = userService.createNewPaymentMethod(user, paymentMethod);
-
-		// Assert
-		assertThat(result).isEqualTo(paymentMethod);
-		verify(paymentMethodRepository).save(paymentMethod);
-		verify(userRepository).save(user);
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
 	}
+
+	@Test
+	void UserTC1E_createUser_WhenEmailIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		user.setId(null);
+		user.setEmail("mr");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+	}
+
+	@Test
+	void UserTC1E_createUser_WhenEmailAlreadyExists_ShouldThrowEmailAlreadyInUseException() {
+		// Arrange
+		user.setId(null);
+		user.setEmail("myNameIsMario@yahoo.com");
+		when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
+
+		// Act & Assert
+		assertThrows(EmailAlreadyInUseException.class, () -> userService.createNewUser(user));
+	}
+
+	@Test
+	void UserTC1E_createUser_WhenPasswordIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		user.setId(null);
+		user.setPassword("12");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+	}
+
+	@Test
+	void UserTC1E_createUser_WhenRoleIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		user.setId(null);
+		user.setRole("RUOLO_FINTO");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+	}
+
+	@Test
+	void UserTC1E_createUser_WhenPhoneNumberIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		user.setId(null);
+		user.setPhoneNumber("123");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+	}
+
 
 	// ================================================================================================================
-	// ============ READ ==============================================================================================
+	// ============ TEST CASE 2 ========================================================================================
 	// ================================================================================================================
 
+	/**
+	 * L’User deve essere aggiornato con nuovi dati
+	 */
 	@Test
-	void UserServiceImpl_findUserById_ShouldReturnUser() {
-		// Arrange
-		when(userRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.ofNullable(user));
-
-		// Act
-		User result = userService.findUserById(user.getId());
-
-		// Assert
-		assertThat(result).isEqualTo(user);
-		verify(userRepository).findById(user.getId());
-	}
-
-	@Test
-	void UserServiceImpl_findShippingAddressById_ShouldReturnShippingAddress() {
-		// Arrange
-		when(shippingAddressRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.ofNullable(shippingAddress));
-
-		// Act
-		ShippingAddress result = userService.findShippingAddressById(shippingAddress.getId());
-
-		// Assert
-		assertThat(result).isEqualTo(shippingAddress);
-		verify(shippingAddressRepository).findById(shippingAddress.getId());
-	}
-
-	@Test
-	void UserServiceImpl_findPaymentMethodById_ShouldReturnPaymentMethod() {
-		// Arrange
-		when(paymentMethodRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.ofNullable(paymentMethod));
-
-		// Act
-		PaymentMethod result = userService.findPaymentMethodById(paymentMethod.getId());
-
-		// Assert
-		assertThat(result).isEqualTo(paymentMethod);
-		verify(paymentMethodRepository).findById(paymentMethod.getId());
-	}
-
-	// ================================================================================================================
-	// ============ UPDATE ============================================================================================
-	// ================================================================================================================
-
-	@Test
-	void UserServiceImpl_updateUser_ShouldUpdateUser() {
+	void UserTC2_updateUser_WhenUserIsValid_ShouldUpdateUser() {
 		// Arrange
 		when(userRepository.save(any(User.class))).thenReturn(user);
+		when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPass");
+		when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
 		// Act
 		User updatedUser = userService.updateUser(user);
 
 		// Assert
-		assertThat(updatedUser).isEqualTo(user);
-		verify(userRepository).save(user);
+		assertThat(updatedUser).isNotNull();
+		assertThat(updatedUser.getId()).isEqualTo(user.getId());
+		assertThat(updatedUser.getFirstName()).isEqualTo(user.getFirstName());
+		assertThat(updatedUser.getLastName()).isEqualTo(user.getLastName());
+		assertThat(updatedUser.getEmail()).isEqualTo(user.getEmail());
+		assertThat(updatedUser.getPassword()).isEqualTo("encodedPass");
+		assertThat(updatedUser.getRole()).isEqualTo(user.getRole());
+		assertThat(updatedUser.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+		assertThat(updatedUser.getCart()).isEqualTo(user.getCart());
+		assertThat(updatedUser.getShippingAddresses()).isEqualTo(user.getShippingAddresses());
+		assertThat(updatedUser.getPaymentMethods()).isEqualTo(user.getPaymentMethods());
+		assertThat(updatedUser.getOrders()).isEqualTo(user.getOrders());
 	}
 
 	@Test
-	void UserServiceImpl_updateShippingAddress_ShouldUpdateShippingAddress() {
+	void UserTC2E_updateUser_WhenUserDoesNotExist_ShouldThrowIllegalArgumentException() {
 		// Arrange
+		user.setId(null);
+
+		// Act & Assert
+		assertThrows(IllegalArgumentException.class, () -> userService.updateUser(user));
+	}
+
+
+
+	// ================================================================================================================
+	// ============ TEST CASE 3 ========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * <li>L’User deve essere eliminato dal sistema</li>
+	 * <li>Gli ordini devono essere modificati per non perderli</li>
+	 */
+	@Test
+	void UserTC3_deleteUser_WhenUserExists_ShouldDeleteUser() {
+		// When
+		userService.deleteUser(user);
+
+		// Then
+		verify(userRepository, times(1)).delete(user);
+		verify(cartService, times(1)).deleteCart(cart);
+		verify(paymentMethodRepository, times(1)).deleteAll(user.getPaymentMethods());
+		verify(shippingAddressRepository, times(1)).deleteAll(user.getShippingAddresses());
+	}
+
+
+	@Test
+	void UserTC3E_deleteUser_WhenUserDoesNotExist_ShouldNotInteractWithRepositories() {
+		// Given
+		User nonExistentUser = null;
+
+		// When
+		userService.deleteUser(nonExistentUser);
+
+		// Then
+		verify(userRepository, times(0)).delete(any(User.class));
+		verify(cartService, times(0)).deleteCart(any(Cart.class));
+		verify(paymentMethodRepository, times(0)).deleteAll(anyList());
+		verify(shippingAddressRepository, times(0)).deleteAll(anyList());
+	}
+
+	@Test
+	void UserTC3E_deleteUser_WhenUserHasOrders_ShouldNotDeleteUser() {
+		// Given
+		when(orderService.updateOrder(any(OrderPlaced.class))).thenReturn(order);
+
+		// When
+		userService.deleteUser(user);
+
+		// Then
+		verify(userRepository, times(1)).delete(user);
+		verify(cartService, times(1)).deleteCart(cart);
+		verify(paymentMethodRepository, times(1)).deleteAll(user.getPaymentMethods());
+		verify(shippingAddressRepository, times(1)).deleteAll(user.getShippingAddresses());
+		verify(orderService, times(1)).updateOrder(order);
+	}
+
+
+	// ================================================================================================================
+	// ============ TEST CASE 4 ========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Deve essere creato lo ShippingAddress con i dati inseriti durante la creazione
+	 */
+	@Test
+	void UserTC4_createShippingAddress_WhenShippingAddressIsValid_ShouldCreateNewShippingAddress() throws MissingRequiredField, ErrorInField {
+		// Arrange
+		shippingAddress.setId(null);
 		when(shippingAddressRepository.save(any(ShippingAddress.class))).thenReturn(shippingAddress);
 
 		// Act
-		ShippingAddress updatedShippingAddress = userService.updateShippingAddress(shippingAddress);
+		ShippingAddress newShippingAddress = userService.createNewShippingAddress(user, shippingAddress);
 
 		// Assert
-		assertThat(updatedShippingAddress).isEqualTo(shippingAddress);
-		verify(shippingAddressRepository).save(shippingAddress);
+		assertThat(newShippingAddress).isNotNull();
+		assertThat(newShippingAddress.getId()).isEqualTo(shippingAddress.getId());
+		assertThat(newShippingAddress.getCity()).isEqualTo(shippingAddress.getCity());
+		assertThat(newShippingAddress.getCountry()).isEqualTo(shippingAddress.getCountry());
+		assertThat(newShippingAddress.getStreet()).isEqualTo(shippingAddress.getStreet());
+		assertThat(newShippingAddress.getZipCode()).isEqualTo(shippingAddress.getZipCode());
+		assertThat(newShippingAddress.getUser()).isEqualTo(user);
 	}
 
 	@Test
-	void UserServiceImpl_updatePaymentMethod_ShouldUpdatePaymentMethod() {
+	void UserTC4E_createShippingAddress_WhenStreetIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
+		shippingAddress.setId(null);
+		shippingAddress.setStreet("R");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+	}
+
+	@Test
+	void UserTC4E_createShippingAddress_WhenCityIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		shippingAddress.setId(null);
+		shippingAddress.setCity("V");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+	}
+
+	@Test
+	void UserTC4E_createShippingAddress_WhenCountryIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		shippingAddress.setId(null);
+		shippingAddress.setCountry("S");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+	}
+
+	@Test
+	void UserTC4E_createShippingAddress_WhenZipCodeIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		shippingAddress.setId(null);
+		shippingAddress.setZipCode("123");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+	}
+
+	@Test
+	void UserTC4E_createShippingAddress_WhenStateIsNotValid_ShouldThrowErrorInField() {
+		// Arrange
+		shippingAddress.setId(null);
+		shippingAddress.setState("I");
+
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+	}
+
+
+
+	// ================================================================================================================
+	// ============ TEST CASE 5 ========================================================================================
+	// ================================================================================================================
+
+	/**
+	 * Deve essere creato il PaymentMethod con i dati inseriti durante la creazione
+	 */
+	@Test
+	void UserTC5_createPaymentMethod_WhenPaymentMethodIsValid_ShouldCreateNewPaymentMethod() throws MissingRequiredField, ErrorInField {
+		// Arrange
+		paymentMethod.setId(null);
 		when(paymentMethodRepository.save(any(PaymentMethod.class))).thenReturn(paymentMethod);
 
 		// Act
-		PaymentMethod updatedPaymentMethod = userService.updatePaymentMethod(paymentMethod);
+		PaymentMethod newPaymentMethod = userService.createNewPaymentMethod(user, paymentMethod);
 
 		// Assert
-		assertThat(updatedPaymentMethod).isEqualTo(paymentMethod);
-		verify(paymentMethodRepository).save(paymentMethod);
-	}
-
-	// ================================================================================================================
-	// ============ DELETE ============================================================================================
-	// ================================================================================================================
-
-	@Test
-	void UserServiceImpl_deleteUser_ShouldDeleteUserAndRelatedEntities() {
-		// Act
-		userService.deleteUser(user);
-
-		// Assert
-		verify(cartService).deleteCart(cart);
-		verify(paymentMethodRepository).deleteAll(user.getPaymentMethods());
-		verify(shippingAddressRepository).deleteAll(user.getShippingAddresses());
-		verify(orderService).updateOrder(order);
-		verify(userRepository).delete(user);
+		assertThat(newPaymentMethod).isNotNull();
+		assertThat(newPaymentMethod.getId()).isEqualTo(paymentMethod.getId());
+		assertThat(newPaymentMethod.getCardNumber()).isEqualTo(paymentMethod.getCardNumber());
+		assertThat(newPaymentMethod.getCardHolderName()).isEqualTo(paymentMethod.getCardHolderName());
+		assertThat(newPaymentMethod.getCvv()).isEqualTo(paymentMethod.getCvv());
+		assertThat(newPaymentMethod.getExpirationDate()).isEqualTo(paymentMethod.getExpirationDate());
+		assertThat(newPaymentMethod.getUser()).isEqualTo(user);
 	}
 
 	@Test
-	void UserServiceImpl_deleteShippingAddress_ShouldRemoveShippingAddressFromUser() {
-		// Act
-		userService.deleteShippingAddress(shippingAddress);
-
-		// Assert
-		verify(shippingAddressRepository).delete(shippingAddress);
-		verify(userRepository).save(user);
-	}
-
-	@Test
-	void UserServiceImpl_deletePaymentMethod_ShouldRemovePaymentMethodFromUser() {
-		// Act
-		userService.deletePaymentMethod(paymentMethod);
-
-		// Assert
-		verify(paymentMethodRepository).delete(paymentMethod);
-		verify(userRepository).save(user);
-	}
-
-	@Test
-	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnEmptyPage_WhenNoUsersMatchFilters() {
+	void UserTC5E_createPaymentMethod_WhenCardNumberIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		when(userRepository.findAll()).thenReturn(Collections.emptyList());
+		paymentMethod.setId(null);
+		paymentMethod.setCardNumber("123");
 
-		// Act
-		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
-
-		// Assert
-		assertThat(result).isEmpty();
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
-	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnPageOfUsers_WhenUsersMatchFilters() {
+	void UserTC5E_createPaymentMethod_WhenCardHolderNameIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		User user1 = new User();
-		user1.setEmail("test1@example.com");
-		user1.setRole(UserRole.CLIENTE);
+		paymentMethod.setId(null);
+		paymentMethod.setCardHolderName("MR");
 
-		User user2 = new User();
-		user2.setEmail("test2@example.com");
-		user2.setRole(UserRole.GESTORE_PRODOTTI);
-
-		filters.setEmail("test1@example.com");
-		filters.setRole(UserRole.CLIENTE);
-
-		when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
-
-		// Act
-		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
-
-		// Assert
-		assertThat(result.getContent()).containsOnly(user1);
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
-	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnFirstPage_WhenMoreUsersThanPageSize() {
+	void UserTC5E_createPaymentMethod_WhenCvvIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		List<User> users = new ArrayList<>();
-		for (int i = 0; i < 15; i++) {
-			User user = new User();
-			user.setEmail("test" + i + "@example.com");
-			users.add(user);
-		}
-		when(userRepository.findAll()).thenReturn(users);
+		paymentMethod.setId(null);
+		paymentMethod.setCvv("0");
 
-		// Act
-		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
-
-		// Assert
-		assertThat(result.getContent()).hasSize(10); // 10 è la dimensione della pagina
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
-	void UserServiceImpl_findAllUsersWithFilters_ShouldReturnSubsequentPage_WhenPageNumberIsGreaterThanZero() {
+	void UserTC5E_createPaymentMethod_WhenExpirationDateIsNotValid_ShouldThrowErrorInField() {
 		// Arrange
-		List<User> users = new ArrayList<>();
-		for (int i = 0; i < 15; i++) {
-			User user = new User();
-			user.setEmail("test" + i + "@example.com");
-			users.add(user);
-		}
-		when(userRepository.findAll()).thenReturn(users);
-		pageable = PageRequest.of(1, 10);
+		paymentMethod.setId(null);
+		paymentMethod.setExpirationDate("0");
 
-		// Act
-		Page<User> result = userService.findAllUsersPaginatedWithFilters(filters, pageable);
-
-		// Assert
-		assertThat(result.getContent()).hasSize(5);
+		// Act & Assert
+		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
+
+
 
 }

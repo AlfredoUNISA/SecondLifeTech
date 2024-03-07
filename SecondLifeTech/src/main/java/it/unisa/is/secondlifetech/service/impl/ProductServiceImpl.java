@@ -276,7 +276,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInField, MissingRequiredField {
-		if (model.getId() == null)
+		if (model == null || model.getId() == null)
 			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductModel");
 
 		checkProductModelValues(model);
@@ -302,7 +302,7 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public ProductVariation updateVariation(ProductVariation productVariation) {
-		if (productVariation.getId() == null)
+		if (productVariation == null || productVariation.getId() == null)
 			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductVariation");
 
 		return productVariationRepository.save(productVariation);
@@ -341,9 +341,10 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Override
 	public void deleteVariation(ProductVariation variation) {
+		checkProductVariation(variation);
+
 		ProductModel model = variation.getModel();
 		checkProductModel(model);
-		checkProductVariation(variation);
 
 		// Se la variante è presente in un ordine, aggiorna le informazioni dell'ordine
 		for (OrderItem item : orderService.findOrderItemsByProductVariation(variation)) {
