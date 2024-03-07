@@ -705,6 +705,239 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 			}
 
+			model = new ProductModel("Galaxy S10", "Samsung", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019,6,6.1,128,359,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,360,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,360,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,370,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,370,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,380,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,380,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,128,380,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,370,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,370,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,390,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,409,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,409,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+			}
+
+
+
+
+			model = new ProductModel("Galaxy S20", "Samsung", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019,6,6.1,128,459,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,460,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,460,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,470,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,470,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,480,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,6,6.1,128,480,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,128,480,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,470,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,470,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,490,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,509,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,509,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+			}
+
+			model = new ProductModel("Galaxy S21", "Samsung", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019,8,6.1,128,559,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,560,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,560,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,570,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,570,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,580,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,580,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,128,580,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,570,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,570,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,590,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,609,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,609,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+			}
+
+
+			model = new ProductModel("Galaxy S22", "Samsung", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019,8,6.1,128,659,10,"nero",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,660,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,660,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,670,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,670,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,680,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.1,128,680,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,128,680,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,670,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,670,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,690,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,709,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.1,256,709,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,680,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,680,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,690,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,690,10,"bianco",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,699,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,8,6.5,128,699,10,"nero",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,128,699,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,256,709,10,"bianco",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,256,709,10,"blu",ProductState.ACCETTABILE,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,256,729,10,"nero",ProductState.BUONO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,256,749,10,"bianco",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+				variation = new ProductVariation(2019,12,6.5,256,749,10,"blu",ProductState.OTTIMO,model);
+				productService.createNewVariation(model,variation);
+			}
+
+
+
+			model = new ProductModel("Galaxy S22 Ultra", "Samsung", ProductCategory.SMARTPHONE);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019, 8, 6.8, 256, 859, 10, "nero", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 6.8, 256, 860, 10, "bianco", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 6.8, 256, 860, 10, "blu", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 6.8, 256, 870, 10, "nero", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 12, 6.8, 256, 870, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 6.8, 256, 880, 10, "blu", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 6.8, 256, 880, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 960, 10, "bianco", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 960, 10, "blu", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 970, 10, "nero", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 970, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 980, 10, "blu", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 16, 6.8, 512, 980, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+			}
+
+
+			model = new ProductModel("Tab A7", "Samsung", ProductCategory.TABLET);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019, 4, 9, 128, 259, 10, "nero", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 4, 9, 128, 259, 10, "bianco", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 4, 9, 128, 269, 10, "nero", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 4, 9, 128, 269, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 4, 9, 128, 279, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 4, 9, 128, 279, 10, "bianco", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 256, 299, 10, "nero", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 256, 309, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 256, 319, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+			}
+
+
+			model = new ProductModel("Tab S7", "Samsung", ProductCategory.TABLET);
+			if (!modelRepository.existsByName(model.getName())) {
+				productService.createNewModel(model);
+				ProductVariation variation = new ProductVariation(2019, 6, 9, 128, 359, 10, "nero", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 128, 359, 10, "bianco", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 128, 369, 10, "nero", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 128, 369, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 128, 379, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 6, 9, 128, 379, 10, "bianco", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 9, 256, 399, 10, "nero", ProductState.ACCETTABILE, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 9, 256, 409, 10, "bianco", ProductState.BUONO, model);
+				productService.createNewVariation(model, variation);
+				variation = new ProductVariation(2019, 8, 9, 256, 419, 10, "nero", ProductState.OTTIMO, model);
+				productService.createNewVariation(model, variation);
+			}
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
