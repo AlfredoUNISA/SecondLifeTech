@@ -55,12 +55,99 @@
                             <td th:text="${variation.color}"></td>
                             <td th:text="${variation.state}"></td>
                             <td>
-                                <a class="btn btn-primary"
-                                   th:href="@{'/dashboard-prodotti/edit-variation/' + ${variation.id}}">Modifica</a>
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                                        th:data-bs-target="'#modalEditModel' + ${variation.id}">
+                                    Modifica
+                                </button>
                                 <a class="btn btn-danger"
                                    th:href="@{'/dashboard-prodotti/delete-variation/' + ${variation.id}}">Elimina</a>
                             </td>
                         </tr>
+                        <div class="modal fade" th:id="'modalEditModel'+ ${variation.id}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleInfo">
+                                            Modifica modello
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+
+                                    <form action="/dashboard-prodotti/edit-variation" method="post">
+                                        <div class="modal-body">
+                                            <div class="m-3">
+                                                <input type="hidden" th:value="${variation.id}" name="editVariationID">
+                                                <label for="editColor" class="form-label">Colore</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="editColor"
+                                                           name="color"
+                                                           th:value="${variation.color}">
+                                                </div>
+
+                                                <label for="editBrand" class="form-label">Dimensione Display</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editBrand"
+                                                           name="displaySize"
+                                                           th:value="${variation.displaySize}">
+                                                </div>
+                                                <label for="editPrice" class="form-label">Prezzo</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editPrice"
+                                                           name="price"
+                                                           th:value="${variation.price}">
+                                                </div>
+                                                <label for="editQuantity" class="form-label">Quantità in magazzino</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editQuantity"
+                                                           name="quantityInStock"
+                                                           th:value="${variation.quantityInStock}">
+                                                </div>
+                                                <label for="editRam" class="form-label">Ram</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editRam"
+                                                           name="ram"
+                                                           th:value="${variation.ram}">
+                                                </div>
+
+                                                <label for="editCategory" class="form-label">Condizione</label>
+                                                <div class="input-group mb-3">
+                                                    <select id="editCategory" class="form-select" name="state">
+                                                        <option value="">All Categories</option>
+                                                        <th:block th:each="state : ${states}">
+                                                            <option th:value="${state}"
+                                                                    th:text="${state}"></option>
+                                                        </th:block>
+                                                    </select>
+                                                </div>
+                                                <label for="editStorage" class="form-label">Dimensione storage</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editStorage"
+                                                           name="storageSize"
+                                                           th:value="${variation.storageSize}">
+                                                </div>
+                                                <label for="editYear" class="form-label">Anno</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="editYear"
+                                                           name="year"
+                                                           th:value="${variation.year}">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Annulla
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Salva
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </th:block>
                 </th:block>
                 </tbody>
