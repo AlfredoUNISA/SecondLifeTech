@@ -289,6 +289,15 @@ class ProductServiceImplTests {
 	}
 
 	@Test
+	void ProductTC3E_updateNewModel_WhenModelNameAlreadyExists_ShouldThrowErrorInField() {
+		// Arrange
+		when(productModelRepository.existsByName(anyString())).thenReturn(true);
+
+		// Act and Assert
+		assertThrows(ErrorInField.class, () -> productService.updateModel(productModel, null));
+	}
+
+	@Test
 	void ProductTC3E_updateModel_WhenModelIsNull_ShouldThrowIllegalArgumentException() {
 		// Arrange
 		ProductModel nullModel = null;
