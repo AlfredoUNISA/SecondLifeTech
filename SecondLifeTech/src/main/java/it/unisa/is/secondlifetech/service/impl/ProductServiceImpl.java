@@ -7,7 +7,6 @@ import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.exception.ErrorInField;
 import it.unisa.is.secondlifetech.exception.MissingRequiredField;
 import it.unisa.is.secondlifetech.repository.*;
-import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +103,19 @@ public class ProductServiceImpl implements ProductService {
 		imageFile.setContentType(image.getContentType());
 		imageFile.setData(image.getBytes());
 
+		return changeImageModel(model, imageFile);
+	}
+
+	/**
+	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
+	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
+	 *
+	 * @param model il modello di prodotto a cui aggiungere l'immagine
+	 * @param imageFile il file da aggiungere
+	 * @return l'oggetto ImageFile aggiunto
+	 */
+	@Override
+	public ImageFile changeImageModel(ProductModel model, ImageFile imageFile) {
 		// Se il modello ha già un'immagine, elimina l'immagine precedente
 		if (model.getImageFile() != null) {
 			deleteImage(model.getImageFile());

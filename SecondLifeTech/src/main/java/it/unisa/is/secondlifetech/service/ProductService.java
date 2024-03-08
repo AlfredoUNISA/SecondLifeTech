@@ -46,8 +46,19 @@ public interface ProductService {
 	 */
 	ImageFile changeImageModel(ProductModel model, MultipartFile image) throws IOException;
 
+	/**
+	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
+	 * Da usare per <b>creare</b> una nuova immagine o <b>aggiornare</b> l'immagine di un modello.
+	 *
+	 * @param model il modello di prodotto a cui aggiungere l'immagine
+	 * @param imageFile il file da aggiungere
+	 * @return l'oggetto ImageFile aggiunto
+	 */
+	ImageFile changeImageModel(ProductModel model, ImageFile imageFile);
+
 	// ================================================================================================================
 	// =============== READ ============================================================================================
+
 	// ================================================================================================================
 
 	/**

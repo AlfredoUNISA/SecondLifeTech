@@ -46,6 +46,18 @@
             <div class="col-md-9">
                 <h2>I miei ordini</h2>
 
+                <th:block th:if="${param.error_finalizing}">
+                    <div class="alert alert-danger" role="alert">
+                        Non è stato possibile finalizzare il pagamento
+                    </div>
+                </th:block>
+
+                <th:block th:if="${param.finalized}">
+                    <div class="alert alert-success" role="alert">
+                        Ordine effettuato
+                    </div>
+                </th:block>
+
                 <div class="table-responsive">
                     <table class="table">
                         <thead>

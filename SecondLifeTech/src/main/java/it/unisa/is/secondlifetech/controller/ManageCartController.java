@@ -338,10 +338,8 @@ public class ManageCartController {
 			return "redirect:/error";
 		}
 
-		return "redirect:/my-profile/orders";
+		return "redirect:/my-profile/orders?finalized";
 	}
-
-	// TODO: non permettere al guest di selezionare una quantità < 0 e > stock
 
 	/**
 	 * Parse the cart cookie value into a map

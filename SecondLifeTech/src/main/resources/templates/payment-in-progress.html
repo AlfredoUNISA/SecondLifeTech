@@ -35,7 +35,7 @@
 
 		<div class="row">
 			<div class="col-12 mt-3 text-center">
-				<a href="/error" class="btn btn-danger">Pagamento Fallito</a>
+				<a href="/my-profile/orders?error_finalizing" class="btn btn-danger">Pagamento Fallito</a>
 				<form action="/my-cart/place-order/payment-in-progress/proceed">
 					<input type="hidden" th:value="${paymentMethodId}" name="paymentMethodId">
 					<input type="hidden" th:value="${shippingAddressId}" name="shippingAddressId">

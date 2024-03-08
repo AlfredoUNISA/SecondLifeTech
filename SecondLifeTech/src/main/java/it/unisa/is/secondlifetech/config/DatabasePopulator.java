@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +36,8 @@ public class DatabasePopulator {
         this.productService = productService;
     }
 
-	public static ImageFile createFromFile(String filePath) throws IOException {
-		File file = new File(filePath);
+	public static ImageFile createFromFile(String fileName) throws IOException {
+		File file = ResourceUtils.getFile("classpath:static/images_for_db_init/" + fileName);
 
 		String name = file.getName();
 		String contentType = Files.probeContentType(file.toPath());
@@ -56,6 +57,8 @@ public class DatabasePopulator {
 			ProductModel model = new ProductModel("iPhone 7", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
+				productService.changeImageModel(model, createFromFile("iPhone 7.jpg"));
+
 				ProductVariation variation = new ProductVariation(2017,2,4.7,128,200,10,"nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2017,2,4.7,128,200,10,"bianco",ProductState.ACCETTABILE,model);
@@ -83,6 +86,8 @@ public class DatabasePopulator {
 			model = new ProductModel("iPhone 7 Plus", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
+				productService.changeImageModel(model, createFromFile("iPhone 7.jpg"));
+
 				ProductVariation variation = new ProductVariation(2017,2,5.5,128,250,10,"nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2017,2,5.5,128,250,10,"bianco",ProductState.ACCETTABILE,model);
@@ -110,6 +115,8 @@ public class DatabasePopulator {
 			model = new ProductModel("iPhone 8", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
+				productService.changeImageModel(model, createFromFile("iPhone 8.jpg"));
+
 				ProductVariation variation = new ProductVariation(2018,2,4.7,128,210,10,"nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2018,2,4.7,128,210,10,"bianco",ProductState.ACCETTABILE,model);
