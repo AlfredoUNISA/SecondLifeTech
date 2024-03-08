@@ -136,31 +136,8 @@ public class ProductController {
         return "redirect:/dashboard-prodotti";
     }
 
-    @PostMapping("/dashboard-prodotti/add")
-    public String otherPost(@ModelAttribute("product") ProductModel model, @RequestParam("image") MultipartFile file) throws IOException, ErrorInField, MissingRequiredField {
-        if (file.isEmpty()) {
-            throw new MissingRequiredField();
-        }
-        ImageFile fileObj = new ImageFile();
-        fileObj.setName(model.getName());
-        fileObj.setContentType(file.getContentType());
-        fileObj.setData(file.getBytes());
-        ImageFile imageFile = imageFileRepository.save(fileObj);
-        model.setImageFile(imageFile);
-        try {
-            productService.createNewModel(model);
-        } catch (ErrorInField errorInField) {
-            throw new ErrorInField("Errore nei campi");
-        } catch (MissingRequiredField missingRequiredField) {
-            throw new MissingRequiredField();
-        } catch (Exception e) {
-            return "redirect:/error";
-        }
-        return "redirect:/dashboard-prodotti";
-    }
-
     @GetMapping("/dashboard-prodotti/view-variations")
-    public String viewVariations(Model model, Principal principal, @RequestParam(value = "modelName") String modelName){
+    public String viewVariations(Model model, Principal principal, @RequestParam(value = "modelName") String modelName) {
         User user = null;
         if (principal != null) {
             user = userService.findUserByEmail(principal.getName());
@@ -190,7 +167,7 @@ public class ProductController {
             models = new ArrayList<>();
             models.add(productService.findModelByName(modelName));
         } else {
-             models= productService.findAllModels();
+            models = productService.findAllModels();
 
         }
         model.addAttribute("models", models);
@@ -209,7 +186,7 @@ public class ProductController {
             user = userService.findUserByEmail(principal.getName());
         }
         //Aggiunta Immagine
-        if (file!=null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             ImageFile fileObj = new ImageFile();
             fileObj.setName(variation.getModel().getName());
             fileObj.setContentType(file.getContentType());
@@ -238,14 +215,19 @@ public class ProductController {
         }
         try {
             productService.createNewVariation(model, variation);
+        } catch (MissingRequiredField | ErrorInField e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/dashboard-prodotti/add-variation";
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error";
         }
         return "redirect:/dashboard-prodotti/view-variations?modelName=" + model.getName();
     }
+
     @PostMapping("/dashboard-prodotti/edit-model")
-    public String editModel(@ModelAttribute("editModelID") String modelID, @RequestParam("image") MultipartFile file) throws IOException, ErrorInField, MissingRequiredField {
+    public String editModel(@ModelAttribute("editModelID") String modelID, @RequestParam("image") MultipartFile
+            file, RedirectAttributes redirectAttributes) throws IOException, ErrorInField, MissingRequiredField {
         if (file.isEmpty()) {
             throw new MissingRequiredField();
         }
@@ -257,10 +239,9 @@ public class ProductController {
         ImageFile imageFile = imageFileRepository.save(fileObj);
         try {
             productService.updateModel(model, file);
-        } catch (ErrorInField errorInField) {
-            throw new ErrorInField("Errore nei campi");
-        } catch (MissingRequiredField missingRequiredField) {
-            throw new MissingRequiredField();
+        } catch (ErrorInField | MissingRequiredField e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/dashboard-prodotti";
         } catch (Exception e) {
             return "redirect:/error";
         }
