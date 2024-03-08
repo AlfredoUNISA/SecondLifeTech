@@ -126,6 +126,9 @@
 
             <div class="col-md-9">
                 <a class="btn btn-primary mb-5" href="/dashboard-prodotti/add-variation">Aggiungi prodotto</a>
+                <th:block th:if="${error}">
+                <div class="alert alert-danger" role="alert" th:text="'Errore: ' + ${error}"></div>
+                </th:block>
                 <br/>
                 <div class="row row-cols-1 row-cols-md-4 g-4">
                     <th:block th:each="product : ${productList}">
