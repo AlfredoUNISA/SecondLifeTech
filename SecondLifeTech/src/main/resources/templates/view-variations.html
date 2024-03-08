@@ -116,7 +116,7 @@
                                                         <option value="">All Categories</option>
                                                         <th:block th:each="state : ${states}">
                                                             <option th:value="${state}"
-                                                                    th:text="${state}"></option>
+                                                                    th:text="${state}" th:selected="${state.equals(variation.state)}"></option>
                                                         </th:block>
                                                     </select>
                                                 </div>

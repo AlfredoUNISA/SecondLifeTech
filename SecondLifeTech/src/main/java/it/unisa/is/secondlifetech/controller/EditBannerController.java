@@ -6,12 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class EditBannerController {
-    @GetMapping("/edit-banner")
+    @GetMapping("/dashboard-prodotti/edit-banner")
     public String getEditBanner() {
-        return "edit-banner";
-    }
-    @PostMapping("/edit-banner")
-    public String postEditBanner() {
         return "edit-banner";
     }
 }

@@ -106,6 +106,15 @@ class ProductServiceImplTests {
 		// Assert
 		assertThat(createdModel).isNull();
 	}
+
+	@Test
+	void ProductTC1E_createNewModel_WhenModelNameAlreadyExists_ShouldThrowErrorInField() {
+		// Arrange
+		when(productModelRepository.existsByName(anyString())).thenReturn(true);
+
+		// Act and Assert
+		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModel));
+	}
 	
 	@Test
 	void ProductTC1E_createNewModel_WhenModelNameIsInvalid_ShouldThrowErrorInField() {

@@ -440,13 +440,14 @@ public class ProductServiceImpl implements ProductService {
 	 * @throws ErrorInField se uno dei valori non è valido
 	 * @throws MissingRequiredField se uno dei valori richiesti è mancante
 	 */
-	private static void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
+	private void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
 		if (productModel.getName().isEmpty()
 			|| productModel.getBrand().isEmpty()
 			|| productModel.getCategory().isEmpty()){
 			throw new MissingRequiredField();
 		}
-
+		if (productModelRepository.existsByName(productModel.getName()))
+			throw new ErrorInField("Il nome del modello esiste già" );
 		if (productModel.getName().length() < ProductFilters.MIN_STRING_LENGTH || productModel.getName().length() > ProductFilters.MAX_STRING_LENGTH)
 			throw new ErrorInField("Il nome del modello deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
 

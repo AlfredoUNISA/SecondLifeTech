@@ -6,35 +6,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 public class ImageRestController {
-	private ImageFileRepository imageFileRepository;
+    private ImageFileRepository imageFileRepository;
 
-	@Autowired
-	public ImageRestController(ImageFileRepository imageFileRepository) {
-		this.imageFileRepository = imageFileRepository;
-	}
+    @Autowired
+    public ImageRestController(ImageFileRepository imageFileRepository) {
+        this.imageFileRepository = imageFileRepository;
+    }
 
-	@GetMapping("/images/{id}")
-	public ResponseEntity<byte[]> getImage(@PathVariable UUID id) {
-		Optional<ImageFile> imageFileOptional = imageFileRepository.findById(id);
+    @GetMapping("/images/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable UUID id) {
+        Optional<ImageFile> imageFileOptional = imageFileRepository.findById(id);
 
-		if (imageFileOptional.isPresent()) {
-			ImageFile imageFile = imageFileOptional.get();
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, imageFile.getContentType());
+        if (imageFileOptional.isPresent()) {
+            ImageFile imageFile = imageFileOptional.get();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, imageFile.getContentType());
 
-			return new ResponseEntity<>(imageFile.getData(), headers, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(imageFile.getData(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-		}
-	}
+        }
+    }
+
+//    @GetMapping("/images/thumbnail")
+//    public void getThumbnail(@RequestParam("image") MultipartFile file) throws IOException {
+//        String name = file.getName();
+//        Files.write(Path.of("src\\main\\resources\\static\\"), file.getBytes());
+//        String contentType = Files.probeContentType(file.toPath());
+//        byte[] data = Files.readAllBytes(file.toPath());
+//
+//    }
 }

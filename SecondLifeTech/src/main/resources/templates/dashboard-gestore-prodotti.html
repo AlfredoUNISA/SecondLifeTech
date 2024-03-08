@@ -211,7 +211,7 @@
                                                         <option value="">All Categories</option>
                                                         <th:block th:each="category : ${categories}">
                                                             <option th:value="${category}"
-                                                                    th:text="${category}"></option>
+                                                                    th:text="${category}" th:selected="${category.equals(product.category)}"></option>
                                                         </th:block>
                                                     </select>
                                                 </div>
