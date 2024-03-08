@@ -81,6 +81,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2017,2,4.7,256,240,10,"Oro",ProductState.BUONO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 7 Plus", "Apple", ProductCategory.SMARTPHONE);
@@ -110,6 +112,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2017,2,5.5,256,260,10,"Oro",ProductState.BUONO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 8", "Apple", ProductCategory.SMARTPHONE);
@@ -139,6 +143,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2018,2,4.7,256,250,10,"Oro",ProductState.BUONO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 8 Plus", "Apple", ProductCategory.SMARTPHONE);
@@ -167,6 +173,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2018,2,5.5,256,290,10,"Oro",ProductState.BUONO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone X", "Apple", ProductCategory.SMARTPHONE);
@@ -195,6 +203,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2018,3,5.7,256,330,10,"Oro",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone XS", "Apple", ProductCategory.SMARTPHONE);
@@ -245,6 +255,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,3,6.5,256,360,10,"Oro",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 11", "Apple", ProductCategory.SMARTPHONE);
@@ -277,12 +289,14 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,3,6.1,256,389,10,"Oro",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 11 Pro", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
-				productService.changeImageModel(model, createFromFile("iPhone 11 Pro.jpg"));
+				productService.changeImageModel(model, createFromFile("iPhone 11.jpg"));
 				ProductVariation variation = new ProductVariation(2019,3,5.7,128,399,10,"Nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,3,5.7,128,399,10,"Bianco",ProductState.ACCETTABILE,model);
@@ -324,6 +338,7 @@ public class DatabasePopulator {
 				variation = new ProductVariation(2019,3,6.7,512,499,10,"Oro",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
 
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -371,12 +386,14 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2020,4,5.4,256,439,10,"Oro",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 12 Pro", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
-				productService.changeImageModel(model, createFromFile("iPhone 12 Pro.jpg"));
+				productService.changeImageModel(model, createFromFile("iPhone 12.jpg"));
 				ProductVariation variation = new ProductVariation(2020, 6, 6.1, 128, 470, 10, "Nero", ProductState.ACCETTABILE, model);
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 6, 6.1, 128, 470, 10, "Bianco", ProductState.ACCETTABILE, model);
@@ -421,6 +438,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 6, 6.7, 512, 670, 10, "blu", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 13", "Apple", ProductCategory.SMARTPHONE);
@@ -467,12 +486,14 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2020,4,5.4,256,639,10,"Oro",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("iPhone 13 Pro", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
-				productService.changeImageModel(model, createFromFile("iPhone 13 Pro.jpg"));
+				productService.changeImageModel(model, createFromFile("iPhone 13.jpg"));
 				ProductVariation variation = new ProductVariation(2020, 6, 6.1, 128, 670, 10, "Nero", ProductState.ACCETTABILE, model);
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 6, 6.1, 128, 670, 10, "Bianco", ProductState.ACCETTABILE, model);
@@ -517,6 +538,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 6, 6.7, 512, 870, 10, "blu", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -550,6 +573,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,6,6.1,256,389,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Xiaomi 12", "Xiaomi", ProductCategory.SMARTPHONE);
@@ -582,6 +607,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,12,6.1,256,689,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Pixel 6a", "Google", ProductCategory.SMARTPHONE);
@@ -614,6 +641,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,6,6.1,256,389,10,"verde",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Pixel 6", "Google", ProductCategory.SMARTPHONE);
@@ -638,6 +667,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 8, 6.1, 128, 490, 10, "rosso", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Pixel 6 Pro", "Google", ProductCategory.SMARTPHONE);
@@ -670,6 +701,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 12, 6.7, 512, 670, 10, "Oro", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -695,7 +728,11 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 8, 6.1, 128, 690, 10, "verde", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
+
+
 			model = new ProductModel("Pixel 7 Pro", "Google", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
@@ -727,12 +764,14 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2020, 12, 6.7, 512, 870, 10, "blu", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Galaxy S10", "Samsung", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
-				productService.changeImageModel(model, createFromFile("Galaxy S10.jpg"));
+				productService.changeImageModel(model, createFromFile("Galaxy S20.jpg"));
 
 				ProductVariation variation = new ProductVariation(2019,6,6.1,128,359,10,"Nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
@@ -760,6 +799,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,12,6.1,256,409,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -768,7 +809,7 @@ public class DatabasePopulator {
 			model = new ProductModel("Galaxy S20", "Samsung", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
-				productService.changeImageModel(model, createFromFile("Galaxy S10.jpg"));
+				productService.changeImageModel(model, createFromFile("Galaxy S20.jpg"));
 
 				ProductVariation variation = new ProductVariation(2019,6,6.1,128,459,10,"Nero",ProductState.ACCETTABILE,model);
 				productService.createNewVariation(model,variation);
@@ -796,6 +837,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,12,6.1,256,509,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 			model = new ProductModel("Galaxy S21", "Samsung", ProductCategory.SMARTPHONE);
@@ -829,6 +872,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,12,6.1,256,609,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -887,6 +932,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model,variation);
 				variation = new ProductVariation(2019,12,6.5,256,749,10,"blu",ProductState.OTTIMO,model);
 				productService.createNewVariation(model,variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -922,6 +969,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2019, 16, 6.8, 512, 980, 10, "Nero", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -948,6 +997,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2019, 6, 9, 256, 319, 10, "Nero", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 
@@ -974,6 +1025,8 @@ public class DatabasePopulator {
 				productService.createNewVariation(model, variation);
 				variation = new ProductVariation(2019, 8, 9, 256, 419, 10, "Nero", ProductState.OTTIMO, model);
 				productService.createNewVariation(model, variation);
+
+				log.info("Creato Modello " + model.getName());
 			}
 
 		} catch (Exception e) {
