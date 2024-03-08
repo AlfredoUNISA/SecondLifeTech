@@ -54,7 +54,7 @@ public class SearchProductController {
                                     HttpServletRequest request
     ) throws ErrorInField {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(12);
+        int pageSize = size.orElse(8);
 
         ProductFilters filters = new ProductFilters(
             name, brand, category, minYear, maxYear, minRam, maxRam, minDisplaySize, maxDisplaySize,
