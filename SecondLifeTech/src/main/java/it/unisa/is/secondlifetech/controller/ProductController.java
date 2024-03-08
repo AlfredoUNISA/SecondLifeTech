@@ -143,6 +143,7 @@ public class ProductController {
             user = userService.findUserByEmail(principal.getName());
         }
         ProductModel modelObj = productService.findModelByName(modelName);
+        model.addAttribute("states", ProductState.ALL_STATES);
         model.addAttribute("modelName", modelObj.getName());
         model.addAttribute("user", user);
         model.addAttribute("variations", modelObj.getVariations());
@@ -227,7 +228,10 @@ public class ProductController {
 
     @PostMapping("/dashboard-prodotti/edit-model")
     public String editModel(@ModelAttribute("editModelID") String modelID, @RequestParam("image") MultipartFile
-            file, RedirectAttributes redirectAttributes) throws IOException, ErrorInField, MissingRequiredField {
+            file, RedirectAttributes redirectAttributes,
+                            @ModelAttribute("name") String modelName,
+                            @ModelAttribute("brand") String modelBrand,
+                            @ModelAttribute("modelCategory") String modelCategory) throws IOException, ErrorInField, MissingRequiredField {
         if (file.isEmpty()) {
             throw new MissingRequiredField();
         }
@@ -238,6 +242,9 @@ public class ProductController {
         fileObj.setData(file.getBytes());
         ImageFile imageFile = imageFileRepository.save(fileObj);
         try {
+            model.setName(modelName);
+            model.setBrand(modelBrand);
+            model.setBrand(modelCategory);
             productService.updateModel(model, file);
         } catch (ErrorInField | MissingRequiredField e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -246,5 +253,31 @@ public class ProductController {
             return "redirect:/error";
         }
         return "redirect:/dashboard-prodotti";
+    }
+    @PostMapping("/dashboard-prodotti/edit-variation")
+    public String editVariation(@ModelAttribute("editVariationID") String variationID,
+                                @ModelAttribute("color") String color,
+                                @ModelAttribute("displaySize") String displaySize,
+                                @ModelAttribute("price") String price,
+                                @ModelAttribute("quantityInStock") String quantityInStock,
+                                @ModelAttribute("ram") String ram,
+                                @ModelAttribute("state") String state,
+                                @ModelAttribute("storageSize") String storageSize,
+                                @ModelAttribute("year") String year) {
+        ProductVariation variation = productService.findVariationById(UUID.fromString(variationID));
+        variation.setColor(color);
+        variation.setDisplaySize(Double.parseDouble(displaySize));
+        variation.setPrice(Double.parseDouble(price));
+        variation.setQuantityInStock(Integer.parseInt(quantityInStock));
+        variation.setRam(Integer.parseInt(ram));
+        variation.setState(state);
+        variation.setStorageSize(Integer.parseInt(storageSize));
+        variation.setYear(Integer.parseInt(year));
+        try {
+            productService.updateVariation(variation);
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
+        return "redirect:/dashboard-prodotti/view-variations?modelName=" + variation.getModel().getName();
     }
 }

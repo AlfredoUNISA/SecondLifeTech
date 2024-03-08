@@ -200,14 +200,14 @@
                                                 <label for="editBrand" class="form-label">Brand</label>
                                                 <div class="input-group mb-3">
                                                     <input type="text" class="form-control" id="editBrand"
-                                                           name="surname"
+                                                           name="brand"
                                                            th:value="${product.brand}">
 
                                                 </div>
 
                                                 <label for="editCategory" class="form-label">Category</label>
                                                 <div class="input-group mb-3">
-                                                    <select id="editCategory" class="form-select">
+                                                    <select id="editCategory" class="form-select" name="modelCategory">
                                                         <option value="">All Categories</option>
                                                         <th:block th:each="category : ${categories}">
                                                             <option th:value="${category}"
