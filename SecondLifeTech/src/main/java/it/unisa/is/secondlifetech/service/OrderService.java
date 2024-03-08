@@ -1,8 +1,11 @@
 package it.unisa.is.secondlifetech.service;
 
+import it.unisa.is.secondlifetech.dto.OrderFilters;
+import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.OrderItem;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,6 +112,13 @@ public interface OrderService {
 	 * @return una lista di oggetti OrderItem
 	 */
 	List<OrderItem> findOrderItemsByProductVariation(ProductVariation productVariation);
+
+	/**
+	 * Ottiene tutti gli ordini dal database con un sistema a Paginazione e con filtri.
+	 *
+	 * @return una pagina di oggetti User
+	 */
+	Page<OrderPlaced> findAllOrdersPaginatedWithFilters(OrderFilters filters, Pageable pageable);
 
 	/**
 	 * Ottiene tutti gli ordini dal database.

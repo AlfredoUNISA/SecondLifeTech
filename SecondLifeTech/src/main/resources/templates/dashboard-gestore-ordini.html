@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>La mia Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 col-12 border rounded p-3">
+                <h2>Filtri</h2>
+                <hr>
+
+                <form action="/dashboard-ordini" method="post" role="form">
+                    <div class="form-group mt-3">
+                        <h5>Email</h5>
+                        <input id="email" name="email" type="text" th:field="*{filters.email}" class="form-control"
+                               placeholder="Email">
+                    </div>
+                    <div class="form-group mt-3">
+                        <h5>Stato</h5>
+                        <select id="state" th:field="*{filters.state}" class="form-select" name="state">
+                            <option value="true">SPEDITO</option>
+                            <option value="false">NON SPEDITO</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary">Applica Filtri</button>
+                    </div>
+                </form>
+                <br/>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="reset" class="btn btn-secondary" onclick="window.location.href='/dashboard-ordini'">
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <br/>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Spedito</th>
+                            <th>Totale</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:if="${orderPage.isEmpty()}">
+                            <tr>
+                                <td colspan="4">Nessun utente trovato</td>
+                            </tr>
+                        </th:block>
+                        <th:block th:unless="${orderPage.isEmpty()}">
+                            <th:block th:each="order : ${orderPage}">
+                                <tr>
+                                    <td th:text="${order.email}"></td>
+                                    <td>
+                                        <th:block th:if="${order.shipped == false}">
+                                            <div class="badge bg-warning rounded-pill">Non spedito</div>
+                                        </th:block>
+                                        <th:block th:if="${order.shipped == true}">
+                                            <div class="badge bg-success rounded-pill">Spedito</div>
+                                        </th:block>
+                                    </td>
+                                    <td th:text="${order.total}"></td>
+                                </tr>
+                            </th:block>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+
+                <ul class="pagination justify-content-center mt-5">
+                    <!-- Previous Page Link -->
+                    <li th:class="${orderPage.number == 0} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${orderPage.number > 0}"
+                           th:href="@{/dashboard-utenti(size=${orderPage.size}, page=${orderPage.number})}"
+                           class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                        </a>
+
+                        <span th:unless="${orderPage.number > 0}" class="page-link" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="pageNumber : ${pageNumbers}"
+                        th:class="${pageNumber == orderPage.number + 1} ? 'page-item active' : 'page-item'">
+                        <a th:href="@{/dashboard-utenti(size=${orderPage.size}, page=${pageNumber})}"
+                           class="page-link"
+                           th:text="${pageNumber}"></a>
+                    </li>
+
+                    <!-- Next Page Link -->
+                    <li th:class="${orderPage.number == orderPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                        <a th:if="${orderPage.number < orderPage.totalPages - 1}"
+                           th:href="@{/dashboard-utenti(size=${orderPage.size}, page=${orderPage.number + 2})}"
+                           class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span>
+                        </a>
+
+                        <span th:unless="${orderPage.number < orderPage.totalPages - 1}"
+                              class="page-link"
+                              aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>
