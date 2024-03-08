@@ -71,7 +71,7 @@ public class WebSecurityConfig {
 	private static final int HOUR = 60 * MINUTE;
 	private static final int DAY = 24 * HOUR;
 	private static final int WEEK = 7 * DAY;
-	public static final int COOKIE_MAX_AGE = 30;
+	public static final int COOKIE_MAX_AGE = HOUR;
 
 	@Bean
 	public RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
