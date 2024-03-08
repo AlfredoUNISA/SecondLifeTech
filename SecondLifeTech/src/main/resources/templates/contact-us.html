@@ -11,30 +11,37 @@
 <body data-bs-theme="dark">
 
 <div th:replace="~{header :: header}"></div>
-
 <div class="my-content" style="min-height: calc(100vh - 17em);">
-    <br/>
 
-    <div class="container">
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">@</span>
-            <input type="text" class="form-control" placeholder="descrivi il tuo problema..." aria-label="Testo" aria-describedby="basic-addon1">
-        </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon">@</span>
-            <input type="text" class="form-control" placeholder="Inserisci email" aria-label="Testo" aria-describedby="basic-addon1">
-        </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Contattaci
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="problemDescription" class="form-label">Descrivi il tuo problema</label>
+                                <textarea class="form-control" id="problemDescription" rows="3"
+                                          placeholder="Descrivi il tuo problema..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailInput" class="form-label">Inserisci email</label>
+                                <input type="email" class="form-control" id="emailInput" placeholder="Inserisci email">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Invia</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-
-
+        </div>
     </div>
-</div>
 
+</div>
 <div th:replace="~{footer :: footer}"></div>
 
 </body>
