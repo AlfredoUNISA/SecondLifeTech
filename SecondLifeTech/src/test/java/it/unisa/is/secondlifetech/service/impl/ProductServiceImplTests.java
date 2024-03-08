@@ -106,6 +106,15 @@ class ProductServiceImplTests {
 		// Assert
 		assertThat(createdModel).isNull();
 	}
+
+	@Test
+	void ProductTC1E_createNewModel_WhenModelNameAlreadyExists_ShouldThrowErrorInField() {
+		// Arrange
+		when(productModelRepository.existsByName(anyString())).thenReturn(true);
+
+		// Act and Assert
+		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModel));
+	}
 	
 	@Test
 	void ProductTC1E_createNewModel_WhenModelNameIsInvalid_ShouldThrowErrorInField() {
@@ -277,6 +286,15 @@ class ProductServiceImplTests {
 		// Assert
 		assertThat(updatedModel).isEqualTo(productModel);
 		verify(productModelRepository, times(1)).save(productModel);
+	}
+
+	@Test
+	void ProductTC3E_updateNewModel_WhenModelNameAlreadyExists_ShouldThrowErrorInField() {
+		// Arrange
+		when(productModelRepository.existsByName(anyString())).thenReturn(true);
+
+		// Act and Assert
+		assertThrows(ErrorInField.class, () -> productService.updateModel(productModel, null));
 	}
 
 	@Test
