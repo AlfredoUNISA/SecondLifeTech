@@ -11,7 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
 // Per evitare una ricorsione infinita nei log, non aggiungere @ToString!
 @Entity
 public class ImageFile {
@@ -32,6 +31,10 @@ public class ImageFile {
 	private ProductModel model;
 
 	public ImageFile(String name, String contentType, byte[] data, ProductModel model) {
+		if (name.equalsIgnoreCase("banner.jpg")) {
+			throw new IllegalArgumentException("Non è possibile creare un'immagine con nome 'banner.jpg'");
+		}
+
 		this.name = name;
 		this.contentType = contentType;
 		this.data = data;

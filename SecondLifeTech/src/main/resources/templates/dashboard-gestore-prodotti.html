@@ -125,9 +125,14 @@
             </div>
 
             <div class="col-md-9">
-                <a class="btn btn-primary mb-5" href="/dashboard-prodotti/add-variation">Aggiungi prodotto</a>
+
+                    <a class="btn btn-primary mb-5" href="/dashboard-prodotti/add-variation">Aggiungi prodotto</a>
+                    <a class="btn btn-secondary mb-5" href="/dashboard-prodotti/edit-banner">Modifica il banner</a>
+
+
+
                 <th:block th:if="${error}">
-                <div class="alert alert-danger" role="alert" th:text="'Errore: ' + ${error}"></div>
+                    <div class="alert alert-danger" role="alert" th:text="'Errore: ' + ${error}"></div>
                 </th:block>
                 <br/>
                 <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -211,7 +216,8 @@
                                                         <option value="">All Categories</option>
                                                         <th:block th:each="category : ${categories}">
                                                             <option th:value="${category}"
-                                                                    th:text="${category}" th:selected="${category.equals(product.category)}"></option>
+                                                                    th:text="${category}"
+                                                                    th:selected="${category.equals(product.category)}"></option>
                                                         </th:block>
                                                     </select>
                                                 </div>

@@ -32,9 +32,20 @@ public class ImageRestController {
     }
 
     @GetMapping("/images/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable UUID id) {
+    public ResponseEntity<byte[]> getProductImage(@PathVariable UUID id) {
         Optional<ImageFile> imageFileOptional = imageFileRepository.findById(id);
 
+        return getResponseEntity(imageFileOptional);
+    }
+
+    @GetMapping("/images/banner")
+    public ResponseEntity<byte[]> getBanner() {
+        Optional<ImageFile> imageFileOptional = imageFileRepository.findByName("banner.jpg");
+
+        return getResponseEntity(imageFileOptional);
+    }
+
+    private ResponseEntity<byte[]> getResponseEntity(Optional<ImageFile> imageFileOptional) {
         if (imageFileOptional.isPresent()) {
             ImageFile imageFile = imageFileOptional.get();
             HttpHeaders headers = new HttpHeaders();
@@ -43,16 +54,8 @@ public class ImageRestController {
             return new ResponseEntity<>(imageFile.getData(), headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
     }
 
-//    @GetMapping("/images/thumbnail")
-//    public void getThumbnail(@RequestParam("image") MultipartFile file) throws IOException {
-//        String name = file.getName();
-//        Files.write(Path.of("src\\main\\resources\\static\\"), file.getBytes());
-//        String contentType = Files.probeContentType(file.toPath());
-//        byte[] data = Files.readAllBytes(file.toPath());
-//
-//    }
+
 }

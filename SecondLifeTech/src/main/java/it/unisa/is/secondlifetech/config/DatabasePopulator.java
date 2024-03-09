@@ -3,11 +3,15 @@ package it.unisa.is.secondlifetech.config;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
+import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
+import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.repository.ProductModelRepository;
 import it.unisa.is.secondlifetech.repository.ProductVariationRepository;
 import it.unisa.is.secondlifetech.service.ProductService;
+import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +30,17 @@ public class DatabasePopulator {
 
 	private final ProductModelRepository modelRepository;
 	private final ProductVariationRepository variationRepository;
-
+	private final ImageFileRepository imageFileRepository;
+	private final UserService userService;
 	private final ProductService productService;
 
 	@Autowired
-	public DatabasePopulator(ProductModelRepository modelRepository, ProductVariationRepository variationRepository, ProductService productService) {
+	public DatabasePopulator(ProductModelRepository modelRepository, ProductVariationRepository variationRepository, ImageFileRepository imageFileRepository, UserService userService, ProductService productService) {
         this.modelRepository = modelRepository;
         this.variationRepository = variationRepository;
-        this.productService = productService;
+		this.imageFileRepository = imageFileRepository;
+		this.userService = userService;
+		this.productService = productService;
     }
 
 	public static ImageFile createFromFile(String fileName) throws IOException {
@@ -43,17 +50,31 @@ public class DatabasePopulator {
 		String contentType = Files.probeContentType(file.toPath());
 		byte[] data = Files.readAllBytes(file.toPath());
 
-		return ImageFile.builder()
-			.name(name)
-			.contentType(contentType)
-			.data(data)
-			.build();
+		ImageFile image = new ImageFile();
+		image.setName(name);
+		image.setContentType(contentType);
+		image.setData(data);
+
+		return image;
 	}
 
 	@PostConstruct
 	public void populate() {
 		try {
+			// Gestore Utente
+			User gestoreUtenti = new User("gestoreUtenti", "gestoreUtenti", "gestoreUtenti@email.com", "pass", null, UserRole.GESTORE_UTENTI, "");
+			if (userService.findUserByEmail(gestoreUtenti.getEmail()) == null) {
+				userService.createNewUser(gestoreUtenti);
+				log.info("Creato Gestore Utenti");
+			}
 
+			// Banner
+			if (!imageFileRepository.existsByName("banner.jpg")) {
+				imageFileRepository.save(createFromFile("banner.jpg"));
+				log.info("Creato Banner");
+			}
+
+			// Prodotti
 			ProductModel model = new ProductModel("iPhone 7", "Apple", ProductCategory.SMARTPHONE);
 			if (!modelRepository.existsByName(model.getName())) {
 				productService.createNewModel(model);
