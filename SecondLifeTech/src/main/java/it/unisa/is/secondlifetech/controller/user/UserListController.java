@@ -1,16 +1,10 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.user;
 
-import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.dto.UserFilters;
-import it.unisa.is.secondlifetech.entity.ImageFile;
-import it.unisa.is.secondlifetech.entity.ProductModel;
-import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.User;
-import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
-import it.unisa.is.secondlifetech.entity.constant.ProductState;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -47,7 +40,7 @@ public class UserListController {
                            @RequestParam("page") Optional<Integer> page,
                            @RequestParam("size") Optional<Integer> size,
                            HttpServletRequest request
-        ) throws ErrorInField {
+        ) throws ErrorInFieldException {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
         Principal principal = request.getUserPrincipal();
@@ -115,15 +108,15 @@ public class UserListController {
     }
 
     @PostMapping("/dashboard-utenti/add-user")
-    public String otherPost(@ModelAttribute("user") User user) throws IOException, ErrorInField, MissingRequiredField {
+    public String otherPost(@ModelAttribute("user") User user) throws IOException, ErrorInFieldException, MissingRequiredFieldException {
         try {
             user.setRole("ROLE_"+user.getRole());
             user.setPassword("standardPassword");
             userService.createNewUser(user);
-        } catch (ErrorInField errorInField) {
-            throw new ErrorInField("Errore nei campi");
-        } catch (MissingRequiredField missingRequiredField) {
-            throw new MissingRequiredField();
+        } catch (ErrorInFieldException errorInField) {
+            throw new ErrorInFieldException("Errore nei campi");
+        } catch (MissingRequiredFieldException missingRequiredField) {
+            throw new MissingRequiredFieldException();
         }   catch (Exception e) {
             return "redirect:/error";
         }

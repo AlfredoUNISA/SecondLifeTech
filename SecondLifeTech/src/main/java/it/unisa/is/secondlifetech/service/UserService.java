@@ -5,9 +5,8 @@ import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
-import it.unisa.is.secondlifetech.exception.NoItemsForFinalizationException;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ public interface UserService {
 	 * @param user l'oggetto User da creare
 	 * @return l'oggetto User creato
 	 */
-	User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredField, ErrorInField;
+	User createNewUser(User user) throws EmailAlreadyInUseException, MissingRequiredFieldException, ErrorInFieldException;
 
 	/**
 	 * Crea e aggiunge un nuovo indirizzo di spedizione a un utente.
@@ -38,7 +37,7 @@ public interface UserService {
 	 * @param user            l'utente a cui aggiungere l'indirizzo
 	 * @param shippingAddress l'indirizzo da aggiungere
 	 */
-	ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField;
+	ShippingAddress createNewShippingAddress(User user, ShippingAddress shippingAddress) throws MissingRequiredFieldException, ErrorInFieldException;
 
 	/**
 	 * Crea e aggiunge un nuovo metodo di pagamento a un utente.
@@ -46,7 +45,7 @@ public interface UserService {
 	 * @param user  	    l'utente a cui aggiungere il metodo di pagamento
 	 * @param paymentMethod il metodo di pagamento da aggiungere
 	 */
-	PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) throws MissingRequiredField, ErrorInField;
+	PaymentMethod createNewPaymentMethod(User user, PaymentMethod paymentMethod) throws MissingRequiredFieldException, ErrorInFieldException;
 
 
 
@@ -133,7 +132,7 @@ public interface UserService {
 	 *
 	 * @param shippingAddress l'indirizzo da aggiornare
 	 */
-	ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) throws MissingRequiredField, ErrorInField;
+	ShippingAddress updateShippingAddress(ShippingAddress shippingAddress) throws MissingRequiredFieldException, ErrorInFieldException;
 
 	/**
 	 * Aggiorna un metodo di pagamento di un utente.

@@ -3,8 +3,8 @@ package it.unisa.is.secondlifetech.service.impl;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.EmailAlreadyInUseException;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.repository.PaymentMethodRepository;
 import it.unisa.is.secondlifetech.repository.ShippingAddressRepository;
 import it.unisa.is.secondlifetech.repository.UserRepository;
@@ -99,7 +99,7 @@ class UserServiceImplTests {
 	 * Deve essere creato un User con i dati inseriti durante la creazione
 	 */
 	@Test
-	void UserTC1_createUser_WhenUserIsValid_ShouldCreateNewUser() throws MissingRequiredField, ErrorInField, EmailAlreadyInUseException {
+	void UserTC1_createUser_WhenUserIsValid_ShouldCreateNewUser() throws MissingRequiredFieldException, ErrorInFieldException, EmailAlreadyInUseException {
 		// Arrange
 		user.setId(null);
 		when(userRepository.save(any(User.class))).thenReturn(user);
@@ -130,7 +130,7 @@ class UserServiceImplTests {
 		user.setFirstName("M");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
@@ -140,7 +140,7 @@ class UserServiceImplTests {
 		user.setLastName("o");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class UserServiceImplTests {
 		user.setEmail("mr");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
@@ -171,7 +171,7 @@ class UserServiceImplTests {
 		user.setPassword("12");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
@@ -181,7 +181,7 @@ class UserServiceImplTests {
 		user.setRole("RUOLO_FINTO");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 	@Test
@@ -191,7 +191,7 @@ class UserServiceImplTests {
 		user.setPhoneNumber("123");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewUser(user));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewUser(user));
 	}
 
 
@@ -299,7 +299,7 @@ class UserServiceImplTests {
 	 * Deve essere creato lo ShippingAddress con i dati inseriti durante la creazione
 	 */
 	@Test
-	void UserTC4_createShippingAddress_WhenShippingAddressIsValid_ShouldCreateNewShippingAddress() throws MissingRequiredField, ErrorInField {
+	void UserTC4_createShippingAddress_WhenShippingAddressIsValid_ShouldCreateNewShippingAddress() throws MissingRequiredFieldException, ErrorInFieldException {
 		// Arrange
 		shippingAddress.setId(null);
 		when(shippingAddressRepository.save(any(ShippingAddress.class))).thenReturn(shippingAddress);
@@ -324,7 +324,7 @@ class UserServiceImplTests {
 		shippingAddress.setStreet("R");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewShippingAddress(user, shippingAddress));
 	}
 
 	@Test
@@ -334,7 +334,7 @@ class UserServiceImplTests {
 		shippingAddress.setCity("V");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewShippingAddress(user, shippingAddress));
 	}
 
 	@Test
@@ -344,7 +344,7 @@ class UserServiceImplTests {
 		shippingAddress.setCountry("S");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewShippingAddress(user, shippingAddress));
 	}
 
 	@Test
@@ -354,7 +354,7 @@ class UserServiceImplTests {
 		shippingAddress.setZipCode("123");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewShippingAddress(user, shippingAddress));
 	}
 
 	@Test
@@ -364,7 +364,7 @@ class UserServiceImplTests {
 		shippingAddress.setState("I");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewShippingAddress(user, shippingAddress));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewShippingAddress(user, shippingAddress));
 	}
 
 
@@ -377,7 +377,7 @@ class UserServiceImplTests {
 	 * Deve essere creato il PaymentMethod con i dati inseriti durante la creazione
 	 */
 	@Test
-	void UserTC5_createPaymentMethod_WhenPaymentMethodIsValid_ShouldCreateNewPaymentMethod() throws MissingRequiredField, ErrorInField {
+	void UserTC5_createPaymentMethod_WhenPaymentMethodIsValid_ShouldCreateNewPaymentMethod() throws MissingRequiredFieldException, ErrorInFieldException {
 		// Arrange
 		paymentMethod.setId(null);
 		when(paymentMethodRepository.save(any(PaymentMethod.class))).thenReturn(paymentMethod);
@@ -402,7 +402,7 @@ class UserServiceImplTests {
 		paymentMethod.setCardNumber("123");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
@@ -412,7 +412,7 @@ class UserServiceImplTests {
 		paymentMethod.setCardHolderName("MR");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
@@ -422,7 +422,7 @@ class UserServiceImplTests {
 		paymentMethod.setCvv("0");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 	@Test
@@ -432,7 +432,7 @@ class UserServiceImplTests {
 		paymentMethod.setExpirationDate("0");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
+		assertThrows(ErrorInFieldException.class, () -> userService.createNewPaymentMethod(user, paymentMethod));
 	}
 
 

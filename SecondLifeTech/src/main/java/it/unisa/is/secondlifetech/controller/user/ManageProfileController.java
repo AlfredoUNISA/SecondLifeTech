@@ -1,10 +1,10 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.user;
 
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,7 +162,7 @@ public class ManageProfileController {
 
 			try {
 				userService.createNewPaymentMethod(user, newPaymentMethod);
-			} catch (MissingRequiredField | ErrorInField e) {
+			} catch (MissingRequiredFieldException | ErrorInFieldException e) {
 				redirectAttributes.addFlashAttribute("error", e.getMessage());
 				return "redirect:/my-profile/payment-methods";
 			} catch (Exception e) {
@@ -229,7 +229,7 @@ public class ManageProfileController {
 
 			try {
 				userService.createNewShippingAddress(user, newShippingAddress);
-			} catch (MissingRequiredField | ErrorInField e) {
+			} catch (MissingRequiredFieldException | ErrorInFieldException e) {
 				redirectAttributes.addFlashAttribute("error", e.getMessage());
 				return "redirect:/my-profile/shipping-addresses";
 			} catch (Exception e) {
@@ -257,7 +257,7 @@ public class ManageProfileController {
 
 			try {
 				userService.updateShippingAddress(new ShippingAddress(id, street, city, state, zipCode, country, user));
-			} catch (MissingRequiredField | ErrorInField e) {
+			} catch (MissingRequiredFieldException | ErrorInFieldException e) {
 				redirectAttributes.addFlashAttribute("error", e.getMessage());
 				return "redirect:/my-profile/shipping-addresses";
 			} catch (Exception e) {

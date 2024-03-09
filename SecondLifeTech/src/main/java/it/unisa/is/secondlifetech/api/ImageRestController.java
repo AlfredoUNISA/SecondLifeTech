@@ -31,6 +31,12 @@ public class ImageRestController {
         this.imageFileRepository = imageFileRepository;
     }
 
+
+    /**
+     * Metodo per ottenere l'immagine di un prodotto specifico.
+     * @param id L'UUID dell'immagine del prodotto da recuperare.
+     * @return ResponseEntity contenente i dati dell'immagine se trovata, altrimenti ritorna HttpStatus.NOT_FOUND.
+     */
     @GetMapping("/images/{id}")
     public ResponseEntity<byte[]> getProductImage(@PathVariable UUID id) {
         Optional<ImageFile> imageFileOptional = imageFileRepository.findById(id);
@@ -38,6 +44,11 @@ public class ImageRestController {
         return getResponseEntity(imageFileOptional);
     }
 
+    /**
+     * Metodo per ottenere l'immagine del banner.
+     * Cerca un'immagine con il nome "banner.jpg" nel repository.
+     * @return ResponseEntity contenente i dati dell'immagine se trovata, altrimenti ritorna HttpStatus.NOT_FOUND.
+     */
     @GetMapping("/images/banner")
     public ResponseEntity<byte[]> getBanner() {
         Optional<ImageFile> imageFileOptional = imageFileRepository.findByName("banner.jpg");

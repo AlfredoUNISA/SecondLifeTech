@@ -53,7 +53,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/create-user-test")
-	public String createUserPOST(@ModelAttribute("user") User user) throws MissingRequiredField, EmailAlreadyInUseException, ErrorInField {
+	public String createUserPOST(@ModelAttribute("user") User user) throws MissingRequiredFieldException, EmailAlreadyInUseException, ErrorInFieldException {
 		user.setRole(UserRole.getRole(user.getRole()));
 		userService.createNewUser(user);
 		return "redirect:/";
@@ -69,7 +69,7 @@ public class TestingController {
 
 	@PostMapping("/create-product-model-test")
 	public String createProductModelPOST(@ModelAttribute("productModel") ProductModel productModel,
-	                                 @RequestAttribute("image") MultipartFile image) throws IOException, ErrorInField, MissingRequiredField {
+	                                 @RequestAttribute("image") MultipartFile image) throws IOException, ErrorInFieldException, MissingRequiredFieldException {
 		productService.createNewModel(productModel);
 		productService.changeImageModel(productModel, image);
 		return "redirect:/";
@@ -85,7 +85,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/create-product-variation-test")
-	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) throws ErrorInField, MissingRequiredField {
+	public String createProductVariationPOST(@ModelAttribute("productVariation") ProductVariation productVariation) throws ErrorInFieldException, MissingRequiredFieldException {
 		ProductModel productModel = productService.findModelById(productVariation.getModel().getId());
 		productService.createNewVariation(productModel, productVariation);
 		return "redirect:/";
@@ -153,7 +153,7 @@ public class TestingController {
                                     @RequestParam(value = "state", required = false) String state,
                                     @RequestParam("page") Optional<Integer> page,
                                     @RequestParam("size") Optional<Integer> size
-									) throws ErrorInField {
+									) throws ErrorInFieldException {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(1);
 
@@ -253,7 +253,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/add-shipping-address-test")
-	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) throws MissingRequiredField, ErrorInField {
+	public String addShippingAddress(@RequestParam("userId") UUID userId, @ModelAttribute("newShippingAddress") ShippingAddress newShippingAddress) throws MissingRequiredFieldException, ErrorInFieldException {
 		User user = userService.findUserById(userId);
 		userService.createNewShippingAddress(user, newShippingAddress);
 		return "redirect:/view-user-test?userId=" + userId;
@@ -278,7 +278,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/add-payment-method-test")
-	public String addPaymentMethod(@RequestParam("userId") UUID userId, @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) throws MissingRequiredField, ErrorInField {
+	public String addPaymentMethod(@RequestParam("userId") UUID userId, @ModelAttribute("newPaymentMethod") PaymentMethod newPaymentMethod) throws MissingRequiredFieldException, ErrorInFieldException {
 		User user = userService.findUserById(userId);
 		userService.createNewPaymentMethod(user, newPaymentMethod);
 		return "redirect:/view-user-test?userId=" + userId;
@@ -338,7 +338,7 @@ public class TestingController {
 	}
 
 	@PostMapping("/update-model-test")
-	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException, MissingRequiredField, ErrorInField {
+	public String updateModelPOST(@ModelAttribute("model") ProductModel model, @RequestAttribute("image") MultipartFile image) throws IOException, MissingRequiredFieldException, ErrorInFieldException {
 		productService.updateModel(model, image);
 		return "redirect:/view-product-variations?productModelId=" + model.getId();
 	}

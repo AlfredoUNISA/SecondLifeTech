@@ -1,11 +1,11 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.product;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class SearchProductController {
+public class ProductControllerUtente {
     ProductService productService;
     UserService userService;
 
     @Autowired
-    public SearchProductController(ProductService productService, UserService userService) {
+    public ProductControllerUtente(ProductService productService, UserService userService) {
         this.productService = productService;
         this.userService = userService;
     }
@@ -52,7 +52,7 @@ public class SearchProductController {
                                     @RequestParam("page") Optional<Integer> page,
                                     @RequestParam("size") Optional<Integer> size,
                                     HttpServletRequest request
-    ) throws ErrorInField {
+    ) throws ErrorInFieldException {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(8);
 

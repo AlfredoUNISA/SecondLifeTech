@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.user;
 
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
@@ -15,12 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @Slf4j
 @RequestMapping("/register")
-public class RegistrationControl {
+public class RegistrationController {
 	UserService userService;
 	ProductService productService;
 
 	@Autowired
-	public RegistrationControl(UserService userService, ProductService productService) {
+	public RegistrationController(UserService userService, ProductService productService) {
 		this.userService = userService;
 		this.productService = productService;
 	}

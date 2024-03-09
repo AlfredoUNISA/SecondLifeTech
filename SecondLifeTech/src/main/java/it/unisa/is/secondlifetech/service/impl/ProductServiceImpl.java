@@ -4,8 +4,8 @@ import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.*;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.repository.*;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.ProductService;
@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductModel creato
 	 */
 	@Override
-	public ProductModel createNewModel(ProductModel productModel) throws ErrorInField, MissingRequiredField {
+	public ProductModel createNewModel(ProductModel productModel) throws ErrorInFieldException, MissingRequiredFieldException {
 		if (productModel == null)
 			return null;
 
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
 	@Override
-	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField {
+	public ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInFieldException, MissingRequiredFieldException {
 		if (variation == null)
 			return null;
 
@@ -239,7 +239,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return una lista di oggetti ProductModel
 	 */
 	@Override
-	public Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField {
+	public Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInFieldException {
 		List<ProductModel> allModels = productModelRepository.findAll();
 		List<ProductModel> filteredModels = doFilter(filters, allModels);
 
@@ -287,7 +287,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @return l'oggetto ProductModel aggiornato
 	 */
 	@Override
-	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInField, MissingRequiredField {
+	public ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInFieldException, MissingRequiredFieldException {
 		if (model == null || model.getId() == null)
 			throw new IllegalArgumentException("Impossibile modificare un oggetto senza id per la classe ProductModel");
 
@@ -437,63 +437,63 @@ public class ProductServiceImpl implements ProductService {
 	 * Controlla che i valori del modello di prodotto siano validi.
 	 *
 	 * @param productModel l'oggetto ProductModel da controllare
-	 * @throws ErrorInField se uno dei valori non è valido
-	 * @throws MissingRequiredField se uno dei valori richiesti è mancante
+	 * @throws ErrorInFieldException se uno dei valori non è valido
+	 * @throws MissingRequiredFieldException se uno dei valori richiesti è mancante
 	 */
-	private void checkProductModelValues(ProductModel productModel) throws ErrorInField, MissingRequiredField {
+	private void checkProductModelValues(ProductModel productModel) throws ErrorInFieldException, MissingRequiredFieldException {
 		if (productModel.getName().isEmpty()
 			|| productModel.getBrand().isEmpty()
 			|| productModel.getCategory().isEmpty()){
-			throw new MissingRequiredField();
+			throw new MissingRequiredFieldException();
 		}
 		if (productModelRepository.existsByName(productModel.getName()))
-			throw new ErrorInField("Il nome del modello esiste già" );
+			throw new ErrorInFieldException("Il nome del modello esiste già" );
 		if (productModel.getName().length() < ProductFilters.MIN_STRING_LENGTH || productModel.getName().length() > ProductFilters.MAX_STRING_LENGTH)
-			throw new ErrorInField("Il nome del modello deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+			throw new ErrorInFieldException("Il nome del modello deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
 
 		if (productModel.getBrand().length() < ProductFilters.MIN_STRING_LENGTH || productModel.getBrand().length() > ProductFilters.MAX_STRING_LENGTH)
-			throw new ErrorInField("Il nome del brand deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+			throw new ErrorInFieldException("Il nome del brand deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
 
 		if (!List.of(ProductCategory.ALL_CATEGORIES).contains(productModel.getCategory()))
-			throw new ErrorInField("La categoria specificata non è valida");
+			throw new ErrorInFieldException("La categoria specificata non è valida");
 	}
 
-	private static void checkProductVariationValues(ProductVariation variation) throws ErrorInField, MissingRequiredField {
+	private static void checkProductVariationValues(ProductVariation variation) throws ErrorInFieldException, MissingRequiredFieldException {
 		if (variation.getState().isEmpty() || variation.getColor().isEmpty()) {
-			throw new MissingRequiredField();
+			throw new MissingRequiredFieldException();
 		}
 
 		if (variation.getPrice() < ProductFilters.MIN_PRICE || variation.getPrice() > ProductFilters.MAX_PRICE)
-			throw new ErrorInField("Il prezzo deve essere compreso tra " + ProductFilters.MIN_PRICE + " e " + ProductFilters.MAX_PRICE);
+			throw new ErrorInFieldException("Il prezzo deve essere compreso tra " + ProductFilters.MIN_PRICE + " e " + ProductFilters.MAX_PRICE);
 
 		if (variation.getYear() < ProductFilters.MIN_YEAR || variation.getYear() > ProductFilters.MAX_YEAR)
-			throw new ErrorInField("L'anno deve essere compreso tra " + ProductFilters.MIN_YEAR + " e " + ProductFilters.MAX_YEAR);
+			throw new ErrorInFieldException("L'anno deve essere compreso tra " + ProductFilters.MIN_YEAR + " e " + ProductFilters.MAX_YEAR);
 
 		if (variation.getRam() < ProductFilters.MIN_RAM || variation.getRam() > ProductFilters.MAX_RAM)
-			throw new ErrorInField("La RAM deve essere compresa tra " + ProductFilters.MIN_RAM + " e " + ProductFilters.MAX_RAM);
+			throw new ErrorInFieldException("La RAM deve essere compresa tra " + ProductFilters.MIN_RAM + " e " + ProductFilters.MAX_RAM);
 
 		if (variation.getDisplaySize() < ProductFilters.MIN_DISPLAY_SIZE || variation.getDisplaySize() > ProductFilters.MAX_DISPLAY_SIZE)
-			throw new ErrorInField("La dimensione dello schermo deve essere compresa tra " + ProductFilters.MIN_DISPLAY_SIZE + " e " + ProductFilters.MAX_DISPLAY_SIZE);
+			throw new ErrorInFieldException("La dimensione dello schermo deve essere compresa tra " + ProductFilters.MIN_DISPLAY_SIZE + " e " + ProductFilters.MAX_DISPLAY_SIZE);
 
 		if (variation.getStorageSize() < ProductFilters.MIN_STORAGE_SIZE || variation.getStorageSize() > ProductFilters.MAX_STORAGE_SIZE)
-			throw new ErrorInField("La dimensione dello storage deve essere compresa tra " + ProductFilters.MIN_STORAGE_SIZE + " e " + ProductFilters.MAX_STORAGE_SIZE);
+			throw new ErrorInFieldException("La dimensione dello storage deve essere compresa tra " + ProductFilters.MIN_STORAGE_SIZE + " e " + ProductFilters.MAX_STORAGE_SIZE);
 
 		if (variation.getQuantityInStock() < 1)
-			throw new ErrorInField("La quantità in stock deve essere almeno 1");
+			throw new ErrorInFieldException("La quantità in stock deve essere almeno 1");
 
 		if (variation.getColor().length() < ProductFilters.MIN_STRING_LENGTH || variation.getColor().length() > ProductFilters.MAX_STRING_LENGTH)
-			throw new ErrorInField("Il colore deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+			throw new ErrorInFieldException("Il colore deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
 
 		if (!List.of(ProductState.ALL_STATES).contains(variation.getState()))
-			throw new ErrorInField("Lo stato specificato non è valido");
+			throw new ErrorInFieldException("Lo stato specificato non è valido");
 	}
 
 	/**
 	 * Esegue il filtraggio dei modelli di prodotto.
 	 */
-	private List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInField {
+	private List<ProductModel> doFilter(ProductFilters filters, List<ProductModel> allModels) throws ErrorInFieldException {
 		if (filters.hasError())
-			throw new ErrorInField("I filtri specificati non sono validi");
+			throw new ErrorInFieldException("I filtri specificati non sono validi");
 
 		List<ProductModel> filteredModels = new ArrayList<>();
 

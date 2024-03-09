@@ -199,7 +199,7 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void removeFromCart_WhenCartIsNull_ShouldThrowNullPointerException() {
+	public void CartTC2E_removeFromCart_WhenCartIsNull_ShouldThrowNullPointerException() {
 		// Arrange
 		Cart cartError = null;
 		UUID cartItemId = cartItem.getId();
@@ -209,7 +209,7 @@ public class CartServiceImplTest {
 	}
 
 	@Test
-	public void removeFromCart_WhenCartItemDoesNotExist_ShouldNotChangeCart() {
+	public void CartTC2E_removeFromCart_WhenCartItemDoesNotExist_ShouldNotChangeCart() {
 		// Arrange
 		UUID cartItemIdError = UUID.randomUUID();
 		cart.addItem(cartItem);

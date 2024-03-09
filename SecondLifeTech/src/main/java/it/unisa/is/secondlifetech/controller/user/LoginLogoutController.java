@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.user;
 
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;

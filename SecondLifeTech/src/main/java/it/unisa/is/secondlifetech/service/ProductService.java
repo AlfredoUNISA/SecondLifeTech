@@ -4,8 +4,8 @@ import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
 import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +26,7 @@ public interface ProductService {
 	 * @param productModel l'oggetto ProductModel da creare
 	 * @return l'oggetto ProductModel creato
 	 */
-	ProductModel createNewModel(ProductModel productModel) throws ErrorInField, MissingRequiredField;
+	ProductModel createNewModel(ProductModel productModel) throws ErrorInFieldException, MissingRequiredFieldException;
 
 	/**
 	 * Crea e aggiunge una nuova variante di prodotto a un modello di prodotto nel database.
@@ -34,7 +34,7 @@ public interface ProductService {
 	 * @param model     il modello di prodotto a cui aggiungere la variante
 	 * @param variation l'oggetto ProductVariation da aggiungere
 	 */
-	ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInField, MissingRequiredField;
+	ProductVariation createNewVariation(ProductModel model, ProductVariation variation) throws ErrorInFieldException, MissingRequiredFieldException;
 
 	/**
 	 * Sostituisce l'immagine di un modello con un nuova immagine.<br/><br/>
@@ -136,7 +136,7 @@ public interface ProductService {
 	 *
 	 * @return una lista di oggetti ProductModel
 	 */
-	Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInField;
+	Page<ProductModel> findAllModelsPaginatedWithFilters(ProductFilters filters, Pageable pageable) throws ErrorInFieldException;
 
 	/**
 	 * Ottiene tutte le varianti di prodotto dal database.
@@ -158,7 +158,7 @@ public interface ProductService {
 	 * @param image        il file da aggiungere come immagine del modello
 	 * @return l'oggetto ProductModel aggiornato
 	 */
-	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInField, MissingRequiredField;
+	ProductModel updateModel(ProductModel model, MultipartFile image) throws IOException, ErrorInFieldException, MissingRequiredFieldException;
 
 	/**
 	 * Aggiorna le informazioni di una variante di prodotto nel database.

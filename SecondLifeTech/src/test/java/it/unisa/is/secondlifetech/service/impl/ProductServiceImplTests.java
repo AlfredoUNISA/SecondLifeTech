@@ -6,8 +6,8 @@ import it.unisa.is.secondlifetech.entity.ProductModel;
 import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.repository.*;
 import it.unisa.is.secondlifetech.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +83,7 @@ class ProductServiceImplTests {
 	 * Deve essere creato un ProductModel con i dati inseriti durante la creazione
 	 */
 	@Test
-	void ProductTC1_createNewModel_WhenModelIsValid_ShouldCreateModel() throws ErrorInField, MissingRequiredField {
+	void ProductTC1_createNewModel_WhenModelIsValid_ShouldCreateModel() throws ErrorInFieldException, MissingRequiredFieldException {
 		// Arrange
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
 
@@ -96,7 +96,7 @@ class ProductServiceImplTests {
 	}
 
 	@Test
-	void ProductTC1E_createNewModel_WhenModelIsNull_ShouldReturnNull() throws ErrorInField, MissingRequiredField {
+	void ProductTC1E_createNewModel_WhenModelIsNull_ShouldReturnNull() throws ErrorInFieldException, MissingRequiredFieldException {
 		// Arrange
 		ProductModel nullModel = null;
 
@@ -113,7 +113,7 @@ class ProductServiceImplTests {
 		when(productModelRepository.existsByName(anyString())).thenReturn(true);
 
 		// Act and Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModel));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewModel(productModel));
 	}
 	
 	@Test
@@ -125,7 +125,7 @@ class ProductServiceImplTests {
 		productModelError.setCategory(productModel.getCategory());
 
 		// Act and Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModelError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewModel(productModelError));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ class ProductServiceImplTests {
 		productModelError.setCategory(productModel.getCategory());
 
 		// Act and Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModelError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewModel(productModelError));
 	}
 
 	@Test
@@ -149,7 +149,7 @@ class ProductServiceImplTests {
 		productModelError.setCategory("CATEGORIA_FINTA");
 
 		// Act and Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewModel(productModelError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewModel(productModelError));
 	}
 
 
@@ -163,7 +163,7 @@ class ProductServiceImplTests {
 	 * <li>Deve essere associata al ProductModel specificato</li>
 	 */
 	@Test
-	void ProductTC2_createNewVariation_WhenVariationIsValid_ShouldCreateVariation() throws ErrorInField, MissingRequiredField {
+	void ProductTC2_createNewVariation_WhenVariationIsValid_ShouldCreateVariation() throws ErrorInFieldException, MissingRequiredFieldException {
 		// Arrange
 		when(productVariationRepository.save(any(ProductVariation.class))).thenReturn(productVariation);
 
@@ -183,7 +183,7 @@ class ProductServiceImplTests {
 		productVariationError.setYear(2105);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -193,7 +193,7 @@ class ProductServiceImplTests {
 		productVariationError.setRam(-5);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -203,7 +203,7 @@ class ProductServiceImplTests {
 		productVariationError.setDisplaySize(-8);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -213,7 +213,7 @@ class ProductServiceImplTests {
 		productVariationError.setStorageSize(-100);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -223,7 +223,7 @@ class ProductServiceImplTests {
 		productVariationError.setPrice(-4);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -233,7 +233,7 @@ class ProductServiceImplTests {
 		productVariationError.setQuantityInStock(-1);
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -243,7 +243,7 @@ class ProductServiceImplTests {
 		productVariationError.setColor("B");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -253,7 +253,7 @@ class ProductServiceImplTests {
 		productVariationError.setState("STATO_FINTO");
 
 		// Act & Assert
-		assertThrows(ErrorInField.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
+		assertThrows(ErrorInFieldException.class, () -> productService.createNewVariation(productVariationError.getModel(), productVariationError));
 	}
 
 	@Test
@@ -275,7 +275,7 @@ class ProductServiceImplTests {
 	 * Il ProductModel deve essere aggiornato con i nuovi dati
  	 */
 	@Test
-	void ProductTC3_updateModel_WhenModelIsValid_ShouldUpdateModel() throws ErrorInField, MissingRequiredField, IOException {
+	void ProductTC3_updateModel_WhenModelIsValid_ShouldUpdateModel() throws ErrorInFieldException, MissingRequiredFieldException, IOException {
 		// Arrange
 		when(productModelRepository.findById(any(UUID.class))).thenReturn(Optional.of(productModel));
 		when(productModelRepository.save(any(ProductModel.class))).thenReturn(productModel);
@@ -294,7 +294,7 @@ class ProductServiceImplTests {
 		when(productModelRepository.existsByName(anyString())).thenReturn(true);
 
 		// Act and Assert
-		assertThrows(ErrorInField.class, () -> productService.updateModel(productModel, null));
+		assertThrows(ErrorInFieldException.class, () -> productService.updateModel(productModel, null));
 	}
 
 	@Test

@@ -1,15 +1,13 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.order;
 
 import it.unisa.is.secondlifetech.dto.OrderFilters;
-import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.OrderPlaced;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
 import it.unisa.is.secondlifetech.service.OrderService;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,7 +59,7 @@ public class OrderController {
 						   @RequestParam("page") Optional<Integer> page,
 						   @RequestParam("size") Optional<Integer> size,
 						   HttpServletRequest request
-	) throws ErrorInField {
+	) throws ErrorInFieldException {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
 		Principal principal = request.getUserPrincipal();

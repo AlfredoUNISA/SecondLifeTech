@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.product;
 
 import it.unisa.is.secondlifetech.dto.ProductFilters;
 import it.unisa.is.secondlifetech.entity.ImageFile;
@@ -7,9 +7,8 @@ import it.unisa.is.secondlifetech.entity.ProductVariation;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.entity.constant.ProductCategory;
 import it.unisa.is.secondlifetech.entity.constant.ProductState;
-import it.unisa.is.secondlifetech.entity.constant.UserRole;
-import it.unisa.is.secondlifetech.exception.ErrorInField;
-import it.unisa.is.secondlifetech.exception.MissingRequiredField;
+import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
+import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
 import it.unisa.is.secondlifetech.repository.ImageFileRepository;
 import it.unisa.is.secondlifetech.service.ProductService;
 import it.unisa.is.secondlifetech.service.UserService;
@@ -34,13 +33,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
-public class ProductController {
+public class ProductControllerGestore {
     ProductService productService;
     UserService userService;
     ImageFileRepository imageFileRepository;
 
     @Autowired
-    public ProductController(ProductService productService, UserService userService, ImageFileRepository imageFileRepository) {
+    public ProductControllerGestore(ProductService productService, UserService userService, ImageFileRepository imageFileRepository) {
         this.productService = productService;
         this.userService = userService;
         this.imageFileRepository = imageFileRepository;
@@ -66,7 +65,7 @@ public class ProductController {
                             @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
                             HttpServletRequest request
-    ) throws ErrorInField {
+    ) throws ErrorInFieldException {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
         Principal principal = request.getUserPrincipal();
@@ -207,7 +206,7 @@ public class ProductController {
             model = variation.getModel(); //Se il modello non è presente nel database
             try {
                 productService.createNewModel(model); //Aggiungo il modello al database
-            } catch (MissingRequiredField | ErrorInField e) {
+            } catch (MissingRequiredFieldException | ErrorInFieldException e) {
                 redirectAttributes.addFlashAttribute("error", e.getMessage());
                 return "redirect:/dashboard-prodotti/add-variation";
             } catch (Exception e) {
@@ -216,7 +215,7 @@ public class ProductController {
         }
         try {
             productService.createNewVariation(model, variation);
-        } catch (MissingRequiredField | ErrorInField e) {
+        } catch (MissingRequiredFieldException | ErrorInFieldException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/dashboard-prodotti/add-variation";
         } catch (Exception e) {
@@ -231,9 +230,9 @@ public class ProductController {
             file, RedirectAttributes redirectAttributes,
                             @ModelAttribute("name") String modelName,
                             @ModelAttribute("brand") String modelBrand,
-                            @ModelAttribute("modelCategory") String modelCategory) throws IOException, ErrorInField, MissingRequiredField {
+                            @ModelAttribute("modelCategory") String modelCategory) throws IOException, ErrorInFieldException, MissingRequiredFieldException {
         if (file.isEmpty()) {
-            throw new MissingRequiredField();
+            throw new MissingRequiredFieldException();
         }
         ProductModel model = productService.findModelById(UUID.fromString(modelID));
         ImageFile fileObj = new ImageFile();
@@ -246,7 +245,7 @@ public class ProductController {
             model.setBrand(modelBrand);
             model.setBrand(modelCategory);
             productService.updateModel(model, file);
-        } catch (ErrorInField | MissingRequiredField e) {
+        } catch (ErrorInFieldException | MissingRequiredFieldException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/dashboard-prodotti";
         } catch (Exception e) {

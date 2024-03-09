@@ -1,4 +1,4 @@
-package it.unisa.is.secondlifetech.controller;
+package it.unisa.is.secondlifetech.controller.cart;
 
 import it.unisa.is.secondlifetech.config.WebSecurityConfig;
 import it.unisa.is.secondlifetech.entity.*;
@@ -97,12 +97,6 @@ public class ManageCartController {
 	}
 
 
-	/**
-	 * Retrieve product details from the database using product ids if the user with a cart cookie is a guest
-	 *
-	 * @param cartMap the cart map containing product id and quantity pairs
-	 * @return a list of CartItem objects containing product details and quantity
-	 */
 	private List<CartItem> getProductDetails(Map<String, Integer> cartMap) {
 		List<CartItem> cartItems = new ArrayList<>();
 		// Iterate over the product id and quantity pairs
