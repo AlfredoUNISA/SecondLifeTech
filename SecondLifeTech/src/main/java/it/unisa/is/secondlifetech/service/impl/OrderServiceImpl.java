@@ -211,17 +211,19 @@ public class OrderServiceImpl implements OrderService {
             );
 
             if (filters.getState() != null && !filters.getState().isEmpty()) {
+                boolean stato = Boolean.parseBoolean(filters.getState());
                 // Filtra per stato spedizione con email
                 filteredOrders.addAll(allOrders.stream()
-                        .filter(order -> order.isShipped() == Boolean.getBoolean(filters.getState()))
+                        .filter(order -> order.isShipped() == stato )
                         .toList()
                 );
             }
 
         } else if (filters.getState() != null && !filters.getState().isEmpty()) {
+            boolean stato = Boolean.parseBoolean(filters.getState());
             // Filtra per stato spedizione
             filteredOrders.addAll(allOrders.stream()
-                    .filter(order -> order.isShipped() == Boolean.getBoolean(filters.getState()))
+                    .filter(order -> order.isShipped() == stato)
                     .toList()
             );
         } else {
