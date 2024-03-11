@@ -77,6 +77,14 @@
                                         </th:block>
                                     </td>
                                     <td th:text="${order.total}"></td>
+                                    <td>
+                                        <a th:href="@{'/dashboard-ordini/details?id='+${order.id}}" class="btn btn-primary">Dettagli</a>
+                                    </td>
+<!--                                    <td>-->
+<!--                                        <form th:action="@{'/dashboard-ordini/details?}'+${order.id}" method="post" role="form">-->
+<!--                                            <button type="submit" class="btn btn-danger">Modifica stato</button>-->
+<!--                                        </form>-->
+<!--                                    </td>-->
                                 </tr>
                             </th:block>
                         </th:block>

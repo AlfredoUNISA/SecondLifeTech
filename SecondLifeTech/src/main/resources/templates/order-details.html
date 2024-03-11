@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dettagli ordine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{../bootstrap-5.3.2/js/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{../css/style.css}" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="my-content" style="min-height: calc(100vh - 17em);">
+    <br/>
+    <div class="container">
+        <h2 class="d-flex justify-content-center mt-4">Dettagli ordine di
+            <th:block th:class="text-success" th:text="${ordine.user.email}"></th:block>
+        </h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nome modello</th>
+                <th>Marca</th>
+                <th>Categoria</th>
+                <th>Anno</th>
+                <th>RAM</th>
+                <th>Dimensione Display</th>
+                <th>Dimensione Memoria</th>
+                <th>Prezzo</th>
+                <th>Quantità ordinata</th>
+                <th>Colore</th>
+                <th>Condizione</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${ordine.items}">
+                <td th:text="${item.productVariation.model.name}"></td>
+                <td th:text="${item.productVariation.model.brand}"></td>
+                <td th:text="${item.productVariation.model.category}"></td>
+                <td th:text="${item.productVariation.year}"></td>
+                <td th:text="${item.productVariation.ram}"></td>
+                <td th:text="${item.productVariation.displaySize}"></td>
+                <td th:text="${item.productVariation.storageSize}"></td>
+                <td th:text="${item.productVariation.price}"></td>
+                <td th:text="${item.quantityOrdered}"></td>
+                <td th:text="${item.productVariation.color}"></td>
+                <td th:text="${item.productVariation.state}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Totale:
+            <th:block th:text="${ordine.total}"></th:block>
+            €
+        </h3>
+        <th:block th:if="${ordine.shipped == false}">
+            <div class="badge bg-warning rounded-pill">Non spedito</div>
+            <form action="/dashboard-ordini/editState" method="post" role="form">
+                <div class="d-flex justify-content-center mt-4">
+                    <input type="hidden" name="id" th:value="${ordine.id}">
+                    <button type="submit" class="btn btn-primary">Modifica stato</button>
+                </div>
+            </form>
+        </th:block>
+        <th:block th:if="${ordine.shipped == true}">
+            <div class="badge bg-success rounded-pill">Spedito</div>
+        </th:block>
+    </div>
+</div>
+<div th:replace="~{footer :: footer}"></div>
+
+</body>
+</html>
