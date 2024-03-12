@@ -36,7 +36,7 @@
                         Login/Registrazione
                     </a>
                 </li>
-                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null && user.getRole().contains('CLIENTE')}">
+                <li class="nav-item mx-0 mx-lg-1" th:if="${user!=null}">
                     <a class="text-white nav-link py-3 px-0 px-lg-3 rounded" href="/my-profile">
                         Il mio Profilo
                     </a>

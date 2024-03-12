@@ -2,6 +2,7 @@ package it.unisa.is.secondlifetech.config;
 
 import it.unisa.is.secondlifetech.entity.Cart;
 import it.unisa.is.secondlifetech.entity.User;
+import it.unisa.is.secondlifetech.entity.constant.UserRole;
 import it.unisa.is.secondlifetech.exception.NoDevicesAvailableException;
 import it.unisa.is.secondlifetech.service.CartService;
 import it.unisa.is.secondlifetech.service.UserService;
@@ -35,29 +36,31 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	public void onAuthenticationSuccess(HttpServletRequest request,
 	                                    HttpServletResponse response,
 	                                    Authentication authentication) {
-		// Guest user, retrieve the cart from the cookie and add items to the database cart
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("cart")) {
-					String cartValue = cookie.getValue();
-					// Parse the cart cookie value to retrieve product id and quantity pairs
-					Map<String, Integer> cartMap = parseCartCookie(cartValue);
-					// Add each item to the user's cart in the database
-					User user = userService.findUserByEmail(authentication.getName());
-					Cart cart = user.getCart();
-					for (Map.Entry<String, Integer> entry : cartMap.entrySet()) {
-						UUID productId = UUID.fromString(entry.getKey());
-						int quantity = entry.getValue();
-						try {
-							cartService.addToCart(cart, productId, quantity);
-						} catch (NoDevicesAvailableException e) {
-							log.error(e.getMessage());
+		User user = userService.findUserByEmail(authentication.getName());
+		if (!user.getRole().contains("GESTORE")) {
+			// Guest user, retrieve the cart from the cookie and add items to the database cart
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("cart")) {
+						String cartValue = cookie.getValue();
+						// Parse the cart cookie value to retrieve product id and quantity pairs
+						Map<String, Integer> cartMap = parseCartCookie(cartValue);
+						// Add each item to the user's cart in the database
+						Cart cart = user.getCart();
+						for (Map.Entry<String, Integer> entry : cartMap.entrySet()) {
+							UUID productId = UUID.fromString(entry.getKey());
+							int quantity = entry.getValue();
+							try {
+								cartService.addToCart(cart, productId, quantity);
+							} catch (NoDevicesAvailableException e) {
+								log.error(e.getMessage());
+							}
 						}
+						// Clear the cart cookie
+						cookie.setMaxAge(0);
+						break;
 					}
-					// Clear the cart cookie
-					cookie.setMaxAge(0);
-					break;
 				}
 			}
 		}

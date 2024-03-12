@@ -24,21 +24,23 @@
                         <a href="/my-profile" class="nav-link active">Informazioni personali</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="/my-profile/payment-methods" class="nav-link">Metodi di pagamento</a>
-                    </li>
+                    <th:block th:if="${user.getRole().contains('CLIENTE')}">
+                        <li class="nav-item">
+                            <a href="/my-profile/payment-methods" class="nav-link">Metodi di pagamento</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a href="/my-profile/shipping-addresses" class="nav-link">Indirizzi di spedizione</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="/my-profile/shipping-addresses" class="nav-link">Indirizzi di spedizione</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a href="/my-profile/orders" class="nav-link">Ordini</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="/my-profile/orders" class="nav-link">Ordini</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a href="/logout" class="nav-link">Logout</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="/logout" class="nav-link">Logout</a>
+                        </li>
+                    </th:block>
                 </ul>
             </div>
 

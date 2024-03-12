@@ -68,6 +68,20 @@ public class DatabasePopulator {
 				log.info("Creato Gestore Utenti");
 			}
 
+			// Gestore Prodotti
+			User gestoreProdotti = new User("gestoreProdotti", "gestoreProdotti", "gestoreProdotti@email.com", "pass", null, UserRole.GESTORE_PRODOTTI, "");
+			if (userService.findUserByEmail(gestoreProdotti.getEmail()) == null) {
+				userService.createNewUser(gestoreProdotti);
+				log.info("Creato Gestore Prodotti");
+			}
+
+			// Gestore Ordini
+			User gestoreOrdini = new User("gestoreOrdini", "gestoreOrdini", "gestoreOrdini@email.com", "pass", null, UserRole.GESTORE_ORDINI, "");
+			if (userService.findUserByEmail(gestoreOrdini.getEmail()) == null) {
+				userService.createNewUser(gestoreOrdini);
+				log.info("Creato Gestore Ordini");
+			}
+
 			// Banner
 			if (!imageFileRepository.existsByName("banner.jpg")) {
 				imageFileRepository.save(createFromFile("banner.jpg"));

@@ -39,8 +39,6 @@ public class WebSecurityConfig {
 				csrf.disable() // disabilitato perché dà alcuni problemi di CSRF token
 			).authorizeHttpRequests((authorize) -> authorize
 				.requestMatchers("/").permitAll()
-				.requestMatchers("/cliente/**").hasAnyAuthority(UserRole.CLIENTE)
-				.requestMatchers("/gestore/**").hasAnyAuthority(UserRole.GESTORE_PRODOTTI, UserRole.GESTORE_UTENTI, UserRole.GESTORE_ORDINI)
 				.requestMatchers("/dashboard-prodotti/**").hasAnyAuthority(UserRole.GESTORE_PRODOTTI)
 				.requestMatchers("/dashboard-ordini/**").hasAnyAuthority(UserRole.GESTORE_ORDINI)
 				.requestMatchers("/dashboard-utenti/**").hasAnyAuthority(UserRole.GESTORE_UTENTI)

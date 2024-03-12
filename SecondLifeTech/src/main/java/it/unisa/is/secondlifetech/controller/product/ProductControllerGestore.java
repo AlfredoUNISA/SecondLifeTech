@@ -65,7 +65,7 @@ public class ProductControllerGestore {
                             @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
                             HttpServletRequest request
-    ) throws ErrorInFieldException {
+    ) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
         Principal principal = request.getUserPrincipal();
@@ -87,11 +87,15 @@ public class ProductControllerGestore {
 
         } else {
             // Applicare i filtri
-            productPage = productService.findAllModelsPaginatedWithFilters(
-                    filters,
-                    PageRequest.of(currentPage - 1, pageSize)
-            );
-            model.addAttribute("productPage", productPage);
+	        try {
+		        productPage = productService.findAllModelsPaginatedWithFilters(
+		                filters,
+		                PageRequest.of(currentPage - 1, pageSize)
+		        );
+	        } catch (ErrorInFieldException e) {
+		        return "redirect:/dashboard-prodotti";
+	        }
+	        model.addAttribute("productPage", productPage);
             model.addAttribute("productList", productPage.getContent());
         }
 
@@ -230,16 +234,9 @@ public class ProductControllerGestore {
             file, RedirectAttributes redirectAttributes,
                             @ModelAttribute("name") String modelName,
                             @ModelAttribute("brand") String modelBrand,
-                            @ModelAttribute("modelCategory") String modelCategory) throws IOException, ErrorInFieldException, MissingRequiredFieldException {
-        if (file.isEmpty()) {
-            throw new MissingRequiredFieldException();
-        }
+                            @ModelAttribute("modelCategory") String modelCategory) {
         ProductModel model = productService.findModelById(UUID.fromString(modelID));
-        ImageFile fileObj = new ImageFile();
-        fileObj.setName(model.getName());
-        fileObj.setContentType(file.getContentType());
-        fileObj.setData(file.getBytes());
-        ImageFile imageFile = imageFileRepository.save(fileObj);
+
         try {
             model.setName(modelName);
             model.setBrand(modelBrand);

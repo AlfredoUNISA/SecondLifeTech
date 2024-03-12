@@ -52,7 +52,7 @@ public class ProductControllerUtente {
                                     @RequestParam("page") Optional<Integer> page,
                                     @RequestParam("size") Optional<Integer> size,
                                     HttpServletRequest request
-    ) throws ErrorInFieldException {
+    ) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(8);
 
@@ -73,11 +73,15 @@ public class ProductControllerUtente {
 
         } else {
             // Applicare i filtri
-            productPage = productService.findAllModelsPaginatedWithFilters(
-                filters,
-                PageRequest.of(currentPage - 1, pageSize)
-            );
-            model.addAttribute("productPage", productPage);
+	        try {
+		        productPage = productService.findAllModelsPaginatedWithFilters(
+		            filters,
+		            PageRequest.of(currentPage - 1, pageSize)
+		        );
+	        } catch (ErrorInFieldException e) {
+		        return "redirect:/products";
+	        }
+	        model.addAttribute("productPage", productPage);
             model.addAttribute("productList", productPage.getContent());
         }
 
