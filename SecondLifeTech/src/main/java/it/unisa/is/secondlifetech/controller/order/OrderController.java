@@ -122,6 +122,7 @@ public class OrderController {
         if (principal != null) {
             user = userService.findUserByEmail(principal.getName());
         }
+        model.addAttribute("user", user);
         return "order-details";
 
     }
