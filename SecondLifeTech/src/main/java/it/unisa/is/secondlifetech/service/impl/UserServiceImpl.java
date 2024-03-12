@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
 			cartService.createNewCart(cart);
 
 			user.setCart(cart);
+			cart.setUser(user);
 			return userRepository.save(user);
 		}
 

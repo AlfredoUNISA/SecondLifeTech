@@ -18,8 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-	private UserDetailsService userDetailsService;
-	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	private final UserDetailsService userDetailsService;
+	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
 	@Autowired
 	public WebSecurityConfig(UserDetailsService userDetailsService, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {

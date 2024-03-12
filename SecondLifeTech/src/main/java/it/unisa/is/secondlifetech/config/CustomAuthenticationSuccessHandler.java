@@ -23,8 +23,8 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-	private CartService cartService;
-	private UserService userService;
+	private final CartService cartService;
+	private final UserService userService;
 
 	@Autowired
 	public CustomAuthenticationSuccessHandler(CartService cartService, UserService userService) {

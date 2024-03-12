@@ -20,8 +20,15 @@
                     <div class="card-header">
                         Contattaci
                     </div>
+
+                    <th:block th:if="${success}">
+                        <div class="alert alert-success" role="alert">
+                            Il tuo messaggio è stato inviato correttamente!
+                        </div>
+                    </th:block>
+
                     <div class="card-body">
-                        <form>
+                        <form action="/contact-us" method="post">
                             <div class="mb-3">
                                 <label for="problemDescription" class="form-label">Descrivi il tuo problema</label>
                                 <textarea class="form-control" id="problemDescription" rows="3"
