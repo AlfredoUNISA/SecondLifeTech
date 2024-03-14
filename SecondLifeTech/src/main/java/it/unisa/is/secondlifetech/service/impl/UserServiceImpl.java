@@ -288,9 +288,11 @@ public class UserServiceImpl implements UserService {
 	 * @return l'oggetto User aggiornato
 	 */
 	@Override
-	public User updateUser(User user) {
+	public User updateUser(User user) throws MissingRequiredFieldException, ErrorInFieldException {
 		if (user.getId() == null)
 			throw new IllegalArgumentException("ID dell'utente non specificato nella modifica");
+
+		checkUserValues(user);
 
 		String oldPassword = userRepository.findById(user.getId()).get().getPassword();
 		String newPassword = passwordEncoder.encode(user.getPassword());
@@ -502,6 +504,4 @@ public class UserServiceImpl implements UserService {
 		if (paymentMethod.getCvv().length() != 3)
 			throw new ErrorInFieldException("Il CVC deve essere lungo 3 caratteri");
 	}
-
-	// TODO: implementare gli errori su thymeleaf
 }

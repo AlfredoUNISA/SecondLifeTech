@@ -132,7 +132,8 @@
 
                                     <label for="editNewPassword" class="form-label">Nuova Password</label>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" id="editNewPassword" name="password">
+                                        <input type="password" class="form-control" id="editNewPassword"
+                                               name="password">
                                     </div>
 
                                     <div class="modal-footer">
@@ -165,39 +166,41 @@
                 </button>
 
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-danger mt-4" data-bs-toggle="modal"
-                        data-bs-target="#modalDeleteMyAccount">
-                    Elimina account
-                </button>
+                <th:block th:if="${user.getRole().contains('CLIENTE')}">
+                    <button type="button" class="btn btn-danger mt-4" data-bs-toggle="modal"
+                            data-bs-target="#modalDeleteMyAccount">
+                        Elimina account
+                    </button>
 
-                <!-- Modal Delete -->
-                <div class="modal fade" id="modalDeleteMyAccount" tabindex="-1" role="dialog"
-                     aria-labelledby="modalTitleId" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalTitleDelete">
-                                    Sei sicuro di voler eliminare il tuo account?
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Questa azione è irreversibile.</p>
-                            </div>
-                            <form action="/my-profile/delete-my-account" method="post">
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        ANNULLA L'ELIMINAZIONE DELL'ACCOUNT
-                                    </button>
-                                    <button type="submit" class="btn btn-danger">
-                                        Elimina
-                                    </button>
+                    <!-- Modal Delete -->
+                    <div class="modal fade" id="modalDeleteMyAccount" tabindex="-1" role="dialog"
+                         aria-labelledby="modalTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalTitleDelete">
+                                        Sei sicuro di voler eliminare il tuo account?
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
-                            </form>
+                                <div class="modal-body">
+                                    <p>Questa azione è irreversibile.</p>
+                                </div>
+                                <form action="/my-profile/delete-my-account" method="post">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            ANNULLA L'ELIMINAZIONE DELL'ACCOUNT
+                                        </button>
+                                        <button type="submit" class="btn btn-danger">
+                                            Elimina
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </th:block>
             </div>
 
         </div>

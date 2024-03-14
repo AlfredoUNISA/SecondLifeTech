@@ -203,7 +203,7 @@ class UserServiceImplTests {
 	 * L’User deve essere aggiornato con nuovi dati
 	 */
 	@Test
-	void UserTC2_updateUser_WhenUserIsValid_ShouldUpdateUser() {
+	void UserTC2_updateUser_WhenUserIsValid_ShouldUpdateUser() throws MissingRequiredFieldException, ErrorInFieldException {
 		// Arrange
 		when(userRepository.save(any(User.class))).thenReturn(user);
 		when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPass");

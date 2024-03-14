@@ -125,7 +125,7 @@ public interface UserService {
 	 * @param user l'oggetto User con le nuove informazioni da salvare
 	 * @return l'oggetto User aggiornato
 	 */
-	User updateUser(User user);
+	User updateUser(User user) throws MissingRequiredFieldException, ErrorInFieldException;
 
 	/**
 	 * Aggiorna un indirizzo di spedizione di un utente.
