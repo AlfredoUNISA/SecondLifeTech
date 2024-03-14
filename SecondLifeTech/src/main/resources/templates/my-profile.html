@@ -47,6 +47,11 @@
             <!-- Main Content -->
             <div class="col-md-6">
                 <h2>Informazioni personali</h2>
+
+                <th:block th:if="${error}">
+                    <div class="alert alert-danger" role="alert" th:text="'Errore: ' + ${error}"></div>
+                </th:block>
+
                 <b>Nome:</b>
                 <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p>
 

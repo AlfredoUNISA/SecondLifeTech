@@ -292,14 +292,21 @@ public class UserServiceImpl implements UserService {
 		if (user.getId() == null)
 			throw new IllegalArgumentException("ID dell'utente non specificato nella modifica");
 
-		checkUserValues(user);
+		User foundUser = userRepository.findById(user.getId()).orElse(null);
 
-		String oldPassword = userRepository.findById(user.getId()).get().getPassword();
-		String newPassword = passwordEncoder.encode(user.getPassword());
-		if (newPassword.equalsIgnoreCase(oldPassword))
+		if (foundUser == null)
+			throw new RuntimeException("Utente non trovato");
+
+		String oldPassword = foundUser.getPassword();
+		String newPassword = user.getPassword();
+
+		if (newPassword.equalsIgnoreCase(oldPassword)) {
 			user.setPassword(oldPassword);
-		else
+			checkUserValuesWithoutPassword(user);
+		} else {
 			user.setPassword(newPassword);
+			checkUserValues(user);
+		}
 
 		return userRepository.save(user);
 	}
@@ -438,6 +445,32 @@ public class UserServiceImpl implements UserService {
 
 		if (user.getPassword().length() < UserFilters.MIN_STRING_LENGTH || user.getPassword().length() > UserFilters.MAX_STRING_LENGTH)
 			throw new ErrorInFieldException("La password deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (!List.of(UserRole.ALL_ROLES).contains(UserRole.getRoleName(user.getRole())))
+			throw new ErrorInFieldException("Il ruolo specificato non è valido");
+	}
+
+	private static void checkUserValuesWithoutPassword(User user) throws MissingRequiredFieldException, ErrorInFieldException {
+		if (user.getFirstName().isEmpty()
+				||user.getLastName().isEmpty()
+				||user.getEmail().isEmpty()
+				||user.getPassword().isEmpty()
+				||user.getRole().isEmpty()) {
+			throw new MissingRequiredFieldException();
+		}
+
+		if (user.getFirstName().length() < UserFilters.MIN_STRING_LENGTH || user.getFirstName().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInFieldException("Il nome deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (user.getLastName().length() < UserFilters.MIN_STRING_LENGTH || user.getLastName().length() > UserFilters.MAX_STRING_LENGTH)
+			throw new ErrorInFieldException("Il cognome deve essere lungo tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+
+		if (!user.getPhoneNumber().isEmpty() && user.getPhoneNumber().length() < 6 || user.getPhoneNumber().length() > 15)
+			throw new ErrorInFieldException("Il numero di telefono deve essere lungo tra i 6 e i 15 caratteri");
+
+		// regex per l'email
+		if (!user.getEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))
+			throw new ErrorInFieldException("Email non valida");
 
 		if (!List.of(UserRole.ALL_ROLES).contains(UserRole.getRoleName(user.getRole())))
 			throw new ErrorInFieldException("Il ruolo specificato non è valido");

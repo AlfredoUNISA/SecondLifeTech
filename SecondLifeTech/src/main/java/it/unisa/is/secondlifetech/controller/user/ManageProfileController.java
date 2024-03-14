@@ -1,16 +1,20 @@
 package it.unisa.is.secondlifetech.controller.user;
 
+import it.unisa.is.secondlifetech.dto.ProductFilters;
+import it.unisa.is.secondlifetech.dto.UserFilters;
 import it.unisa.is.secondlifetech.entity.PaymentMethod;
 import it.unisa.is.secondlifetech.entity.ShippingAddress;
 import it.unisa.is.secondlifetech.entity.User;
 import it.unisa.is.secondlifetech.exception.ErrorInFieldException;
 import it.unisa.is.secondlifetech.exception.MissingRequiredFieldException;
+import it.unisa.is.secondlifetech.repository.UserRepository;
 import it.unisa.is.secondlifetech.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +27,15 @@ import java.util.UUID;
 
 @Controller
 public class ManageProfileController {
-	UserService userService;
+	private final UserService userService;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public ManageProfileController(UserService userService) {
+	public ManageProfileController(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping("/my-profile")
@@ -36,6 +44,12 @@ public class ManageProfileController {
 
 		if (principal != null) {
 			User user = userService.findUserByEmail(principal.getName());
+
+			Object error = request.getAttribute("error");
+			if (error != null) {
+				model.addAttribute("error", error);
+			}
+
 			model.addAttribute("user", user);
 			return "my-profile";
 		}
@@ -66,6 +80,7 @@ public class ManageProfileController {
 
 	@PostMapping("/my-profile/edit-info")
 	public String editProfileBasic(HttpServletRequest request,
+	                               RedirectAttributes redirectAttributes,
 	                               @RequestParam("name") String name,
 	                               @RequestParam("surname") String surname,
 	                               @RequestParam("email") String email,
@@ -82,6 +97,9 @@ public class ManageProfileController {
 
 			try {
 				userService.updateUser(user);
+			} catch (ErrorInFieldException | MissingRequiredFieldException e) {
+				redirectAttributes.addFlashAttribute("error", e.getMessage());
+				return "redirect:/my-profile";
 			} catch (Exception e) {
 				return "redirect:/error";
 			}
@@ -95,19 +113,20 @@ public class ManageProfileController {
 
 	@PostMapping("/my-profile/edit-password")
 	public String editProfilePassword(HttpServletRequest request,
-	                               @RequestParam("password") String password) {
+	                                  RedirectAttributes redirectAttributes,
+	                                  @RequestParam("password") String password) {
 		Principal principal = request.getUserPrincipal();
+
+		if (password.length() < UserFilters.MIN_STRING_LENGTH || password.length() > UserFilters.MAX_STRING_LENGTH) {
+			redirectAttributes.addFlashAttribute("error", "La password deve essere lunga tra i " + ProductFilters.MIN_STRING_LENGTH + " e i " + ProductFilters.MAX_STRING_LENGTH + " caratteri");
+			return "redirect:/my-profile";
+		}
 
 		if (principal != null) {
 			User user = userService.findUserByEmail(principal.getName());
 
-			user.setPassword(password);
-
-			try {
-				userService.updateUser(user);
-			} catch (Exception e) {
-				return "redirect:/error";
-			}
+			user.setPassword(passwordEncoder.encode(password));
+			userRepository.save(user);
 
 			updatePrincipal(user);
 
@@ -123,10 +142,10 @@ public class ManageProfileController {
 	 */
 	private static void updatePrincipal(User user) {
 		org.springframework.security.core.userdetails.User userObj = new org.springframework.security.core.userdetails.User(
-			user.getEmail(),
-			user.getPassword(),
-			Collections.singleton(new SimpleGrantedAuthority(user.getRole())
-			));
+				user.getEmail(),
+				user.getPassword(),
+				Collections.singleton(new SimpleGrantedAuthority(user.getRole())
+				));
 		Authentication authentication = new PreAuthenticatedAuthenticationToken(userObj, userObj.getPassword(), userObj.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
@@ -199,7 +218,7 @@ public class ManageProfileController {
 	}
 
 	@GetMapping("/my-profile/shipping-addresses")
-	public String getShippingAddresses(HttpServletRequest request, Model model){
+	public String getShippingAddresses(HttpServletRequest request, Model model) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
@@ -243,13 +262,13 @@ public class ManageProfileController {
 
 	@PostMapping("/my-profile/shipping-addresses/edit")
 	public String editShippingAddress(HttpServletRequest request,
-	                                    @RequestParam("id") UUID id,
-	                                    @RequestParam("street") String street,
-	                                    @RequestParam("city") String city,
-	                                    @RequestParam("country") String country,
-	                                    @RequestParam("zipCode") String zipCode,
-	                                    @RequestParam("state") String state,
-	                                    RedirectAttributes redirectAttributes) {
+	                                  @RequestParam("id") UUID id,
+	                                  @RequestParam("street") String street,
+	                                  @RequestParam("city") String city,
+	                                  @RequestParam("country") String country,
+	                                  @RequestParam("zipCode") String zipCode,
+	                                  @RequestParam("state") String state,
+	                                  RedirectAttributes redirectAttributes) {
 		Principal principal = request.getUserPrincipal();
 
 		if (principal != null) {
