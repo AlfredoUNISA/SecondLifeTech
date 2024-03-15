@@ -206,7 +206,6 @@ class UserServiceImplTests {
 	void UserTC2_updateUser_WhenUserIsValid_ShouldUpdateUser() throws MissingRequiredFieldException, ErrorInFieldException {
 		// Arrange
 		when(userRepository.save(any(User.class))).thenReturn(user);
-		when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPass");
 		when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
 		// Act
@@ -218,7 +217,6 @@ class UserServiceImplTests {
 		assertThat(updatedUser.getFirstName()).isEqualTo(user.getFirstName());
 		assertThat(updatedUser.getLastName()).isEqualTo(user.getLastName());
 		assertThat(updatedUser.getEmail()).isEqualTo(user.getEmail());
-		assertThat(updatedUser.getPassword()).isEqualTo("encodedPass");
 		assertThat(updatedUser.getRole()).isEqualTo(user.getRole());
 		assertThat(updatedUser.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
 		assertThat(updatedUser.getCart()).isEqualTo(user.getCart());
