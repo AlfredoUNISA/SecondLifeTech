@@ -59,6 +59,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 						}
 						// Clear the cart cookie
 						cookie.setMaxAge(0);
+						cookie.setPath("/");
+						response.addCookie(cookie);
 						break;
 					}
 				}
